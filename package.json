@@ -26,7 +26,8 @@
     "react-scripts": "3.3.0",
     "react-test-renderer": "^16.11.0",
     "tachyons": "^4.11.1",
-    "typescript": "3.7.2"
+    "typescript": "3.7.2",
+    "husky": "^2.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -53,6 +54,17 @@
   "jest": {
     "coverageReporters": [
       "text"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write",
+      "git add"
     ]
   }
 }
