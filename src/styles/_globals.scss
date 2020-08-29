@@ -1,0 +1,464 @@
+$gray-blue: #fafafe;
+$gray-blue-2: #f1f3f7;
+$green: #007b4b;
+$washed-green: #e5f1ed;
+$blue: #2b74d2;
+$washed-blue: #e0e7f0;
+$dark-blue: #00449e;
+$purple: #9619ff;
+$washed-purple: #f4e8ff;
+$red: #a0004b;
+$washed-red: #f0e0e8;
+
+// Won't need these if Tachyons variables are overwriten in colors config
+.green {
+  color: $green;
+}
+.washed-green {
+  color: $washed-green;
+}
+.bg-washed-green {
+  background-color: $washed-green;
+}
+
+.blue {
+  color: $blue;
+}
+.bg-blue {
+  background-color: $blue;
+}
+.hover-blue:focus,
+.hover-blue:hover {
+  color: $blue;
+}
+.hover-bg-blue:focus,
+.hover-bg-blue:hover {
+  background-color: $blue;
+}
+.dark-blue {
+  color: $dark-blue;
+}
+.washed-blue {
+  color: $washed-blue;
+}
+.bg-washed-blue {
+  background-color: $washed-blue;
+}
+
+.hover-b-blue:hover,
+.hover-b-blue:focus {
+  border-color: $blue;
+  transition: border-color 0.15s ease-in;
+}
+
+.purple {
+  color: $purple;
+}
+.washed-purple {
+  color: $washed-purple;
+}
+.bg-washed-purple {
+  background-color: $washed-purple;
+}
+
+.red {
+  color: $red;
+}
+.washed-red {
+  color: $washed-red;
+}
+.bg-washed-red {
+  background-color: $washed-red;
+}
+
+.bg-gray-blue {
+  background-color: $gray-blue;
+}
+
+.bg-gray-blue-2 {
+  background-color: $gray-blue-2;
+}
+
+:focus,
+.link:focus {
+  outline-color: $blue;
+}
+
+// stock shadow too dark
+.shadow {
+  box-shadow: 0 0 2px 0 rgba(59, 86, 73, 0.2),
+    1px 1px 2px 0 rgba(59, 86, 73, 0.1);
+}
+
+.break-all {
+  word-break: break-all;
+}
+
+fieldset {
+  padding: 0.01em 0 0 0;
+}
+
+.w6rem {
+  width: 6rem;
+}
+.w10rem {
+  width: 10rem;
+}
+
+.outline-2-white {
+  outline: 2px solid white;
+}
+
+// Case header widths
+
+.ch1 {
+  width: 6rem;
+  @media screen and (min-width: 58.5em) {
+    width: 8rem;
+  }
+}
+.ch2 {
+  width: 5.5rem;
+  @media screen and (min-width: 58.5em) {
+    width: 6.5rem;
+  }
+}
+.ch3 {
+  width: 11rem;
+  @media screen and (min-width: 58.5em) {
+    width: 16rem;
+  }
+}
+.ch4 {
+  width: 6rem;
+  @media screen and (min-width: 58.5em) {
+    width: 8rem;
+  }
+}
+.ch5 {
+  width: 5.5rem;
+  @media screen and (min-width: 58.5em) {
+    width: 6.5rem;
+  }
+}
+.ch6 {
+  width: 6rem;
+  @media screen and (min-width: 30em) {
+    width: 5.5rem;
+  }
+}
+.ch7 {
+  @media screen and (min-width: 58.5em) {
+    width: 20rem;
+  }
+}
+
+.logo {
+  width: 164px;
+  height: auto;
+  margin: 0.4rem 0 0.02rem 0;
+
+  /*  @media screen and (min-width: 60em) {
+    width: 164px;
+    margin: 0.7rem 0 0 1rem;
+  }*/
+}
+
+// For when we have multiple navs again
+/*.logo--login {
+  width: 210px;
+  height: auto;
+  margin: 1.25rem auto 3rem auto;
+}*/
+
+// For Manual internal links
+.bb-dotted-2 {
+  border-bottom: 2px dotted #aaa;
+}
+
+// For Manual menu
+.shrink-none {
+  flex-shrink: 0;
+}
+@media screen and (min-width: 60em) {
+  .sticky-l {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+  }
+}
+
+.btn--search {
+  height: 54px;
+}
+
+.spinner {
+  display: inline-block;
+  position: relative;
+  top: -2px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  border-radius: 50%;
+  border: 3px solid rgba(53, 126, 221, 0.2);
+}
+.spinner--sm {
+  width: 16px;
+  height: 16px;
+}
+.spinner--light {
+  border: 3px solid rgba(186, 216, 255, 0.2);
+}
+.spinner:after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  bottom: -3px;
+  left: -3px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: rgba(53, 126, 221, 1);
+  -webkit-animation: spin 0.8s linear infinite;
+  animation: spin 0.8s linear infinite;
+}
+.spinner--light:after {
+  border-top-color: rgba(186, 216, 255, 1);
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    tranform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    tranform: rotate(360deg);
+  }
+}
+
+.radio-spinner {
+  position: absolute;
+  bottom: 0.7rem;
+  left: 1.4rem;
+}
+
+.loading-btn {
+  position: relative;
+}
+.loading-btn:before {
+  content: "";
+  position: absolute;
+  height: 60px;
+  width: 60px;
+  position: absolute;
+  left: 50%;
+  margin-left: -30px;
+  top: 50%;
+  margin-top: -30px;
+  background-color: $dark-blue;
+  border-radius: 100%;
+  animation: sk-scaleout 0.9s infinite ease-in-out;
+}
+
+@keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.connect:before,
+.connect:after, {
+  content: " ";
+  position: absolute;
+  transform: translate(-50%);
+  width: 2px;
+  background-color: #dfe2e8;
+}
+.connect-result:before {
+  bottom: -6px;
+  height: 25px;
+  left: 24px;
+}
+.connect-time:before {
+  top: 14px;
+  height: 100%;
+  left: 8px;
+}
+
+.footer-main {
+  box-shadow: 0 50vh 0 50vh #ffffff;
+}
+
+// Radio buttons and checkbox from https://a11y-style-guide.com
+// Checkbox
+
+.checkbox input[type="checkbox"] {
+  opacity: 0;
+}
+
+.checkbox label {
+  position: relative;
+  display: block;
+  padding: 0.2rem 0 0 2.2rem;
+}
+
+.checkbox label::before,
+.checkbox label::after {
+  position: absolute;
+  content: "";
+  display: inline-block;
+}
+
+.checkbox label::before {
+  height: 26px;
+  width: 26px;
+  left: 0;
+  top: 1px;
+  background: white;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.checkbox label::after {
+  left: 9px;
+  top: 5px;
+  width: 8px;
+  height: 14px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.checkbox input[type="checkbox"] + label::after {
+  content: none;
+}
+
+.checkbox input[type="checkbox"]:checked + label::after {
+  content: "";
+}
+
+.checkbox input[type="checkbox"]:checked + label::before {
+  background: $blue;
+}
+
+.checkbox input[type="checkbox"]:focus + label::before {
+  outline: auto 2px Highlight;
+  outline: auto 5px -webkit-focus-ring-color;
+}
+
+// Radio
+
+.radio input[type="radio"] {
+  opacity: 0;
+  display: block;
+  position: relative;
+  top: 0.5rem;
+}
+.radio label {
+  position: relative;
+  top: -0.6rem;
+  display: inline-block;
+  padding: 0.4rem 1.5rem 0 2.1rem;
+}
+.radio label::before,
+.radio label::after {
+  position: absolute;
+  content: "";
+  display: inline-block;
+}
+.radio label::before {
+  height: 28px;
+  width: 28px;
+  left: 0;
+  top: 1px;
+  background: white;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+}
+.radio label::after {
+  left: 5px;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  background: $blue;
+  border-radius: 50%;
+}
+.radio input[type="radio"] + label::after {
+  content: none;
+}
+.radio input[type="radio"]:checked + label::after {
+  content: "";
+}
+.radio input[type="radio"]:focus + label::before {
+  outline: 0;
+  border: 2px solid $blue;
+}
+
+// Change the breakpoint "ns" variable to be wider?
+
+// Custom utility classes
+.pointer-events-none {
+  pointer-events: none;
+}
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+}
+.nowrap {
+  white-space: nowrap;
+}
+.bottom-6 {
+  bottom: 6rem;
+}
+
+// New CSS as of Landing addition
+
+$lightest-blue1: #f3f8ff;
+$lightest-blue2: #e8f2ff;
+.bg-lightest-blue1 {
+  background-color: $lightest-blue1;
+}
+
+.b--lightest-blue1 {
+  border-color: $lightest-blue1;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.wipe-illustrations {
+  max-width: 100%;
+  width: 840px;
+  height: auto;
+}
+.ui-sample {
+  max-width: 100%;
+  width: 400px;
+  height: auto;
+}
+.who-we-are-logos {
+  max-width: 100%;
+  width: 280px;
+  height: auto;
+}
+
+.bs2-inset-gray {
+  box-shadow: inset 0px 0px 0px 2px #eeeeee;
+}
+.bs2-r-gray {
+  box-shadow: 2px 0px 0px 0px #eeeeee;
+}
