@@ -1,36 +1,24 @@
-export interface HouseholdData {
-  members: PersonData[];
-}
+import { Moment } from "moment";
 
-export interface PersonData {
+export interface Person {
   name: string;
   covidEvents: CovidEvent[];
 }
 
 export interface CovidEvent {
-  name: string;
+  name: CovidEventName;
+  date: Moment;
 }
 
-export const LastExposure = {
-  name: "Last Exposure"
-};
-export const NewSymptoms = {
-  name: "New Symptoms"
-};
-export const SymptomsResolve = {
-  name: "Symptoms Resolve"
-};
-export const PositiveTest = {
-  name: "Positive Test"
-};
-export const NegativeTest = {
-  name: "Negative Test"
-};
+export enum CovidEventName {
+  LastCloseContact = "Most Recent Close Contact",
+  SymptomsStart = "Illness Onset",
+  SymptomsEnd = "Most Recent Symptoms",
+  PositiveTest = "Most Recent Positive Test",
+  NegativeTest = "Most Recent Negative Test"
+}
 
-export const AllEvents = [
-  LastExposure,
-  NewSymptoms,
-  SymptomsResolve,
-  PositiveTest,
-  NegativeTest
-];
+export interface CalculationResult {
+  person: Person;
+  date: Moment;
+}

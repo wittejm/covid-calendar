@@ -1,8 +1,8 @@
 import React from "react";
-import { PersonData, CovidEvent, AllEvents } from "./types";
+import { Person, CovidEventName } from "./types";
 
 interface Props {
-  members: PersonData[];
+  members: Person[];
   handleNewEvent: Function;
   handleNewPerson: Function;
   handleRemovePerson: Function;
@@ -14,7 +14,7 @@ export default class Household extends React.Component<Props> {
       <div className="">
         <div className="f3">Household</div>
         <div className="pa2">
-          {this.props.members.map((person: PersonData, i) => {
+          {this.props.members.map((person: Person, i) => {
             return (
               <div className="f4">
                 {person.name}
@@ -34,13 +34,15 @@ export default class Household extends React.Component<Props> {
                 )}
 
                 <div className="pl3">
-                  {AllEvents.map((event: CovidEvent, i) => {
-                    return (
-                      <div className="f5">
-                        <button>{"+ " + event.name}</button>
-                      </div>
-                    );
-                  })}
+                  {Object.values(CovidEventName).map(
+                    (name: CovidEventName, i) => {
+                      return (
+                        <div className="f5">
+                          <button>{"+ " + name}</button>
+                        </div>
+                      );
+                    }
+                  )}
                 </div>
               </div>
             );

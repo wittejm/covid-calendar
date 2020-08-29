@@ -1,12 +1,12 @@
 import React from "react";
 import GridView from "./GridView";
 import Household from "./Household";
-import { PersonData, CovidEvent } from "./types";
+import { Person } from "./types";
 
 interface Props {}
 
 interface State {
-  members: PersonData[];
+  members: Person[];
 }
 
 export default class App extends React.Component<Props, State> {
@@ -20,7 +20,7 @@ export default class App extends React.Component<Props, State> {
   };
 
   handleNewPerson = () => {
-    let updatedmembers: PersonData[] = JSON.parse(
+    let updatedmembers: Person[] = JSON.parse(
       JSON.stringify(this.state.members)
     );
     updatedmembers.push({
@@ -35,7 +35,7 @@ export default class App extends React.Component<Props, State> {
   handleNewEvent = () => {};
 
   handleRemovePerson = (index: number) => {
-    let updatedmembers: PersonData[] = JSON.parse(
+    let updatedmembers: Person[] = JSON.parse(
       JSON.stringify(this.state.members)
     );
     updatedmembers.splice(index, 1);
