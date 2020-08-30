@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PersonData, CovidEvent, CovidEventName } from "./types";
-import moment from "moment";
+import { parse, format } from "date-fns";
 
 interface Props {
   personIndex: number;
@@ -36,19 +36,19 @@ export default function Person(props: Props) {
     if (state.lastCloseContactDate) {
       covidEvents.push({
         name: CovidEventName.LastCloseContact,
-        date: moment(state.lastCloseContactDate, "MM-DD-YYYY")
+        date: parse(state.lastCloseContactDate, "MM/dd/yyyy", new Date())
       });
     }
     if (state.positiveTestDate) {
       covidEvents.push({
         name: CovidEventName.PositiveTest,
-        date: moment(state.positiveTestDate, "MM-DD-YYYY")
+        date: parse(state.positiveTestDate, "MM/dd/yyyy", new Date())
       });
     }
     if (state.firstSymptomsDate) {
       covidEvents.push({
         name: CovidEventName.SymptomsStart,
-        date: moment(state.firstSymptomsDate, "MM-DD-YYYY")
+        date: parse(state.firstSymptomsDate, "MM/dd/yyyy", new Date())
       });
     }
     const personData = {
@@ -166,7 +166,7 @@ export default function Person(props: Props) {
           {props.personData.covidEvents.map((event: CovidEvent, _: number) => {
             return (
               <div className="f5">
-                {event.name} {": "} {moment(event.date).format("MM/DD/YYYY")}
+                {event.name} {": "} {format(event.date, "MM/dd/yyyy")}
               </div>
             );
           })}

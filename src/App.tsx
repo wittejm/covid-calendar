@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import GridView from "./GridView";
 import Household from "./Household";
 import { PersonData, CovidEventName } from "./types";
-import moment from "moment";
+import { parseISO } from "date-fns";
 
 export default function App() {
   const initialMembers = [
@@ -11,18 +11,8 @@ export default function App() {
       covidEvents: [
         {
           name: CovidEventName.LastCloseContact,
-          date: moment("8-25-2020", "MM-DD-YYYY")
+          date: parseISO("2020-08-25")
         }
-        /*
-            {
-                name: CovidEventName.SymptomsStart,
-                date: moment("8-28-2020","MM-DD-YYYY")
-            },
-            {
-                name: CovidEventName.PositiveTest,
-                date: moment("8-29-2020","MM-DD-YYYY")
-            }
-            */
       ],
       isNewPerson: false,
       editing: false
@@ -32,7 +22,7 @@ export default function App() {
       covidEvents: [
         {
           name: CovidEventName.LastCloseContact,
-          date: moment("8-28-2020", "MM-DD-YYYY")
+          date: parseISO("2020-08-28")
         }
       ],
       isNewPerson: false,

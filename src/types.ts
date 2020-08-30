@@ -1,5 +1,3 @@
-import moment, { Moment } from "moment";
-
 export interface PersonData {
   name: string;
   covidEvents: CovidEvent[];
@@ -9,7 +7,7 @@ export interface PersonData {
 
 export interface CovidEvent {
   name: CovidEventName;
-  date: Moment;
+  date: Date;
 }
 
 export enum CovidEventName {
@@ -22,5 +20,5 @@ export enum CovidEventName {
 
 export interface CalculationResult {
   person: PersonData;
-  date: Moment;
+  date: Date;
 }

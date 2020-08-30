@@ -1,5 +1,6 @@
 import { computeIsolationPeriod } from "./calculator";
 import { PersonData } from "./types";
+import { isValid } from "date-fns";
 
 const kent: PersonData = {
   name: "Kent",
@@ -8,5 +9,6 @@ const kent: PersonData = {
 };
 
 test("Empty", () => {
-  expect(computeIsolationPeriod(kent)).toBe(undefined);
+  const date = computeIsolationPeriod(kent);
+  expect(isValid(date)).toBe(false);
 });
