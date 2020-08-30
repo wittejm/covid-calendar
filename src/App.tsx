@@ -44,28 +44,31 @@ export default function App() {
       updatedPersonData,
       ...members.slice(i + 1)
     ]);
+    setEditing(false);
   };
-
   const handleRemovePerson = (i: number) => {
     setMembers(members => [...members.slice(0, i), ...members.slice(i + 1)]);
+    setEditing(false);
   };
 
   return (
-    <main className="f7 f5-l">
-      <h1>Covid Quarantine Qualculator</h1>
+    <main className="mt5 f7 f5-m f4-l bg-white ba b-black">
+      <h1 className="ph3">Covid Quarantine Calculator</h1>
       <div className="flex-l">
-        <div className="w-70-l bw1 bg-light-gray pt5 pb5 pb7-l ph4 pr5-l">
+        <div className={"bw1 pb5 pb7-l pr5-l " + (editing ? "w-70-l" : "w-50-l")} >
           <div className="center mr0-l ml-auto-l">
             <Household
               members={members}
               handleAddNewPerson={handleAddNewPerson}
               handlePersonChanges={handlePersonChanges}
               handleRemovePerson={handleRemovePerson}
+              handleBeginEdit={() => {setEditing(true);}}
+              handleCancelEdit={() => {setEditing(false);}}
               editing={editing}
             />
           </div>
         </div>
-        <div className="w-30-l pt2 pt5-l pb2 ph2 pr4-l">
+        <div className={"pt2 pt5-l pb2 ph2 pr4-l " + (editing ? "w-30-l" : "w-50-l")}>
           <GridView members={members} />
         </div>
       </div>
