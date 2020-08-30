@@ -1,46 +1,88 @@
 import React from "react";
 import GridView from "./GridView";
 import Household from "./Household";
-import { Person } from "./types";
+import { PersonData, CovidEvent, CovidEventName } from "./types";
+import moment, { Moment } from "moment";
 
 interface Props {}
 
 interface State {
-  members: Person[];
+  members: PersonData[];
+  editing: boolean;
 }
 
 export default class App extends React.Component<Props, State> {
   state: State = {
     members: [
       {
-        name: `Person 1`,
-        covidEvents: []
+        name: `Alice`,
+        covidEvents: [
+          {
+            name: CovidEventName.LastCloseContact,
+            date: moment("8-25-2020", "MM-DD-YYYY")
+          }
+          /*
+            {
+                name: CovidEventName.SymptomsStart,
+                date: moment("8-28-2020","MM-DD-YYYY")
+            },
+            {
+                name: CovidEventName.PositiveTest,
+                date: moment("8-29-2020","MM-DD-YYYY")
+            }
+            */
+        ],
+        isNewPerson: false,
+        editing: false
+      },
+      {
+        name: `Bob`,
+        covidEvents: [
+          {
+            name: CovidEventName.LastCloseContact,
+            date: moment("8-28-2020", "MM-DD-YYYY")
+          }
+        ],
+        isNewPerson: false,
+        editing: false
       }
-    ]
+    ],
+    editing: false
   };
 
-  handleNewPerson = () => {
-    let updatedmembers: Person[] = JSON.parse(
+  handleAddNewPerson = () => {
+    let updatedMembers: PersonData[] = JSON.parse(
       JSON.stringify(this.state.members)
     );
-    updatedmembers.push({
+    updatedMembers.push({
       name: `Person ${this.state.members.length + 1}`,
-      covidEvents: []
+      covidEvents: [],
+      isNewPerson: true,
+      editing: true
     });
     this.setState({
-      members: updatedmembers
+      members: updatedMembers,
+      editing: true
     });
   };
 
-  handleNewEvent = () => {};
+  handlePersonChanges = (updatedPersonData: PersonData, index: number) => {
+    let updatedMembers: PersonData[] = JSON.parse(
+      JSON.stringify(this.state.members)
+    );
+    updatedMembers[index] = updatedPersonData;
+    this.setState({
+      members: updatedMembers
+    });
+  };
 
   handleRemovePerson = (index: number) => {
-    let updatedmembers: Person[] = JSON.parse(
+    let updatedMembers: PersonData[] = JSON.parse(
       JSON.stringify(this.state.members)
     );
-    updatedmembers.splice(index, 1);
+    updatedMembers.splice(index, 1);
     this.setState({
-      members: updatedmembers
+      members: updatedMembers
     });
   };
 
@@ -49,18 +91,19 @@ export default class App extends React.Component<Props, State> {
       <main className="f7 f5-l">
         <h1>Covid Quarantine Qualculator</h1>
         <div className="flex-l">
-          <div className="w-30-l bw1 bg-light-gray pt5 pb5 pb7-l ph4 pr5-l">
+          <div className="w-70-l bw1 bg-light-gray pt5 pb5 pb7-l ph4 pr5-l">
             <div className="center mr0-l ml-auto-l">
               <Household
                 members={this.state.members}
-                handleNewPerson={this.handleNewPerson}
+                handleAddNewPerson={this.handleAddNewPerson}
+                handlePersonChanges={this.handlePersonChanges}
                 handleRemovePerson={this.handleRemovePerson}
-                handleNewEvent={this.handleNewEvent}
+                editing={this.state.editing}
               />
             </div>
           </div>
-          <div className="w-70-l pt2 pt5-l pb2 ph2 ph6-l">
-            <GridView />
+          <div className="w-30-l pt2 pt5-l pb2 ph2 pr4-l">
+            <GridView members={this.state.members} />
           </div>
         </div>
       </main>

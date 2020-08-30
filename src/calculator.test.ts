@@ -1,9 +1,10 @@
 import { computeIsolationPeriod } from "./calculator";
-import { Person } from "./types";
+import { PersonData } from "./types";
 
-const kent: Person = {
+const kent: PersonData = {
   name: "Kent",
-  covidEvents: []
+  covidEvents: [],
+  isNewPerson: false
 };
 
 test("Empty", () => {
