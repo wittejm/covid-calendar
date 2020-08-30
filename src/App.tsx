@@ -1,114 +1,81 @@
-import React from "react";
+import React, { useState } from "react";
 import GridView from "./GridView";
 import Household from "./Household";
-import { PersonData, CovidEvent, CovidEventName } from "./types";
-import moment, { Moment } from "moment";
+import { PersonData, CovidEventName } from "./types";
+import { parseISO } from "date-fns";
 
-interface Props {}
+export default function App() {
+  const initialMembers = [
+    {
+      name: `Alice`,
+      covidEvents: [
+        {
+          name: CovidEventName.LastCloseContact,
+          date: parseISO("2020-08-25")
+        }
+      ],
+      isNewPerson: false,
+      editing: false
+    },
+    {
+      name: `Bob`,
+      covidEvents: [
+        {
+          name: CovidEventName.LastCloseContact,
+          date: parseISO("2020-08-28")
+        }
+      ],
+      isNewPerson: false,
+      editing: false
+    }
+  ];
+  const [members, setMembers] = useState(initialMembers);
+  const [editing, setEditing] = useState(false);
 
-interface State {
-  members: PersonData[];
-  editing: boolean;
-}
-
-export default class App extends React.Component<Props, State> {
-  state: State = {
-    members: [
-      {
-        name: `Alice`,
-        covidEvents: [
-          {
-            name: CovidEventName.LastCloseContact,
-            date: moment("8-25-2020", "MM-DD-YYYY")
-          }
-          /*
-            {
-                name: CovidEventName.SymptomsStart,
-                date: moment("8-28-2020","MM-DD-YYYY")
-            },
-            {
-                name: CovidEventName.PositiveTest,
-                date: moment("8-29-2020","MM-DD-YYYY")
-            }
-            */
-        ],
-        isNewPerson: false,
-        editing: false
-      },
-      {
-        name: `Bob`,
-        covidEvents: [
-          {
-            name: CovidEventName.LastCloseContact,
-            date: moment("8-28-2020", "MM-DD-YYYY")
-          }
-        ],
-        isNewPerson: false,
-        editing: false
-      }
-    ],
-    editing: false
-  };
-
-  handleAddNewPerson = () => {
-    let updatedMembers: PersonData[] = JSON.parse(
-      JSON.stringify(this.state.members)
-    );
-    updatedMembers.push({
-      name: `Person ${this.state.members.length + 1}`,
+  const handleAddNewPerson = () => {
+    const newPerson = {
+      name: `Person ${members.length + 1}`,
       covidEvents: [],
       isNewPerson: true,
       editing: true
-    });
-    this.setState({
-      members: updatedMembers,
-      editing: true
-    });
+    };
+    setMembers(members => [...members, newPerson]);
+    setEditing(true);
   };
 
-  handlePersonChanges = (updatedPersonData: PersonData, index: number) => {
-    let updatedMembers: PersonData[] = JSON.parse(
-      JSON.stringify(this.state.members)
-    );
-    updatedMembers[index] = updatedPersonData;
-    this.setState({
-      members: updatedMembers
-    });
+  const handlePersonChanges = (updatedPersonData: PersonData, i: number) => {
+    setMembers(members => [
+      ...members.slice(0, i),
+      updatedPersonData,
+      ...members.slice(i + 1)
+    ]);
   };
 
-  handleRemovePerson = (index: number) => {
-    let updatedMembers: PersonData[] = JSON.parse(
-      JSON.stringify(this.state.members)
-    );
-    updatedMembers.splice(index, 1);
-    this.setState({
-      members: updatedMembers
-    });
+  const handleRemovePerson = (i: number) => {
+    setMembers(members => [...members.slice(0, i), ...members.slice(i + 1)]);
   };
 
-  render() {
-    return (
-      <main className="f7 f5-l">
-        <h1>Covid Quarantine Qualculator</h1>
-        <div className="flex-l">
-          <div className="w-70-l bw1 bg-light-gray pt5 pb5 pb7-l ph4 pr5-l">
-            <div className="center mr0-l ml-auto-l">
-              <Household
-                members={this.state.members}
-                handleAddNewPerson={this.handleAddNewPerson}
-                handlePersonChanges={this.handlePersonChanges}
-                handleRemovePerson={this.handleRemovePerson}
-                editing={this.state.editing}
-              />
-            </div>
-          </div>
-          <div className="w-30-l pt2 pt5-l pb2 ph2 pr4-l">
-            <GridView members={this.state.members} />
+  return (
+    <main className="f7 f5-l">
+      <h1>Covid Quarantine Qualculator</h1>
+      <div className="flex-l">
+        <div className="w-70-l bw1 bg-light-gray pt5 pb5 pb7-l ph4 pr5-l">
+          <div className="center mr0-l ml-auto-l">
+            <Household
+              members={members}
+              handleAddNewPerson={handleAddNewPerson}
+              handlePersonChanges={handlePersonChanges}
+              handleRemovePerson={handleRemovePerson}
+              editing={editing}
+            />
           </div>
         </div>
-      </main>
-      // Persons on the left
-      // Calendar on the right.
-    );
-  }
+        <div className="w-30-l pt2 pt5-l pb2 ph2 pr4-l">
+          <GridView members={members} />
+        </div>
+      </div>
+    </main>
+    // Persons on the left
+    // Calendar on the right.
+  );
 }

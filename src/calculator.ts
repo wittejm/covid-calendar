@@ -1,22 +1,22 @@
 import { CalculationResult, CovidEventName, PersonData } from "./types";
 import * as _ from "lodash";
-import moment, { Moment } from "moment";
+import { addDays, max, min, isValid } from "date-fns";
 
 export function computeHouseHoldQuarantinePeriod(
   household: PersonData[]
 ): CalculationResult[] {
   return household.map((person: PersonData, i: number) => {
     const isolationPeriod = computeIsolationPeriod(person);
-    if (isolationPeriod) {
+    if (isValid(isolationPeriod)) {
       return { person: person, date: isolationPeriod };
     } else {
       // TODO:
-      return { person: person, date: moment() };
+      return { person: person, date: new Date() };
     }
   });
 }
 
-export function computeIsolationPeriod(person: PersonData): Moment | undefined {
+export function computeIsolationPeriod(person: PersonData): Date {
   const illnessOnset = _.chain(person.covidEvents)
     .filter(event => {
       return (
@@ -25,9 +25,9 @@ export function computeIsolationPeriod(person: PersonData): Moment | undefined {
       );
     })
     .map("date")
-    .thru(dates => (_.isEmpty(dates) ? undefined : moment.min(dates)))
+    .thru(dates => min(dates))
     .value();
-  const tenDaysAfterOnset = illnessOnset?.add(10, "days");
+  const tenDaysAfterOnset = illnessOnset && addDays(illnessOnset, 10);
   const symptomsEnd = _.chain(person.covidEvents)
     .filter(event => {
       return event.name === CovidEventName.SymptomsEnd;
@@ -35,9 +35,9 @@ export function computeIsolationPeriod(person: PersonData): Moment | undefined {
     .map("date")
     .first()
     .value();
-  const dayAfterSymptomsEnd = symptomsEnd?.add(1, "days");
+  const dayAfterSymptomsEnd = symptomsEnd && addDays(symptomsEnd, 1);
   return _.chain([tenDaysAfterOnset, dayAfterSymptomsEnd])
     .compact()
-    .thru(dates => (_.isEmpty(dates) ? undefined : moment.max(dates)))
+    .thru(dates => max(dates))
     .value();
 }

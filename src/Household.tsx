@@ -1,5 +1,5 @@
-import React from "react";
-import { PersonData, CovidEventName, CovidEvent } from "./types";
+import React, { useState } from "react";
+import { PersonData } from "./types";
 import Person from "./Person";
 
 interface Props {
@@ -9,62 +9,55 @@ interface Props {
   handleRemovePerson: Function;
   editing: boolean;
 }
-interface State {
-  editing: boolean;
-}
 
-export default class Household extends React.Component<Props, State> {
-  state = {
-    editing: this.props.editing
-  };
+export default function Household(props: Props) {
+  const [editing, setEditing] = useState(false);
 
-  render() {
-    return (
-      <div className="">
-        <div className="f3">Household</div>
-        <div className="pa2">
-          {this.props.members.map((personData: PersonData, i) => {
-            return (
-              <Person
-                personIndex={i}
-                personData={personData}
-                submitPersonData={(
-                  updatedPersonData: PersonData,
-                  index: number
-                ) => {
-                  this.setState({ editing: false });
-                  this.props.handlePersonChanges(updatedPersonData, index);
-                }}
-                handleRemovePerson={() => {
-                  this.props.handleRemovePerson(i);
-                  this.setState({ editing: false });
-                }}
-                handleBeginEdit={() => {
-                  this.setState({ editing: true });
-                }}
-                handleCancelEdit={() => {
-                  if (personData.isNewPerson) {
-                    this.props.handleRemovePerson(i);
-                  }
-                  this.setState({ editing: false });
-                }}
-                editingHousehold={this.state.editing}
-              />
-            );
-          })}
-          {!this.state.editing && (
-            <button
-              className="pa2 f5 fw6"
-              onClick={() => {
-                this.props.handleAddNewPerson();
-                this.setState({ editing: true });
+  return (
+    <div className="">
+      <div className="f3">Household</div>
+      <div className="pa2">
+        {props.members.map((personData: PersonData, i) => {
+          return (
+            <Person
+              personIndex={i}
+              personData={personData}
+              submitPersonData={(
+                updatedPersonData: PersonData,
+                index: number
+              ) => {
+                setEditing(false);
+                props.handlePersonChanges(updatedPersonData, index);
               }}
-            >
-              Add Person
-            </button>
-          )}
-        </div>
+              handleRemovePerson={() => {
+                props.handleRemovePerson(i);
+                setEditing(false);
+              }}
+              handleBeginEdit={() => {
+                setEditing(true);
+              }}
+              handleCancelEdit={() => {
+                if (personData.isNewPerson) {
+                  props.handleRemovePerson(i);
+                }
+                setEditing(false);
+              }}
+              editingHousehold={editing}
+            />
+          );
+        })}
+        {!editing && (
+          <button
+            className="pa2 f5 fw6"
+            onClick={() => {
+              props.handleAddNewPerson();
+              setEditing(true);
+            }}
+          >
+            Add Person
+          </button>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 }

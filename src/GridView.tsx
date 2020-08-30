@@ -3,7 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
 import { PersonData, CalculationResult } from "./types";
-import moment, { Moment } from "moment";
+import { format } from "date-fns";
 
 interface Props {
   members: PersonData[];
@@ -19,7 +19,7 @@ export default class GridView extends React.Component<Props> {
             return (
               <div className="p32">
                 {result.person.name} {" quarantined until: "}{" "}
-                {moment(result.date).format("MM/DD/YYYY")}
+                {format(result.date, "MM/dd/yyyy")}
               </div>
             );
           }
