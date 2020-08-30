@@ -1,11 +1,11 @@
-import { CalculationResult, CovidEventName, Person } from "./types";
+import { CalculationResult, CovidEventName, PersonData } from "./types";
 import * as _ from "lodash";
 import moment, { Moment } from "moment";
 
-function computeHouseHoldQuarantinePeriod(
-  household: Person[]
+export function computeHouseHoldQuarantinePeriod(
+  household: PersonData[]
 ): CalculationResult[] {
-  return household.map((person: Person, i: number) => {
+  return household.map((person: PersonData, i: number) => {
     const isolationPeriod = computeIsolationPeriod(person);
     if (isolationPeriod) {
       return { person: person, date: isolationPeriod };
@@ -16,7 +16,7 @@ function computeHouseHoldQuarantinePeriod(
   });
 }
 
-export function computeIsolationPeriod(person: Person): Moment | undefined {
+export function computeIsolationPeriod(person: PersonData): Moment | undefined {
   const illnessOnset = _.chain(person.covidEvents)
     .filter(event => {
       return (

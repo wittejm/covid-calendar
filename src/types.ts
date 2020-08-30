@@ -1,8 +1,10 @@
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 
-export interface Person {
+export interface PersonData {
   name: string;
   covidEvents: CovidEvent[];
+  isNewPerson: boolean;
+  editing: boolean;
 }
 
 export interface CovidEvent {
@@ -19,6 +21,6 @@ export enum CovidEventName {
 }
 
 export interface CalculationResult {
-  person: Person;
+  person: PersonData;
   date: Moment;
 }
