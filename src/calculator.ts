@@ -17,24 +17,9 @@ export function computeHouseHoldQuarantinePeriod(
 }
 
 export function computeIsolationPeriod(person: PersonData): Date {
-  const illnessOnset = _.chain(person.covidEvents)
-    .filter(event => {
-      return (
-        event.name === CovidEventName.SymptomsStart ||
-        event.name === CovidEventName.PositiveTest
-      );
-    })
-    .map("date")
-    .thru(dates => min(dates))
-    .value();
+  const illnessOnset = person.covidEvents.SymptomsStart && person.covidEvents.SymptomsStart;
   const tenDaysAfterOnset = illnessOnset && addDays(illnessOnset, 10);
-  const symptomsEnd = _.chain(person.covidEvents)
-    .filter(event => {
-      return event.name === CovidEventName.SymptomsEnd;
-    })
-    .map("date")
-    .first()
-    .value();
+  const symptomsEnd = person.covidEvents.SymptomsEnd && person.covidEvents.SymptomsEnd;
   const dayAfterSymptomsEnd = symptomsEnd && addDays(symptomsEnd, 1);
   return _.chain([tenDaysAfterOnset, dayAfterSymptomsEnd])
     .compact()

@@ -5,37 +5,32 @@ import { PersonData, CovidEventName } from "./types";
 import { parseISO } from "date-fns";
 
 export default function App() {
-  const initialMembers = [
+  const initialMembers : PersonData[] = [
     {
       name: `Alice`,
-      covidEvents: [
-        {
-          name: CovidEventName.LastCloseContact,
-          date: parseISO("2020-08-25")
-        }
-      ],
+      covidEvents: {
+        LastCloseContact: parseISO("2020-08-25")
+      },
       isNewPerson: false,
       editing: false
     },
     {
       name: `Bob`,
-      covidEvents: [
-        {
-          name: CovidEventName.LastCloseContact,
-          date: parseISO("2020-08-28")
-        }
-      ],
+      covidEvents: {
+        LastCloseContact: parseISO("2020-08-28")
+      },
       isNewPerson: false,
       editing: false
     }
   ];
+
   const [members, setMembers] = useState(initialMembers);
   const [editing, setEditing] = useState(false);
 
   const handleAddNewPerson = () => {
     const newPerson = {
       name: `Person ${members.length + 1}`,
-      covidEvents: [],
+      covidEvents: {},
       isNewPerson: true,
       editing: true
     };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PersonData, CovidEvent, CovidEventName } from "./types";
+import { PersonData, CovidEvents, CovidEventName } from "./types";
 import { parse, format } from "date-fns";
 
 interface Props {
@@ -13,12 +13,16 @@ interface Props {
 }
 
 export default function Person(props: Props) {
+  const lastCloseContactDate = props.personData.covidEvents.LastCloseContact ? format(props.personData.covidEvents.LastCloseContact, "M/dd/yyyy") : "";
+  const positiveTestDate = props.personData.covidEvents.PositiveTest ? format(props.personData.covidEvents.PositiveTest, "M/dd/yyyy") : "";
+  const firstSymptomsDate = props.personData.covidEvents.SymptomsStart ? format(props.personData.covidEvents.SymptomsStart, "M/dd/yyyy") : "";
+  const symptomsResolved = props.personData.covidEvents.SymptomsEnd ? format(props.personData.covidEvents.SymptomsEnd, "M/dd/yyyy") : "";
   const initialState = {
     name: props.personData.name,
-    lastCloseContactDate: "",
-    positiveTestDate: "",
-    firstSymptomsDate: "",
-    symptomsResolved: "",
+    lastCloseContactDate,
+    positiveTestDate,
+    firstSymptomsDate,
+    symptomsResolved,
     exposuresInHousehold: null
   };
   const [state, setState] = useState(initialState);
@@ -32,25 +36,17 @@ export default function Person(props: Props) {
   };
 
   const handleSubmitClick = () => {
-    let covidEvents: CovidEvent[] = [];
+    let covidEvents: CovidEvents = {};
     if (state.lastCloseContactDate) {
-      covidEvents.push({
-        name: CovidEventName.LastCloseContact,
-        date: parse(state.lastCloseContactDate, "MM/dd/yyyy", new Date())
-      });
+      covidEvents.LastCloseContact = parse(state.lastCloseContactDate, "M/dd/yyyy", new Date());
     }
     if (state.positiveTestDate) {
-      covidEvents.push({
-        name: CovidEventName.PositiveTest,
-        date: parse(state.positiveTestDate, "MM/dd/yyyy", new Date())
-      });
+      covidEvents.PositiveTest = parse(state.positiveTestDate, "M/dd/yyyy", new Date());
     }
     if (state.firstSymptomsDate) {
-      covidEvents.push({
-        name: CovidEventName.SymptomsStart,
-        date: parse(state.firstSymptomsDate, "MM/dd/yyyy", new Date())
-      });
+      covidEvents.SymptomsStart = parse(state.firstSymptomsDate, "M/dd/yyyy", new Date());
     }
+
     const personData = {
       name: state.name,
       covidEvents: covidEvents,
@@ -163,10 +159,10 @@ export default function Person(props: Props) {
         </div>
       ) : (
         <div className="pl3">
-          {props.personData.covidEvents.map((event: CovidEvent, _: number) => {
+          {Object.entries(props.personData.covidEvents).map((entry: [string, Date] , _: number) => {
             return (
               <div className="f5">
-                {event.name} {": "} {format(event.date, "MM/dd/yyyy")}
+                {entry[0]} {": "} {format(entry[1], "MM/dd/yyyy")}
               </div>
             );
           })}

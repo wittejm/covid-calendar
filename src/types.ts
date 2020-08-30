@@ -1,13 +1,8 @@
 export interface PersonData {
   name: string;
-  covidEvents: CovidEvent[];
+  covidEvents: CovidEvents;
   isNewPerson: boolean;
   editing: boolean;
-}
-
-export interface CovidEvent {
-  name: CovidEventName;
-  date: Date;
 }
 
 export enum CovidEventName {
@@ -15,7 +10,18 @@ export enum CovidEventName {
   SymptomsStart = "Illness Onset",
   SymptomsEnd = "Most Recent Symptoms",
   PositiveTest = "Most Recent Positive Test",
-  NegativeTest = "Most Recent Negative Test"
+  NegativeTest = "Most Recent Negative Test",
+  InHouseExposure = "In-house Exposure"
+}
+
+export interface CovidEvents {
+  LastCloseContact? : Date;
+  SymptomsStart? : Date;
+  SymptomsEnd? : Date;
+  PositiveTest? : Date;
+  NegativeTest? : Date;
+  InHouseExposure? : {personName: string, date: Date}[];
+
 }
 
 export interface CalculationResult {
