@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { PersonData, CovidEvent, CovidEventName } from "./types";
+import { PersonData, CovidEvents, CovidEventName } from "./types";
 import { parse, format } from "date-fns";
 
 interface Props {
   personIndex: number;
-  personData: PersonData;
+  householdPersonData: PersonData[];
   submitPersonData: Function;
   handleCancelEdit: Function;
   handleBeginEdit: Function;
@@ -13,16 +13,22 @@ interface Props {
 }
 
 export default function Person(props: Props) {
+  const personData = props.householdPersonData[props.personIndex];
+
+  const lastCloseContactDate = personData.covidEvents.LastCloseContact ? format(personData.covidEvents.LastCloseContact, "M/dd/yyyy") : "";
+  const positiveTestDate = personData.covidEvents.PositiveTest ? format(personData.covidEvents.PositiveTest, "M/dd/yyyy") : "";
+  const firstSymptomsDate = personData.covidEvents.SymptomsStart ? format(personData.covidEvents.SymptomsStart, "M/dd/yyyy") : "";
+  const symptomsResolved = personData.covidEvents.SymptomsEnd ? format(personData.covidEvents.SymptomsEnd, "M/dd/yyyy") : "";
   const initialState = {
-    name: props.personData.name,
-    lastCloseContactDate: "",
-    positiveTestDate: "",
-    firstSymptomsDate: "",
-    symptomsResolved: "",
+    name: personData.name,
+    lastCloseContactDate,
+    positiveTestDate,
+    firstSymptomsDate,
+    symptomsResolved,
     exposuresInHousehold: null
   };
   const [state, setState] = useState(initialState);
-  const [editing, setEditing] = useState(props.personData.editing);
+  const [editing, setEditing] = useState(props.editingHousehold);
 
   const handleChange = (e: React.BaseSyntheticEvent) => {
     const target = e.target;
@@ -32,38 +38,31 @@ export default function Person(props: Props) {
   };
 
   const handleSubmitClick = () => {
-    let covidEvents: CovidEvent[] = [];
+    let covidEvents: CovidEvents = {};
     if (state.lastCloseContactDate) {
-      covidEvents.push({
-        name: CovidEventName.LastCloseContact,
-        date: parse(state.lastCloseContactDate, "MM/dd/yyyy", new Date())
-      });
+      covidEvents.LastCloseContact = parse(state.lastCloseContactDate, "M/dd/yyyy", new Date());
     }
     if (state.positiveTestDate) {
-      covidEvents.push({
-        name: CovidEventName.PositiveTest,
-        date: parse(state.positiveTestDate, "MM/dd/yyyy", new Date())
-      });
+      covidEvents.PositiveTest = parse(state.positiveTestDate, "M/dd/yyyy", new Date());
     }
     if (state.firstSymptomsDate) {
-      covidEvents.push({
-        name: CovidEventName.SymptomsStart,
-        date: parse(state.firstSymptomsDate, "MM/dd/yyyy", new Date())
-      });
+      covidEvents.SymptomsStart = parse(state.firstSymptomsDate, "M/dd/yyyy", new Date());
     }
+
     const personData = {
       name: state.name,
       covidEvents: covidEvents,
       isNewPerson: false,
       editing: false
     };
-    props.submitPersonData(personData, props.personIndex);
     setEditing(false);
+    props.submitPersonData(personData, props.personIndex);
   };
 
   return (
-    <div className="f4 ba bw1 pa2">
-      {props.personData.name}{" "}
+    <div className={"f4 ma2 br4 pv2 bg-light-blue"}  >
+      <div className="pl5 fw5">
+      {personData.name}{" "}
       {!props.editingHousehold && (
         <button
           onClick={() => {
@@ -75,32 +74,11 @@ export default function Person(props: Props) {
           <span aria-hidden="true" className="pl2 f5 fas fa-pen"></span>
         </button>
       )}
+      </div>
+      <div className = {(editing ? "" : "pl5")}>
       {editing ? (
         <div className="pa3">
-          <button
-            onClick={() => {
-              props.handleCancelEdit();
-              setEditing(false);
-            }}
-          >
-            <span className="visually-hidden">Cancel</span>
-            {props.personData.isNewPerson ? "Cancel Add" : "Cancel Edit"}
-            <i aria-hidden="true" className="pl2 fas fa-times-circle gray"></i>
-          </button>
-          {!props.personData.isNewPerson && (
-            <button
-              onClick={() => {
-                props.handleRemovePerson();
-              }}
-            >
-              <span className="visually-hidden">Remove Person</span>
-              Remove Person
-              <i
-                aria-hidden="true"
-                className="pl2 fas fa-times-circle gray"
-              ></i>
-            </button>
-          )}
+
           <div>
             Name:
             <input
@@ -112,9 +90,12 @@ export default function Person(props: Props) {
             />
           </div>
 
-          <div>
+          <div className="pa2">
+
+            <p className="pb2">
             When is the last date you have been exposed to someone covid
             positive outside the household?
+            </p>
             <input
               value={state.lastCloseContactDate}
               name="lastCloseContactDate"
@@ -155,23 +136,53 @@ export default function Person(props: Props) {
             />
           </div>
           <button
-            className="fw5 pa2 bg-green white bg-animate hover-bg-light-green"
+            className="fw5 pa2 bg-green white bg-animate hover-bg-dark-green"
             onClick={handleSubmitClick}
           >
-            Submit Person Information
+            {personData.isNewPerson ? "Submit" : "Update"}
           </button>
+          <button
+            className="ma2 fw5 pa2 bg-yellow white bg-animate hover-bg-light-yellow"
+            onClick={() => {
+              props.handleCancelEdit();
+              setEditing(false);
+            }}
+          >
+            <span className="visually-hidden">Cancel</span>
+            {personData.isNewPerson ? "Cancel Add" : "Cancel Edit"}
+            <i aria-hidden="true" className="pl2 fas fa-times-circle gray"></i>
+          </button>
+          {!personData.isNewPerson && (
+            <button
+              className="ma2 fw5 pa2 bg-washed-red bg-animate hover-bg-light-red"
+              onClick={() => {
+
+                props.handleRemovePerson();
+                setEditing(false);
+
+              }}
+            >
+              <span className="visually-hidden">Remove</span>
+              Remove
+              <i
+                aria-hidden="true"
+                className="pl2 fas fa-times-circle gray"
+              ></i>
+            </button>
+          )}
         </div>
       ) : (
         <div className="pl3">
-          {props.personData.covidEvents.map((event: CovidEvent, _: number) => {
+          {Object.entries(personData.covidEvents).map((entry: [string, Date] , _: number) => {
             return (
               <div className="f5">
-                {event.name} {": "} {format(event.date, "MM/dd/yyyy")}
+                {entry[0]} {": "} {format(entry[1], "MM/dd/yyyy")}
               </div>
             );
           })}
         </div>
       )}
+    </div>
     </div>
   );
 }
