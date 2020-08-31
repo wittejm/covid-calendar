@@ -15,16 +15,20 @@ export enum CovidEventName {
 }
 
 export interface CovidEvents {
-  LastCloseContact? : Date;
-  SymptomsStart? : Date;
-  SymptomsEnd? : Date;
-  PositiveTest? : Date;
-  NegativeTest? : Date;
-  InHouseExposure? : {personName: string, date: Date}[];
+  LastCloseContact?: Date;
+  SymptomsStart?: Date;
+  SymptomsEnd?: Date;
+  PositiveTest?: Date;
+  NegativeTest?: Date;
+  InHouseExposure?: InHouseExposureEvents;
+}
 
+export interface InHouseExposureEvents {
+  [personName: string]: Date;
 }
 
 export interface CalculationResult {
   person: PersonData;
   date: Date;
+  infected?: boolean;
 }
