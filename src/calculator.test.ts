@@ -4,8 +4,9 @@ import { isValid } from "date-fns";
 
 const kent: PersonData = {
   name: "Kent",
-  covidEvents: [],
-  isNewPerson: false
+  covidEvents: {},
+  isNewPerson: false,
+  editing: false
 };
 
 test("Empty", () => {

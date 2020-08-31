@@ -1,4 +1,4 @@
-import { CalculationResult, CovidEventName, PersonData } from "./types";
+import { CalculationResult, PersonData } from "./types";
 import * as _ from "lodash";
 import { addDays, max, min, isValid } from "date-fns";
 
@@ -17,9 +17,15 @@ export function computeHouseHoldQuarantinePeriod(
 }
 
 export function computeIsolationPeriod(person: PersonData): Date {
-  const illnessOnset = person.covidEvents.SymptomsStart && person.covidEvents.SymptomsStart;
+  const illnessOnset = _.chain([
+    person.covidEvents.SymptomsStart,
+    person.covidEvents.PositiveTest
+  ])
+    .compact()
+    .thru(dates => min(dates))
+    .value();
   const tenDaysAfterOnset = illnessOnset && addDays(illnessOnset, 10);
-  const symptomsEnd = person.covidEvents.SymptomsEnd && person.covidEvents.SymptomsEnd;
+  const symptomsEnd = person.covidEvents.SymptomsEnd;
   const dayAfterSymptomsEnd = symptomsEnd && addDays(symptomsEnd, 1);
   return _.chain([tenDaysAfterOnset, dayAfterSymptomsEnd])
     .compact()
