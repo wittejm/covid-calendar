@@ -1,4 +1,7 @@
-import { computeIsolationPeriod } from "./calculator";
+import {
+  computeHouseHoldQuarantinePeriod,
+  computeIsolationPeriod
+} from "./calculator";
 import { PersonData } from "./types";
 import { isValid, parseISO } from "date-fns";
 
@@ -59,6 +62,25 @@ const personC: PersonData = {
   editing: false
 };
 
+const personD: PersonData = {
+  name: "Person D",
+  covidEvents: {
+    InHouseExposure: { "Person A": parseISO("2020-01-05") }
+  },
+  isNewPerson: false,
+  editing: false
+};
+
+const personE: PersonData = {
+  name: "Person E",
+  covidEvents: {
+    PositiveTest: parseISO("2020-01-01"),
+    InHouseExposure: { "Person D": parseISO("2020-01-05") }
+  },
+  isNewPerson: false,
+  editing: false
+};
+
 test("Empty", () => {
   const date = computeIsolationPeriod(empty);
   expect(isValid(date)).toBe(false);
@@ -83,4 +105,20 @@ test("Isolation Period makes use of symptoms end", () => {
 
   const date2 = computeIsolationPeriod(personC);
   expect(date2).toStrictEqual(parseISO("2020-01-11"));
+});
+
+test("Household calculation for one infected and one caretaker", () => {
+  const calcluations = computeHouseHoldQuarantinePeriod([personA, empty]);
+  expect(calcluations[0].date).toStrictEqual(parseISO("2020-01-11"));
+  expect(calcluations[1].date).toStrictEqual(parseISO("2020-01-25"));
+});
+
+test("Household calculation for one infected and isolated peer", () => {
+  const calcluations = computeHouseHoldQuarantinePeriod([personA, personD]);
+  expect(calcluations[0].date).toStrictEqual(parseISO("2020-01-11"));
+  expect(calcluations[1].date).toStrictEqual(parseISO("2020-01-19"));
+
+  const calcluations2 = computeHouseHoldQuarantinePeriod([personE, personD]);
+  expect(calcluations2[0].date).toStrictEqual(parseISO("2020-01-11"));
+  expect(calcluations2[1].date).toStrictEqual(parseISO("2020-01-19"));
 });

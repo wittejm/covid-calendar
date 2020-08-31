@@ -5,15 +5,54 @@ import { addDays, max, min, isValid } from "date-fns";
 export function computeHouseHoldQuarantinePeriod(
   household: PersonData[]
 ): CalculationResult[] {
-  return household.map((person: PersonData, i: number) => {
-    const isolationPeriod = computeIsolationPeriod(person);
-    if (isValid(isolationPeriod)) {
-      return { person: person, date: isolationPeriod };
-    } else {
-      // TODO:
-      return { person: person, date: new Date() };
+  const [infected, quarantined] = _.chain(household)
+    .map((person: PersonData) => {
+      const isolationPeriod = computeIsolationPeriod(person);
+      if (isValid(isolationPeriod)) {
+        return { person: person, date: isolationPeriod, infected: true };
+      } else {
+        return { person: person, date: new Date(), infected: false };
+      }
+    })
+    .partition("infected")
+    .value();
+  const quarantinedCalculations: CalculationResult[] = _.map(
+    quarantined,
+    calculation => {
+      const person = calculation.person;
+      const exposureEvents = _.pick(
+        person.covidEvents.InHouseExposure,
+        _.map(infected, infectedCalculation => infectedCalculation.person.name)
+      );
+      const moreExposureEvents = _.map(infected, infectedCalculation => {
+        const infectedPerson = infectedCalculation.person;
+        const exposureDate =
+          infectedPerson.covidEvents.InHouseExposure?.[person.name];
+        if (exposureDate) {
+          return { [infectedPerson.name]: exposureDate };
+        } else {
+          return { [infectedPerson.name]: infectedCalculation.date };
+        }
+      });
+      const mergedExposureEvents = _.assign(
+        {},
+        ...moreExposureEvents,
+        exposureEvents
+      );
+      const exposureDates = _.values(mergedExposureEvents);
+      const latestStatedExposureDate = person.covidEvents.LastCloseContact;
+      const latestExposureDate = latestStatedExposureDate
+        ? max([...exposureDates, latestStatedExposureDate])
+        : max(exposureDates);
+      const fourteenDaysFromLastExposure = addDays(latestExposureDate, 14);
+      return {
+        person: person,
+        date: fourteenDaysFromLastExposure,
+        infected: false
+      };
     }
-  });
+  );
+  return [...infected, ...quarantinedCalculations];
 }
 
 export function computeIsolationPeriod(person: PersonData): Date {
