@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import GridView from "./GridView";
 import Household from "./Household";
-import { PersonData, CovidEventName } from "./types";
+import { PersonData } from "./types";
 import { parseISO } from "date-fns";
 
 export default function App() {

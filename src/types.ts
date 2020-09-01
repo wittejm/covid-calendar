@@ -20,7 +20,7 @@ export interface CovidEvents {
   SymptomsEnd?: Date;
   PositiveTest?: Date;
   NegativeTest?: Date;
-  InHouseExposure: InHouseExposureEvents;
+  InHouseExposure?: InHouseExposureEvents;
 }
 
 export interface InHouseExposureEvents {

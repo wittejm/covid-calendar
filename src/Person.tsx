@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { PersonData, CovidEvents, CovidEventName } from "./types";
+import { PersonData, CovidEvents, InHouseExposureEvents } from "./types";
 import { parse, format } from "date-fns";
+import { Map } from "immutable";
 
 interface Props {
   personIndex: number;
@@ -28,24 +29,24 @@ export default function Person(props: Props) {
     ? format(personData.covidEvents.SymptomsEnd, "M/dd/yyyy")
     : "";
 
-  let initialInHouseExposureFields: { [key: string]: string } = {};
-  {
-    Object.entries(personData.covidEvents.InHouseExposure).map(
-      (entry: [string, Date]) => {
-        initialInHouseExposureFields[entry[0]] = format(entry[1], "MM/dd/yyyy");
-      }
-    );
-  }
+  let initialInHouseExposureFields: Map<string, string> = personData.covidEvents
+    .InHouseExposure
+    ? Map(personData.covidEvents.InHouseExposure).map((date: Date) =>
+        format(date, "MM/dd/yyyy")
+      )
+    : Map();
 
   const initialState = {
     name: personData.name,
     lastCloseContactDate,
     positiveTestDate,
     firstSymptomsDate,
-    symptomsResolved,
-    inHouseExposureFields: initialInHouseExposureFields
+    symptomsResolved
   };
   const [state, setState] = useState(initialState);
+  const [inHouseExposureFields, setInHouseExposureFields] = useState(
+    initialInHouseExposureFields
+  );
   const [editing, setEditing] = useState(props.editingHousehold);
 
   const handleChange = (e: React.BaseSyntheticEvent) => {
@@ -78,15 +79,9 @@ export default function Person(props: Props) {
         new Date()
       );
     }
-    let inHouseExposures: { [name: string]: Date } = {};
-    {
-      Object.entries(state.inHouseExposureFields).map(
-        (entry: [string, string]) => {
-          inHouseExposures[entry[0]] = parse(entry[1], "M/dd/yyyy", new Date());
-        }
-      );
-    }
-    covidEvents.InHouseExposure = inHouseExposures;
+    covidEvents.InHouseExposure = inHouseExposureFields
+      .map((date: string) => parse(date, "M/dd/yyyy", new Date()))
+      .toObject();
     const personData = {
       name: state.name,
       covidEvents: covidEvents,
@@ -114,6 +109,32 @@ export default function Person(props: Props) {
     .map((person, index) => {
       return person.name;
     });
+
+  function renderCovidEvent(name: string, date: Date) {
+    return (
+      <div className="f5">
+        {name} {": "} {format(date, "MM/dd/yyyy")}
+      </div>
+    );
+  }
+
+  function renderInHouseExposureEvents(
+    inHouseExposureEvents: InHouseExposureEvents
+  ) {
+    if (inHouseExposureEvents) {
+      return Object.entries(inHouseExposureEvents).map(
+        ([name, date]: [string, Date]) => {
+          return (
+            <div className="f5">
+              Exposed to {name} {": "} {format(date, "MM/dd/yyyy")}
+            </div>
+          );
+        }
+      );
+    } else {
+      return <></>;
+    }
+  }
 
   return (
     <div className={"f4 ma2 br4 pv2 bg-light-blue"}>
@@ -206,19 +227,15 @@ export default function Person(props: Props) {
                   </p>
                   <input
                     className="ml3 w4"
-                    value={state.inHouseExposureFields[personName] || ""}
+                    value={inHouseExposureFields.get(personName) || ""}
                     name={`crossExposure-${index}`}
                     id={`crossExposure-${props.personIndex}-${index}`}
                     type="text"
                     onChange={(e: React.BaseSyntheticEvent) => {
-                      let updatedInHouseExposureFields = JSON.parse(
-                        JSON.stringify(state.inHouseExposureFields)
+                      const target = e.target;
+                      setInHouseExposureFields(inHouseExposureFields =>
+                        inHouseExposureFields.set(personName, target.value)
                       );
-                      updatedInHouseExposureFields[personName] = e.target.value;
-                      setState({
-                        ...state,
-                        inHouseExposureFields: updatedInHouseExposureFields
-                      });
                     }}
                   />
                 </div>
@@ -263,23 +280,13 @@ export default function Person(props: Props) {
           </div>
         ) : (
           <div className="pl3">
-            {Object.entries(personData.covidEvents)
-              .filter((entry: [string, any]) => entry[0] !== "InHouseExposure")
-              .map((entry: [string, Date], _: number) => {
-                return (
-                  <div className="f5">
-                    {entry[0]} {": "} {format(entry[1], "MM/dd/yyyy")}
-                  </div>
-                );
-              })}
-            {Object.entries(personData.covidEvents.InHouseExposure).map(
-              (entry: [string, Date], _: number) => {
-                return (
-                  <div className="f5">
-                    Exposed to {entry[0]} {": "}{" "}
-                    {format(entry[1], "MM/dd/yyyy")}
-                  </div>
-                );
+            {Object.entries(personData.covidEvents).map(
+              ([eventName, eventValue]) => {
+                if (eventName === "InHouseExposure") {
+                  return renderInHouseExposureEvents(eventValue);
+                } else {
+                  return renderCovidEvent(eventName, eventValue);
+                }
               }
             )}
           </div>
