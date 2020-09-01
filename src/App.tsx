@@ -5,11 +5,12 @@ import { PersonData, CovidEventName } from "./types";
 import { parseISO } from "date-fns";
 
 export default function App() {
-  const initialMembers : PersonData[] = [
+  const initialMembers: PersonData[] = [
     {
       name: `Alice`,
       covidEvents: {
-        LastCloseContact: parseISO("2020-08-25")
+        LastCloseContact: parseISO("2020-08-25"),
+        InHouseExposure: {}
       },
       isNewPerson: false,
       editing: false
@@ -17,7 +18,8 @@ export default function App() {
     {
       name: `Bob`,
       covidEvents: {
-        LastCloseContact: parseISO("2020-08-28")
+        LastCloseContact: parseISO("2020-08-28"),
+        InHouseExposure: {}
       },
       isNewPerson: false,
       editing: false
@@ -30,7 +32,9 @@ export default function App() {
   const handleAddNewPerson = () => {
     const newPerson = {
       name: `Person ${members.length + 1}`,
-      covidEvents: {},
+      covidEvents: {
+        InHouseExposure: {}
+      },
       isNewPerson: true,
       editing: true
     };
@@ -39,6 +43,12 @@ export default function App() {
   };
 
   const handlePersonChanges = (updatedPersonData: PersonData, i: number) => {
+    for (const otherPerson of members) {
+      if (updatedPersonData.covidEvents.InHouseExposure[otherPerson.name]) {
+        otherPerson.covidEvents.InHouseExposure[updatedPersonData.name] =
+          updatedPersonData.covidEvents.InHouseExposure[otherPerson.name];
+      }
+    }
     setMembers(members => [
       ...members.slice(0, i),
       updatedPersonData,
@@ -55,20 +65,30 @@ export default function App() {
     <main className="mt5 f7 f5-m f4-l bg-white ba b-black">
       <h1 className="ph3">Covid Quarantine Calculator</h1>
       <div className="flex-l">
-        <div className={"bw1 pb5 pb7-l pr5-l " + (editing ? "w-70-l" : "w-50-l")} >
+        <div
+          className={"bw1 pb5 pb7-l pr5-l " + (editing ? "w-70-l" : "w-50-l")}
+        >
           <div className="center mr0-l ml-auto-l">
             <Household
               members={members}
               handleAddNewPerson={handleAddNewPerson}
               handlePersonChanges={handlePersonChanges}
               handleRemovePerson={handleRemovePerson}
-              handleBeginEdit={() => {setEditing(true);}}
-              handleCancelEdit={() => {setEditing(false);}}
+              handleBeginEdit={() => {
+                setEditing(true);
+              }}
+              handleCancelEdit={() => {
+                setEditing(false);
+              }}
               editing={editing}
             />
           </div>
         </div>
-        <div className={"pt2 pt5-l pb2 ph2 pr4-l " + (editing ? "w-30-l" : "w-50-l")}>
+        <div
+          className={
+            "pt2 pt5-l pb2 ph2 pr4-l " + (editing ? "w-30-l" : "w-50-l")
+          }
+        >
           <GridView members={members} />
         </div>
       </div>

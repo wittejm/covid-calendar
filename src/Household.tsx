@@ -13,10 +13,13 @@ interface Props {
 }
 
 export default function Household(props: Props) {
-
   return (
     <div className="">
-      <div className="f3 pa3"> <span className="bg-light-green pv2 ph2 mr2 f7"> (icon) </span> Household</div>
+      <div className="f3 pa3">
+        {" "}
+        <span className="bg-light-green pv2 ph2 mr2 f7"> (icon) </span>{" "}
+        Household
+      </div>
       <div className="pa2">
         {props.members.map((personData: PersonData, i) => {
           return (
