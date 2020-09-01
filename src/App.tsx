@@ -43,12 +43,6 @@ export default function App() {
   };
 
   const handlePersonChanges = (updatedPersonData: PersonData, i: number) => {
-    for (const otherPerson of members) {
-      if (updatedPersonData.covidEvents.InHouseExposure[otherPerson.name]) {
-        otherPerson.covidEvents.InHouseExposure[updatedPersonData.name] =
-          updatedPersonData.covidEvents.InHouseExposure[otherPerson.name];
-      }
-    }
     setMembers(members => [
       ...members.slice(0, i),
       updatedPersonData,
