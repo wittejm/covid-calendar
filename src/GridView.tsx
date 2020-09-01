@@ -9,10 +9,22 @@ interface Props {
   members: PersonData[];
 }
 export default function GridView(props: Props) {
+  function computeEvents(members: PersonData[]) {
+    return computeHouseHoldQuarantinePeriod(members).map(
+      (result: CalculationResult) => {
+        return {
+          classNames: ["TODO"],
+          title: result.person.name,
+          start: result.startDate,
+          end: result.endDate
+        };
+      }
+    );
+  }
+
   return (
     <div>
       <div className="pb3">(calendar will go here.)</div>
-
       {computeHouseHoldQuarantinePeriod(props.members).map(
         (result: CalculationResult) => {
           return (
@@ -26,7 +38,13 @@ export default function GridView(props: Props) {
           );
         }
       )}
-      {<FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" />}
+      {
+        <FullCalendar
+          plugins={[dayGridPlugin]}
+          initialView="dayGridMonth"
+          events={computeEvents(props.members)}
+        />
+      }
     </div>
   );
 }
