@@ -8,24 +8,25 @@ import { format, isValid } from "date-fns";
 interface Props {
   members: PersonData[];
 }
-export default class GridView extends React.Component<Props> {
-  render() {
-    return (
-      <div>
-        <div className="pb3">(calendar will go here.)</div>
+export default function GridView(props: Props) {
+  return (
+    <div>
+      <div className="pb3">(calendar will go here.)</div>
 
-        {computeHouseHoldQuarantinePeriod(this.props.members).map(
-          (result: CalculationResult) => {
-            return (
-              <div className="p32">
-                {result.person.name} {" quarantined until: "}{" "}
-                {isValid(result.date) && format(result.date, "MM/dd/yyyy")}
-              </div>
-            );
-          }
-        )}
-        {/*<FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" />*/}
-      </div>
-    );
-  }
+      {computeHouseHoldQuarantinePeriod(props.members).map(
+        (result: CalculationResult) => {
+          return (
+            <div className="p32">
+              {result.person.name} {" quarantined from "}{" "}
+              {isValid(result.startDate) &&
+                format(result.startDate, "MM/dd/yyyy")}
+              {" until "}{" "}
+              {isValid(result.endDate) && format(result.endDate, "MM/dd/yyyy")}
+            </div>
+          );
+        }
+      )}
+      {<FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" />}
+    </div>
+  );
 }
