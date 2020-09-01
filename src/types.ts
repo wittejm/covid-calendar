@@ -20,7 +20,7 @@ export interface CovidEvents {
   SymptomsEnd?: Date;
   PositiveTest?: Date;
   NegativeTest?: Date;
-  InHouseExposure: InHouseExposureEvents;
+  InHouseExposure?: InHouseExposureEvents;
 }
 
 export interface InHouseExposureEvents {
@@ -29,6 +29,7 @@ export interface InHouseExposureEvents {
 
 export interface CalculationResult {
   person: PersonData;
-  date: Date;
+  startDate: Date;
+  endDate: Date;
   infected?: boolean;
 }

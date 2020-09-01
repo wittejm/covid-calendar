@@ -82,43 +82,45 @@ const personE: PersonData = {
 };
 
 test("Empty", () => {
-  const date = computeIsolationPeriod(empty);
-  expect(isValid(date)).toBe(false);
+  const [startDate, endDate] = computeIsolationPeriod(empty);
+  expect(isValid(endDate)).toBe(false);
 });
 
 test("Isolation Period with one event", () => {
-  const date = computeIsolationPeriod(jordan);
-  expect(date).toStrictEqual(parseISO("2020-01-11"));
+  const [startDate, endDate] = computeIsolationPeriod(jordan);
+  expect(endDate).toStrictEqual(parseISO("2020-01-11"));
 
-  const date2 = computeIsolationPeriod(kent);
-  expect(date2).toStrictEqual(parseISO("2020-01-11"));
+  const [startDate2, endDate2] = computeIsolationPeriod(kent);
+  expect(endDate2).toStrictEqual(parseISO("2020-01-11"));
 });
 
 test("Isolation Period should use min of symptoms and positive test", () => {
-  const date = computeIsolationPeriod(personA);
-  expect(date).toStrictEqual(parseISO("2020-01-11"));
+  const [startDate, endDate] = computeIsolationPeriod(personA);
+  expect(endDate).toStrictEqual(parseISO("2020-01-11"));
 });
 
 test("Isolation Period makes use of symptoms end", () => {
-  const date = computeIsolationPeriod(personB);
-  expect(date).toStrictEqual(parseISO("2020-01-12"));
+  const [startDate, endDate] = computeIsolationPeriod(personB);
+  expect(endDate).toStrictEqual(parseISO("2020-01-12"));
 
-  const date2 = computeIsolationPeriod(personC);
-  expect(date2).toStrictEqual(parseISO("2020-01-11"));
+  const [startDate2, endDate2] = computeIsolationPeriod(personC);
+  expect(endDate2).toStrictEqual(parseISO("2020-01-11"));
 });
 
 test("Household calculation for one infected and one caretaker", () => {
   const calcluations = computeHouseHoldQuarantinePeriod([personA, empty]);
-  expect(calcluations[0].date).toStrictEqual(parseISO("2020-01-11"));
-  expect(calcluations[1].date).toStrictEqual(parseISO("2020-01-25"));
+  expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-11"));
+  expect(calcluations[1].endDate).toStrictEqual(parseISO("2020-01-25"));
 });
 
 test("Household calculation for one infected and isolated peer", () => {
   const calcluations = computeHouseHoldQuarantinePeriod([personA, personD]);
-  expect(calcluations[0].date).toStrictEqual(parseISO("2020-01-11"));
-  expect(calcluations[1].date).toStrictEqual(parseISO("2020-01-19"));
+  expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-11"));
+  expect(calcluations[1].endDate).toStrictEqual(parseISO("2020-01-19"));
 
   const calcluations2 = computeHouseHoldQuarantinePeriod([personE, personD]);
-  expect(calcluations2[0].date).toStrictEqual(parseISO("2020-01-11"));
-  expect(calcluations2[1].date).toStrictEqual(parseISO("2020-01-19"));
+  expect(calcluations2[0].endDate).toStrictEqual(parseISO("2020-01-11"));
+  expect(calcluations2[1].endDate).toStrictEqual(parseISO("2020-01-19"));
 });
+
+// TODO: Add test for earliest exposure date

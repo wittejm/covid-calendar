@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import GridView from "./GridView";
 import Household from "./Household";
-import { PersonData, CovidEventName } from "./types";
+import { PersonData } from "./types";
 import { parseISO } from "date-fns";
 
 export default function App() {
@@ -43,12 +43,6 @@ export default function App() {
   };
 
   const handlePersonChanges = (updatedPersonData: PersonData, i: number) => {
-    for (const otherPerson of members) {
-      if (updatedPersonData.covidEvents.InHouseExposure[otherPerson.name]) {
-        otherPerson.covidEvents.InHouseExposure[updatedPersonData.name] =
-          updatedPersonData.covidEvents.InHouseExposure[otherPerson.name];
-      }
-    }
     setMembers(members => [
       ...members.slice(0, i),
       updatedPersonData,
