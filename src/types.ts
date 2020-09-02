@@ -1,4 +1,5 @@
 export interface PersonData {
+  id: number;
   name: string;
   covidEvents: CovidEvents;
   isNewPerson: boolean;
@@ -20,11 +21,14 @@ export interface CovidEvents {
   SymptomsEnd?: Date;
   PositiveTest?: Date;
   NegativeTest?: Date;
-  InHouseExposure?: InHouseExposureEvents;
 }
 
-export interface InHouseExposureEvents {
-  [personName: string]: Date;
+export interface InHouseExposureEvent {
+  contagiousPerson: PersonData;
+  quarantinedPerson: PersonData;
+  exposed: boolean;
+  ongoing: boolean;
+  date: string;
 }
 
 export interface CalculationResult {

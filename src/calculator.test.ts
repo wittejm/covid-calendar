@@ -6,6 +6,7 @@ import { PersonData } from "./types";
 import { isValid, parseISO } from "date-fns";
 
 const empty: PersonData = {
+  id: 0,
   name: "Empty",
   covidEvents: {},
   isNewPerson: false,
@@ -13,6 +14,7 @@ const empty: PersonData = {
 };
 
 const jordan: PersonData = {
+  id: 0,
   name: "Jordan",
   covidEvents: {
     SymptomsStart: parseISO("2020-01-01")
@@ -22,6 +24,7 @@ const jordan: PersonData = {
 };
 
 const kent: PersonData = {
+  id: 0,
   name: "Foo",
   covidEvents: {
     PositiveTest: parseISO("2020-01-01")
@@ -31,6 +34,7 @@ const kent: PersonData = {
 };
 
 const personA: PersonData = {
+  id: 0,
   name: "Person A",
   covidEvents: {
     PositiveTest: parseISO("2020-01-01"),
@@ -41,6 +45,7 @@ const personA: PersonData = {
 };
 
 const personB: PersonData = {
+  id: 0,
   name: "Person B",
   covidEvents: {
     PositiveTest: parseISO("2020-01-01"),
@@ -52,30 +57,12 @@ const personB: PersonData = {
 };
 
 const personC: PersonData = {
+  id: 0,
   name: "Person C",
   covidEvents: {
     PositiveTest: parseISO("2020-01-01"),
     SymptomsStart: parseISO("2020-01-05"),
     SymptomsEnd: parseISO("2020-01-07")
-  },
-  isNewPerson: false,
-  editing: false
-};
-
-const personD: PersonData = {
-  name: "Person D",
-  covidEvents: {
-    InHouseExposure: { "Person A": parseISO("2020-01-05") }
-  },
-  isNewPerson: false,
-  editing: false
-};
-
-const personE: PersonData = {
-  name: "Person E",
-  covidEvents: {
-    PositiveTest: parseISO("2020-01-01"),
-    InHouseExposure: { "Person D": parseISO("2020-01-05") }
   },
   isNewPerson: false,
   editing: false
@@ -108,19 +95,35 @@ test("Isolation Period makes use of symptoms end", () => {
 });
 
 test("Household calculation for one infected and one caretaker", () => {
-  const calcluations = computeHouseHoldQuarantinePeriod([personA, empty]);
+  const inHouseExposureEvent = {
+    contagiousPerson: personA,
+    quarantinedPerson: empty,
+    exposed: true,
+    ongoing: true,
+    date: ""
+  };
+  const calcluations = computeHouseHoldQuarantinePeriod(
+    [personA, empty],
+    [inHouseExposureEvent]
+  );
   expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-11"));
   expect(calcluations[1].endDate).toStrictEqual(parseISO("2020-01-25"));
 });
 
 test("Household calculation for one infected and isolated peer", () => {
-  const calcluations = computeHouseHoldQuarantinePeriod([personA, personD]);
+  const inHouseExposureEvent = {
+    contagiousPerson: personA,
+    quarantinedPerson: empty,
+    exposed: true,
+    ongoing: false,
+    date: "1/5/2020"
+  };
+  const calcluations = computeHouseHoldQuarantinePeriod(
+    [personA, empty],
+    [inHouseExposureEvent]
+  );
   expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-11"));
   expect(calcluations[1].endDate).toStrictEqual(parseISO("2020-01-19"));
-
-  const calcluations2 = computeHouseHoldQuarantinePeriod([personE, personD]);
-  expect(calcluations2[0].endDate).toStrictEqual(parseISO("2020-01-11"));
-  expect(calcluations2[1].endDate).toStrictEqual(parseISO("2020-01-19"));
 });
 
 // TODO: Add test for earliest exposure date
