@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { PersonData, CovidEvents, InHouseExposureEvents } from "./types";
+import { PersonData, CovidEvents, InHouseExposureEvent } from "./types";
 import { parse, format } from "date-fns";
-import { Map } from "immutable";
+import InHouseExposureQuestions from "./InHouseExposureQuestions";
+import { replace } from "./util";
 
 interface Props {
   personIndex: number;
   householdPersonData: PersonData[];
+  inHouseExposureEvents: InHouseExposureEvent[];
+  setContagiousState: Function;
+  setInHouseExposureEvents: Function;
   submitPersonData: Function;
   handleCancelEdit: Function;
   handleBeginEdit: Function;
@@ -14,40 +18,44 @@ interface Props {
 }
 
 export default function Person(props: Props) {
-  const personData = props.householdPersonData[props.personIndex];
+  const personData = props.householdPersonData.find(
+    person => person.id === props.personIndex
+  );
 
-  const lastCloseContactDate = personData.covidEvents.LastCloseContact
+  const lastCloseContactDate = personData?.covidEvents.LastCloseContact
     ? format(personData.covidEvents.LastCloseContact, "M/dd/yyyy")
     : "";
-  const positiveTestDate = personData.covidEvents.PositiveTest
+  const initialPositiveTestDate = personData?.covidEvents.PositiveTest
     ? format(personData.covidEvents.PositiveTest, "M/dd/yyyy")
     : "";
-  const firstSymptomsDate = personData.covidEvents.SymptomsStart
+  const initialFirstSymptomsDate = personData?.covidEvents.SymptomsStart
     ? format(personData.covidEvents.SymptomsStart, "M/dd/yyyy")
     : "";
-  const symptomsResolved = personData.covidEvents.SymptomsEnd
+  const symptomsResolved = personData?.covidEvents.SymptomsEnd
     ? format(personData.covidEvents.SymptomsEnd, "M/dd/yyyy")
     : "";
 
-  let initialInHouseExposureFields: Map<string, string> = personData.covidEvents
-    .InHouseExposure
-    ? Map(personData.covidEvents.InHouseExposure).map((date: Date) =>
-        format(date, "MM/dd/yyyy")
-      )
-    : Map();
+  let relevantInHouseExposureEvents = props.inHouseExposureEvents.filter(
+    event =>
+      event.contagiousPerson.name === personData?.name ||
+      event.quarantinedPerson.name === personData?.name
+  );
 
   const initialState = {
-    name: personData.name,
+    id: personData?.id,
+    name: personData?.name,
     lastCloseContactDate,
-    positiveTestDate,
-    firstSymptomsDate,
     symptomsResolved
   };
-  const [state, setState] = useState(initialState);
-  const [inHouseExposureFields, setInHouseExposureFields] = useState(
-    initialInHouseExposureFields
+  const [positiveTestDate, setPositiveTestDate] = useState(
+    initialPositiveTestDate
   );
+  const [firstSymptomsDate, setFirstSymptomsDate] = useState(
+    initialFirstSymptomsDate
+  );
+  const [state, setState] = useState(initialState);
   const [editing, setEditing] = useState(props.editingHousehold);
+  const contagious = Boolean(positiveTestDate || firstSymptomsDate);
 
   const handleChange = (e: React.BaseSyntheticEvent) => {
     const target = e.target;
@@ -56,8 +64,26 @@ export default function Person(props: Props) {
     });
   };
 
+  const handlePositiveTestChange = (e: React.BaseSyntheticEvent) => {
+    const value = e.target.value;
+    const nextContagious = Boolean(value !== "" || firstSymptomsDate);
+    if (contagious !== nextContagious) {
+      props.setContagiousState(personData, nextContagious);
+    }
+    setPositiveTestDate(value);
+  };
+
+  const handleFirstSymptomsChange = (e: React.BaseSyntheticEvent) => {
+    const value = e.target.value;
+    const nextContagious = Boolean(value !== "" || positiveTestDate);
+    if (contagious !== nextContagious) {
+      props.setContagiousState(personData, nextContagious);
+    }
+    setFirstSymptomsDate(value);
+  };
+
   const handleSubmitClick = () => {
-    let covidEvents: CovidEvents = { InHouseExposure: {} };
+    let covidEvents: CovidEvents = {};
     if (state.lastCloseContactDate) {
       covidEvents.LastCloseContact = parse(
         state.lastCloseContactDate,
@@ -65,24 +91,22 @@ export default function Person(props: Props) {
         new Date()
       );
     }
-    if (state.positiveTestDate) {
+    if (positiveTestDate) {
       covidEvents.PositiveTest = parse(
-        state.positiveTestDate,
+        positiveTestDate,
         "M/dd/yyyy",
         new Date()
       );
     }
-    if (state.firstSymptomsDate) {
+    if (firstSymptomsDate) {
       covidEvents.SymptomsStart = parse(
-        state.firstSymptomsDate,
+        firstSymptomsDate,
         "M/dd/yyyy",
         new Date()
       );
     }
-    covidEvents.InHouseExposure = inHouseExposureFields
-      .map((date: string) => parse(date, "M/dd/yyyy", new Date()))
-      .toObject();
     const personData = {
+      id: state.id,
       name: state.name,
       covidEvents: covidEvents,
       isNewPerson: false,
@@ -92,23 +116,32 @@ export default function Person(props: Props) {
     props.submitPersonData(personData, props.personIndex);
   };
 
-  const inHouseExposureNames = props.householdPersonData
-    .filter((otherPerson: PersonData) => {
-      const personContagious = Boolean(
-        state.positiveTestDate || state.firstSymptomsDate
-      );
+  const isContagious = Boolean(positiveTestDate || firstSymptomsDate);
+  const meaningfulInHouseExposures = props.householdPersonData.filter(
+    (otherPerson: PersonData) => {
       const otherPersonContagious = Boolean(
         otherPerson.covidEvents.PositiveTest ||
           otherPerson.covidEvents.SymptomsStart
       );
       return (
-        state.name !== otherPerson.name &&
-        personContagious !== otherPersonContagious
+        personData !== otherPerson && isContagious !== otherPersonContagious
       );
-    })
-    .map((person, index) => {
-      return person.name;
-    });
+    }
+  );
+
+  function updateInHouseExposure(inHouseExposureEvent: InHouseExposureEvent) {
+    return (updatedInHouseExposureEvent: InHouseExposureEvent) => {
+      props.setInHouseExposureEvents(
+        (inHouseExposureEvents: InHouseExposureEvent[]) => {
+          return replace(
+            inHouseExposureEvents,
+            inHouseExposureEvent,
+            updatedInHouseExposureEvent
+          );
+        }
+      );
+    };
+  }
 
   function renderCovidEvent(name: string, date: Date) {
     return (
@@ -118,28 +151,10 @@ export default function Person(props: Props) {
     );
   }
 
-  function renderInHouseExposureEvents(
-    inHouseExposureEvents: InHouseExposureEvents
-  ) {
-    if (inHouseExposureEvents) {
-      return Object.entries(inHouseExposureEvents).map(
-        ([name, date]: [string, Date]) => {
-          return (
-            <div className="f5">
-              Exposed to {name} {": "} {format(date, "MM/dd/yyyy")}
-            </div>
-          );
-        }
-      );
-    } else {
-      return <></>;
-    }
-  }
-
   return (
     <div className={"f4 ma2 br4 pv2 bg-light-blue"}>
       <div className="pl5 fw5">
-        {personData.name}{" "}
+        {personData?.name}{" "}
         {!props.editingHousehold && (
           <button
             onClick={() => {
@@ -198,11 +213,11 @@ export default function Person(props: Props) {
               </p>
               <input
                 className="ml3 w4"
-                value={state.positiveTestDate}
+                value={positiveTestDate}
                 name="positiveTestDate"
-                id={`${props.personIndex}-${state.positiveTestDate}`}
+                id={`${props.personIndex}-${positiveTestDate}`}
                 type="text"
-                onChange={handleChange}
+                onChange={handlePositiveTestChange}
               />
             </div>
             <div className="pa2">
@@ -212,40 +227,24 @@ export default function Person(props: Props) {
               </p>
               <input
                 className="ml3 w4"
-                value={state.firstSymptomsDate}
+                value={firstSymptomsDate}
                 name="firstSymptomsDate"
-                id={`${props.personIndex}-${state.firstSymptomsDate}`}
+                id={`${props.personIndex}-${firstSymptomsDate}`}
                 type="text"
-                onChange={handleChange}
+                onChange={handleFirstSymptomsChange}
               />
             </div>
-            {inHouseExposureNames.map((personName, index) => {
-              return (
-                <div className="pa2">
-                  <p className="pb2">
-                    When was your last exposure to {personName}?
-                  </p>
-                  <input
-                    className="ml3 w4"
-                    value={inHouseExposureFields.get(personName) || ""}
-                    name={`crossExposure-${index}`}
-                    id={`crossExposure-${props.personIndex}-${index}`}
-                    type="text"
-                    onChange={(e: React.BaseSyntheticEvent) => {
-                      const target = e.target;
-                      setInHouseExposureFields(inHouseExposureFields =>
-                        inHouseExposureFields.set(personName, target.value)
-                      );
-                    }}
-                  />
-                </div>
-              );
-            })}
+            <InHouseExposureQuestions
+              personIndex={props.personIndex}
+              meaningfulInHouseExposures={meaningfulInHouseExposures}
+              relevantInHouseExposureEvents={relevantInHouseExposureEvents}
+              updateInHouseExposure={updateInHouseExposure}
+            />
             <button
               className="fw5 pa2 bg-green white bg-animate hover-bg-dark-green"
               onClick={handleSubmitClick}
             >
-              {personData.isNewPerson ? "Submit" : "Update"}
+              {personData?.isNewPerson ? "Submit" : "Update"}
             </button>
             <button
               className="ma2 fw5 pa2 bg-yellow white bg-animate hover-bg-light-yellow"
@@ -255,13 +254,13 @@ export default function Person(props: Props) {
               }}
             >
               <span className="visually-hidden">Cancel</span>
-              {personData.isNewPerson ? "Cancel Add" : "Cancel Edit"}
+              {personData?.isNewPerson ? "Cancel Add" : "Cancel Edit"}
               <i
                 aria-hidden="true"
                 className="pl2 fas fa-times-circle gray"
               ></i>
             </button>
-            {!personData.isNewPerson && (
+            {!personData?.isNewPerson && (
               <button
                 className="ma2 fw5 pa2 bg-washed-red bg-animate hover-bg-light-red"
                 onClick={() => {
@@ -280,15 +279,22 @@ export default function Person(props: Props) {
           </div>
         ) : (
           <div className="pl3">
-            {Object.entries(personData.covidEvents).map(
-              ([eventName, eventValue]) => {
-                if (eventName === "InHouseExposure") {
-                  return renderInHouseExposureEvents(eventValue);
-                } else {
+            {personData?.covidEvents &&
+              Object.entries(personData.covidEvents).map(
+                ([eventName, eventValue]) => {
                   return renderCovidEvent(eventName, eventValue);
                 }
+              )}
+            {Object.values(relevantInHouseExposureEvents).map(event => {
+              if (event.exposed) {
+                return (
+                  <div className="f5">
+                    {event.quarantinedPerson.name} exposed to{" "}
+                    {event.contagiousPerson.name} at {event.date}
+                  </div>
+                );
               }
-            )}
+            })}
           </div>
         )}
       </div>

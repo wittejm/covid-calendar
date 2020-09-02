@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { PersonData } from "./types";
+import { InHouseExposureEvent, PersonData } from "./types";
 import Person from "./Person";
 
 interface Props {
   members: PersonData[];
+  inHouseExposureEvents: InHouseExposureEvent[];
+  setInHouseExposureEvents: Function;
+  setContagiousState: Function;
   handleAddNewPerson: Function;
   handleBeginEdit: Function;
   handleCancelEdit: Function;
@@ -21,33 +24,39 @@ export default function Household(props: Props) {
         Household
       </div>
       <div className="pa2">
-        {props.members.map((personData: PersonData, i) => {
-          return (
-            <Person
-              personIndex={i}
-              householdPersonData={props.members}
-              submitPersonData={(
-                updatedPersonData: PersonData,
-                index: number
-              ) => {
-                props.handlePersonChanges(updatedPersonData, index);
-              }}
-              handleRemovePerson={() => {
-                props.handleRemovePerson(i);
-              }}
-              handleBeginEdit={() => {
-                props.handleBeginEdit();
-              }}
-              handleCancelEdit={() => {
-                if (personData.isNewPerson) {
-                  props.handleRemovePerson(i);
-                }
-                props.handleCancelEdit();
-              }}
-              editingHousehold={props.editing}
-            />
-          );
-        })}
+        {props.members
+          .sort((p1, p2) => p1.id - p2.id)
+          .map((personData: PersonData) => {
+            return (
+              <Person
+                key={personData.id}
+                personIndex={personData.id}
+                householdPersonData={props.members}
+                inHouseExposureEvents={props.inHouseExposureEvents}
+                setContagiousState={props.setContagiousState}
+                setInHouseExposureEvents={props.setInHouseExposureEvents}
+                submitPersonData={(
+                  updatedPersonData: PersonData,
+                  index: number
+                ) => {
+                  props.handlePersonChanges(updatedPersonData, index);
+                }}
+                handleRemovePerson={() => {
+                  props.handleRemovePerson(personData.id);
+                }}
+                handleBeginEdit={() => {
+                  props.handleBeginEdit();
+                }}
+                handleCancelEdit={() => {
+                  if (personData.isNewPerson) {
+                    props.handleRemovePerson(personData.id);
+                  }
+                  props.handleCancelEdit();
+                }}
+                editingHousehold={props.editing}
+              />
+            );
+          })}
         {!props.editing && (
           <button
             className="pa2 f5 fw6"

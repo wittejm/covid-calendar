@@ -1,9 +1,10 @@
-import { CalculationResult, PersonData } from "./types";
+import { CalculationResult, InHouseExposureEvent, PersonData } from "./types";
 import * as _ from "lodash";
-import { addDays, max, min, isValid } from "date-fns";
+import { addDays, max, min, isValid, parse } from "date-fns";
 
 export function computeHouseHoldQuarantinePeriod(
-  household: PersonData[]
+  household: PersonData[],
+  inHouseExposureEvents: InHouseExposureEvent[]
 ): CalculationResult[] {
   const [infected, quarantined] = _.chain(household)
     .map((person: PersonData) => {
@@ -30,26 +31,20 @@ export function computeHouseHoldQuarantinePeriod(
     quarantined,
     calculation => {
       const person = calculation.person;
-      const exposureEvents = _.pick(
-        person.covidEvents.InHouseExposure,
-        _.map(infected, infectedCalculation => infectedCalculation.person.name)
+      const exposureEvents = inHouseExposureEvents.filter(
+        event => event.quarantinedPerson === person && event.exposed
       );
-      const moreExposureEvents = _.map(infected, infectedCalculation => {
-        const infectedPerson = infectedCalculation.person;
-        const exposureDate =
-          infectedPerson.covidEvents.InHouseExposure?.[person.name];
-        if (exposureDate) {
-          return { [infectedPerson.name]: exposureDate };
+      const exposureDates = exposureEvents.map(event => {
+        if (event.ongoing) {
+          return (
+            infected.find(
+              calculation => calculation.person === event.contagiousPerson
+            )?.endDate || new Date()
+          );
         } else {
-          return { [infectedPerson.name]: infectedCalculation.endDate };
+          return parse(event.date, "M/dd/yyyy", new Date());
         }
       });
-      const mergedExposureEvents = _.assign(
-        {},
-        ...moreExposureEvents,
-        exposureEvents
-      );
-      const exposureDates = _.values(mergedExposureEvents);
       const latestStatedExposureDate = person.covidEvents.LastCloseContact;
       const earliestExposureDate = latestStatedExposureDate
         ? min([...exposureDates, latestStatedExposureDate])
