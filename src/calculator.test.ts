@@ -17,7 +17,7 @@ const jordan: PersonData = {
   id: 0,
   name: "Jordan",
   covidEvents: {
-    SymptomsStart: parseISO("2020-01-01")
+    SymptomsStart: "01/01/2020"
   },
   isNewPerson: false,
   editing: false
@@ -27,7 +27,7 @@ const kent: PersonData = {
   id: 0,
   name: "Foo",
   covidEvents: {
-    PositiveTest: parseISO("2020-01-01")
+    PositiveTest: "01/01/2020"
   },
   isNewPerson: false,
   editing: false
@@ -37,8 +37,8 @@ const personA: PersonData = {
   id: 0,
   name: "Person A",
   covidEvents: {
-    PositiveTest: parseISO("2020-01-01"),
-    SymptomsStart: parseISO("2020-01-05")
+    PositiveTest: "01/01/2020",
+    SymptomsStart: "01/05/2020"
   },
   isNewPerson: false,
   editing: false
@@ -48,9 +48,9 @@ const personB: PersonData = {
   id: 0,
   name: "Person B",
   covidEvents: {
-    PositiveTest: parseISO("2020-01-01"),
-    SymptomsStart: parseISO("2020-01-05"),
-    SymptomsEnd: parseISO("2020-01-11")
+    PositiveTest: "01/01/2020",
+    SymptomsStart: "01/05/2020",
+    SymptomsEnd: "01/11/2020"
   },
   isNewPerson: false,
   editing: false
@@ -60,9 +60,9 @@ const personC: PersonData = {
   id: 0,
   name: "Person C",
   covidEvents: {
-    PositiveTest: parseISO("2020-01-01"),
-    SymptomsStart: parseISO("2020-01-05"),
-    SymptomsEnd: parseISO("2020-01-07")
+    PositiveTest: "01/01/2020",
+    SymptomsStart: "01/05/2020",
+    SymptomsEnd: "01/07/2020"
   },
   isNewPerson: false,
   editing: false
