@@ -9,6 +9,7 @@ import { compact } from "lodash/fp";
 import { isContagious } from "./util";
 
 interface Props {
+  index: number;
   handleFocusDateField: Function;
   handleUnfocusDateField: Function;
 
@@ -129,15 +130,22 @@ export default function Person(props: Props) {
     props.inHouseExposureEventsState.merge(compact(newExposureEvents));
   }
 
-  const meaningfulInHouseExposures = props.membersState
-    .get()
-    .filter((otherPerson: PersonData) => {
+  const meaningfulInHouseExposures = members.filter(
+    (otherPerson: PersonData) => {
       const otherPersonContagious = Boolean(
         otherPerson.covidEvents.PositiveTest ||
           otherPerson.covidEvents.SymptomsStart
       );
       return person !== otherPerson && contagious !== otherPersonContagious;
-    });
+    }
+  );
+
+  function removeFromMembers() {
+    props.membersState.set(membersState => [
+      ...membersState.slice(0, props.index),
+      ...membersState.slice(props.index + 1)
+    ]);
+  }
 
   return (
     <div className={"f4 ma2 br2 pv2 bg-washed-blue"}>
@@ -195,7 +203,7 @@ export default function Person(props: Props) {
               className="ma2 fw5 pa2 bg-light-silver white bg-animate hover-bg-gray"
               onClick={() => {
                 if (person.isNewPerson) {
-                  props.personState.set(none);
+                  removeFromMembers();
                 }
                 props.editingState.set(-1);
               }}
@@ -207,7 +215,10 @@ export default function Person(props: Props) {
             {!person.isNewPerson && (
               <button
                 className="ma2 fw5 pa2 bg-light-silver white bg-animate hover-bg-gray"
-                onClick={() => props.personState.set(none)}
+                onClick={() => {
+                  removeFromMembers();
+                  props.editingState.set(-1);
+                }}
               >
                 <span className="visually-hidden">Remove</span>
                 Remove
