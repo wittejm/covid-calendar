@@ -2,8 +2,8 @@ import React from "react";
 import { State } from "@hookstate/core/dist";
 
 interface Props {
-  personIndex: number;
-  questionText: string;
+  id: number;
+  questionNumber: number;
   questionFieldTextState: State<string>;
   questionFieldName: string;
   onChange: Function;
@@ -41,14 +41,14 @@ export default function DateQuestion(props: Props) {
 
   return (
     <div className="">
-      <label htmlFor={`${props.personIndex}-${props.questionText}`}>
+      <label htmlFor={`${props.id}-${props.questionNumber}`}>
         Date <span className="f6 fw3">mm/dd/yyyy</span>
       </label>
       <input
         className="form-control"
         value={props.questionFieldTextState.get()}
         name={props.questionFieldName}
-        id={`${props.personIndex}-${props.questionText}`}
+        id={`${props.id}-${props.questionNumber}`}
         type="text"
         onChange={handleTextChange}
         onFocus={handleFocus}

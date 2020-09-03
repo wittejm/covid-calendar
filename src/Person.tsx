@@ -43,7 +43,8 @@ export default function Person(props: Props) {
   const selectionsState: any = useState(
     ["LastCloseContact", "PositiveTest", "SymptomsStart", "SymptomsEnd"].reduce(
       (selections: any, key) => (
-        (selections[key] = covidEventsState[key].get() !== "" ? 0 : -1),
+        (selections[key] =
+          covidEventsState[key].get() && covidEventsState[key].get() !== ""),
         selections
       ),
       {}
@@ -52,31 +53,27 @@ export default function Person(props: Props) {
 
   const buildQuestion = (
     questionNumber: number,
-    personIndex: number,
     fieldName: string,
-    firstQuestionText: string,
-    dateQuestionText: string
+    firstQuestionText: string
   ) => {
     return (
       <div className="mb-3">
-        <div className="flex">
-          <MultipleChoiceQuestion
-            personIndex={person.id}
-            questionText={firstQuestionText}
-            selected={selectionsState[fieldName].get()}
-            onChange={(value: number) => {
-              selectionsState[fieldName].set(value);
-              if (value) {
-                covidEventsState.set(events => unset(fieldName)(events));
-              }
-            }}
-            options={["Yes", "No"]}
-          />
-        </div>
-        {selectionsState[fieldName].get() === 0 ? (
+        <MultipleChoiceQuestion
+          id={person.id}
+          questionText={firstQuestionText}
+          checked={selectionsState[fieldName].get()}
+          onChange={(e: React.BaseSyntheticEvent) => {
+            const checked = e.target.checked;
+            selectionsState[fieldName].set(checked);
+            if (!checked) {
+              covidEventsState.set(events => unset(fieldName)(events));
+            }
+          }}
+        />
+        {selectionsState[fieldName].get() ? (
           <DateQuestion
-            personIndex={personIndex}
-            questionText={firstQuestionText}
+            id={person.id}
+            questionNumber={questionNumber}
             questionFieldTextState={covidEventsState[fieldName]}
             questionFieldName={fieldName}
             onChange={handleChange}
@@ -169,25 +166,15 @@ export default function Person(props: Props) {
           </div>
           {buildQuestion(
             1,
-            person.id,
             "LastCloseContact",
-            "Have you been exposed to someone covid positive outside the household?",
-            "When is the last date you were exposed?"
+            "I have been exposed to someone covid positive"
           )}
           {buildQuestion(
             2,
-            person.id,
             "PositiveTest",
-            "Have you received a positive test result?",
-            "What date did you take the test?"
+            "I have received a positive test result"
           )}
-          {buildQuestion(
-            2,
-            person.id,
-            "SymptomsStart",
-            "Are you showing or have you shown positive symptoms?",
-            "What date did you start showing symptoms?"
-          )}
+          {buildQuestion(2, "SymptomsStart", "I have shown positive symptoms")}
           <InHouseExposureQuestions
             id={person.id}
             meaningfulInHouseExposures={meaningfulInHouseExposures}
