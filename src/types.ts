@@ -16,11 +16,14 @@ export enum CovidEventName {
 }
 
 export interface CovidEvents {
+  [key: string]: Date;
+  /*
   LastCloseContact?: Date;
   SymptomsStart?: Date;
   SymptomsEnd?: Date;
   PositiveTest?: Date;
   NegativeTest?: Date;
+  */
 }
 
 export interface InHouseExposureEvent {

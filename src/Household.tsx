@@ -12,6 +12,8 @@ interface Props {
   handleCancelEdit: Function;
   handlePersonChanges: Function;
   handleRemovePerson: Function;
+  handleFocusDateField: Function;
+  handleUnfocusDateField: Function;
   editing: boolean;
 }
 
@@ -54,9 +56,12 @@ export default function Household(props: Props) {
                   props.handleCancelEdit();
                 }}
                 editingHousehold={props.editing}
+                handleFocusDateField={props.handleFocusDateField}
+                handleUnfocusDateField={props.handleUnfocusDateField}
               />
             );
           })}
+
         {!props.editing && (
           <button
             className="pa2 f5 fw6"

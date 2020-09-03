@@ -122,7 +122,7 @@ export default function App() {
 
   return (
     <main className="mt5 f7 f5-m f4-l bg-white ba b-black">
-      <h1 className="ph3">Covid Quarantine Calculator</h1>
+      <h1 className="ph3 f3">Covid Quarantine Calculator</h1>
       <div className="flex-l">
         <div
           className={"bw1 pb5 pb7-l pr5-l " + (editing ? "w-70-l" : "w-50-l")}
@@ -143,6 +143,12 @@ export default function App() {
                 setEditing(false);
               }}
               editing={editing}
+              handleFocusDateField={(fieldName: string) => {
+                console.log("In-app focused date field is ", fieldName);
+              }}
+              handleUnfocusDateField={(fieldName: string) => {
+                console.log("In-app unfocused date field is ", fieldName);
+              }}
             />
           </div>
         </div>
