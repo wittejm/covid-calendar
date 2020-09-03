@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { parse, format } from "date-fns";
+import React from "react";
+import { State } from "@hookstate/core/dist";
 
 interface Props {
   personIndex: number;
   questionText: string;
-  questionFieldText: string;
+  questionFieldTextState: State<string>;
   questionFieldName: string;
   onChange: Function;
   onFocus: Function;
@@ -12,27 +12,17 @@ interface Props {
 }
 
 export default function DateQuestion(props: Props) {
-  const [questionFieldText, setQuestionFieldText] = useState(
-    props.questionFieldText
-  );
   const twoDigitYearPattern = new RegExp(
     "^([0-9][0-9]?/[0-9][0-9]?/)([0-9][0-9])$"
   );
   const dayMonthPattern = new RegExp("^[0-9][0-9]?/[0-9][0-9]?$");
 
   const handleTextChange = (e: React.BaseSyntheticEvent) => {
-    setQuestionFieldText(e.target.value);
     props.onChange(e);
   };
 
   const handleUnfocus = () => {
-    console.log(
-      "unfocus",
-      props.questionFieldName,
-      ", must autocomplete year and unhighlight cal"
-    );
-
-    let fixedDate = questionFieldText;
+    let fixedDate = props.questionFieldTextState.get();
     const twoDigitYearMatch = twoDigitYearPattern.exec(fixedDate);
     if (twoDigitYearMatch) {
       fixedDate = fixedDate.slice(0, -2) + "20" + fixedDate.slice(-2);
@@ -41,16 +31,11 @@ export default function DateQuestion(props: Props) {
     if (dayMonthMatch) {
       fixedDate = fixedDate + "/2020";
     }
-    console.log("fixed date is: ", fixedDate);
-    setQuestionFieldText(fixedDate);
-    props.onChange({
-      target: { name: props.questionFieldName, value: fixedDate }
-    });
+    props.questionFieldTextState.set(fixedDate);
     props.onUnfocus(props.questionFieldName);
   };
 
   const handleFocus = () => {
-    console.log("focus", props.questionFieldName, ", must highlight cal");
     props.onFocus(props.questionFieldName);
   };
 
@@ -61,7 +46,7 @@ export default function DateQuestion(props: Props) {
       </label>
       <input
         className="form-control"
-        value={questionFieldText}
+        value={props.questionFieldTextState.get()}
         name={props.questionFieldName}
         id={`${props.personIndex}-${props.questionText}`}
         type="text"

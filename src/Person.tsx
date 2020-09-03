@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "@hookstate/core";
 
 import { PersonData, CovidEvents, InHouseExposureEvent } from "./types";
 import DateQuestion from "./DateQuestion";
@@ -39,7 +40,7 @@ export default function Person(props: Props) {
     e => e.get()
   );
   const contagious = isContagious(person);
-  const [selections, setSelections] = useState(
+  const selectionsState: any = useState(
     ["LastCloseContact", "PositiveTest", "SymptomsStart", "SymptomsEnd"].reduce(
       (selections: any, key) => (
         (selections[key] = covidEventsState[key].get() !== "" ? 0 : -1),
@@ -58,25 +59,25 @@ export default function Person(props: Props) {
   ) => {
     return (
       <div className="mb-3">
-        <MultipleChoiceQuestion
-          personIndex={person.id}
-          questionText={firstQuestionText}
-          selected={selections[fieldName]}
-          onChange={(value: number) => {
-            setSelections((state: any) => {
-              return { ...state, [fieldName]: value };
-            });
-            if (value) {
-              covidEventsState.set(events => unset(fieldName)(events));
-            }
-          }}
-          options={["Yes", "No"]}
-        />
-        {selections[fieldName] === 0 ? (
+        <div className="flex">
+          <MultipleChoiceQuestion
+            personIndex={person.id}
+            questionText={firstQuestionText}
+            selected={selectionsState[fieldName].get()}
+            onChange={(value: number) => {
+              selectionsState[fieldName].set(value);
+              if (value) {
+                covidEventsState.set(events => unset(fieldName)(events));
+              }
+            }}
+            options={["Yes", "No"]}
+          />
+        </div>
+        {selectionsState[fieldName].get() === 0 ? (
           <DateQuestion
             personIndex={personIndex}
             questionText={firstQuestionText}
-            questionFieldText={covidEventsState[fieldName].get()}
+            questionFieldTextState={covidEventsState[fieldName]}
             questionFieldName={fieldName}
             onChange={handleChange}
             onFocus={() => {

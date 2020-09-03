@@ -6,7 +6,6 @@ import { CalculationResult, InHouseExposureEvent, PersonData } from "./types";
 import { format, isValid, parseISO } from "date-fns";
 import { concat, compact, remove, flow } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
-import { computeHouseHoldQuarantinePeriod } from "./calculator";
 
 export default function App() {
   const initialMembers: PersonData[] = [
@@ -33,6 +32,7 @@ export default function App() {
   const inHouseExposureEvents = useState([] as InHouseExposureEvent[]);
   const editing = useState(-1); // ID of person being edited or -1 if no one
   const id = useState(members.length + 1);
+  const selectingDateFieldState = useState("");
 
   function createInHouseExposureEvents(newPerson: PersonData) {
     const newExposureEvents = members.get().map((person: PersonData) => {
@@ -81,16 +81,18 @@ export default function App() {
             editingState={editing}
             handleAddNewPerson={handleAddNewPerson}
             handleFocusDateField={(fieldName: string) => {
-              console.log("In-app focused date field is ", fieldName);
+              selectingDateFieldState.set(fieldName);
             }}
             handleUnfocusDateField={(fieldName: string) => {
-              console.log("In-app unfocused date field is ", fieldName);
+              selectingDateFieldState.set("");
             }}
           />
         </div>
         <div className={"col-md-7"}>
           <GridView
-            members={members.get()}
+            membersState={members}
+            editing={editing.get()}
+            selectingDateFieldState={selectingDateFieldState}
             inHouseExposureEvents={inHouseExposureEvents.get()}
           />
         </div>
