@@ -32,13 +32,13 @@ export function computeHouseHoldQuarantinePeriod(
     calculation => {
       const person = calculation.person;
       const exposureEvents = inHouseExposureEvents.filter(
-        event => event.quarantinedPerson === person && event.exposed
+        event => event.quarantinedPerson === person.id && event.exposed
       );
       const exposureDates = exposureEvents.map(event => {
         if (event.ongoing) {
           return (
             infected.find(
-              calculation => calculation.person === event.contagiousPerson
+              calculation => calculation.person.id === event.contagiousPerson
             )?.endDate || new Date()
           );
         } else {

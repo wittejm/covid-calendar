@@ -20,6 +20,7 @@ interface Props {
 
 export default function Person(props: Props) {
   const person = props.personState.get();
+  const members = props.membersState.get();
   const covidEventsState = props.personState.covidEvents;
   const editing = props.editingState.get();
   const relevantInHouseExposureEventsState: State<
@@ -28,8 +29,8 @@ export default function Person(props: Props) {
     (eventState: State<InHouseExposureEvent>) => {
       const event: InHouseExposureEvent = eventState.get();
       return (
-        event.contagiousPerson.id === person.id ||
-        event.quarantinedPerson.id === person.id
+        event.contagiousPerson === person.id ||
+        event.quarantinedPerson === person.id
       );
     }
   );
@@ -113,13 +114,12 @@ export default function Person(props: Props) {
 
   function setContagiousState(contagious: boolean) {
     relevantInHouseExposureEventsState.map(e => e.set(none)); // Remove all current exposures
-    const members = props.membersState.get();
     const newExposureEvents = members.map((otherPerson: PersonData) => {
       const otherContagious = isContagious(otherPerson);
       if (person !== otherPerson && contagious !== otherContagious) {
         return {
-          contagiousPerson: contagious ? person : otherPerson,
-          quarantinedPerson: contagious ? otherPerson : person,
+          contagiousPerson: contagious ? person.id : otherPerson.id,
+          quarantinedPerson: contagious ? otherPerson.id : person.id,
           exposed: true,
           ongoing: false,
           date: ""
@@ -240,10 +240,16 @@ export default function Person(props: Props) {
               {Object.values(relevantInHouseExposureEvents).map(
                 (event: InHouseExposureEvent) => {
                   if (event.exposed) {
+                    const quarantinedPersonName = members.find(
+                      member => member.id === event.quarantinedPerson
+                    )?.name;
+                    const contagiousPersonName = members.find(
+                      member => member.id === event.contagiousPerson
+                    )?.name;
                     return (
                       <div className="f5">
-                        {event.quarantinedPerson.name} exposed to{" "}
-                        {event.contagiousPerson.name} at {event.date}
+                        {quarantinedPersonName} exposed to{" "}
+                        {contagiousPersonName} at {event.date}
                       </div>
                     );
                   }

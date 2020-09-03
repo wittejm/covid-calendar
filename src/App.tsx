@@ -37,8 +37,8 @@ export default function App() {
     const newExposureEvents = members.get().map((person: PersonData) => {
       if (isContagious(person)) {
         return {
-          contagiousPerson: person,
-          quarantinedPerson: newPerson,
+          contagiousPerson: person.id,
+          quarantinedPerson: newPerson.id,
           exposed: true,
           ongoing: false,
           date: ""
