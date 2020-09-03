@@ -32,8 +32,8 @@ export default function Household(props: Props) {
             return (
               <Person
                 key={personData.id}
-                personIndex={personData.id}
-                householdPersonData={props.members}
+                id={personData.id}
+                members={props.members}
                 inHouseExposureEvents={props.inHouseExposureEvents}
                 setContagiousState={props.setContagiousState}
                 setInHouseExposureEvents={props.setInHouseExposureEvents}

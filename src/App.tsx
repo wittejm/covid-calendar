@@ -3,8 +3,8 @@ import GridView from "./GridView";
 import Household from "./Household";
 import { InHouseExposureEvent, PersonData } from "./types";
 import { parseISO } from "date-fns";
-import { concat, compact, set, remove, flow } from "lodash/fp";
-import { getRandomInt, replace } from "./util";
+import { concat, compact, remove, flow } from "lodash/fp";
+import { getRandomInt } from "./util";
 
 export default function App() {
   const initialMembers: PersonData[] = [
@@ -27,13 +27,13 @@ export default function App() {
       editing: false
     }
   ];
+  const [members, setMembers] = useState(initialMembers);
   const initialInHouseExposureEvents: InHouseExposureEvent[] = [];
   const [inHouseExposureEvents, setInHouseExposureEvents] = useState(
     initialInHouseExposureEvents
   );
-  const [members, setMembers] = useState(initialMembers);
   const [editing, setEditing] = useState(false);
-  const [id, setId] = useState(3);
+  const [id, setId] = useState(members.length + 1);
 
   function isContagious(person: PersonData) {
     return Boolean(
@@ -164,7 +164,5 @@ export default function App() {
         </div>
       </div>
     </main>
-    // Persons on the left
-    // Calendar on the right.
   );
 }

@@ -8,8 +8,8 @@ import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { replace } from "./util";
 
 interface Props {
-  personIndex: number;
-  householdPersonData: PersonData[];
+  id: number;
+  members: PersonData[];
   inHouseExposureEvents: InHouseExposureEvent[];
   setContagiousState: Function;
   setInHouseExposureEvents: Function;
@@ -23,9 +23,7 @@ interface Props {
 }
 
 export default function Person(props: Props) {
-  const personData = props.householdPersonData.find(
-    person => person.id === props.personIndex
-  );
+  const personData = props.members.find(person => person.id === props.id);
 
   const lastCloseContactDate = personData?.covidEvents.LastCloseContact
     ? format(personData.covidEvents.LastCloseContact, "M/dd/yyyy")
@@ -85,7 +83,7 @@ export default function Person(props: Props) {
         <div className="flex">
           <div className="pr2"> {`${questionNumber}.`} </div>
           <MultipleChoiceQuestion
-            personIndex={props.personIndex}
+            personIndex={props.id}
             questionText={firstQuestionText}
             selected={selections[fieldName]}
             onChange={(value: number) => {
@@ -123,14 +121,13 @@ export default function Person(props: Props) {
   const handleChange = (e: React.BaseSyntheticEvent) => {
     const name = e.target.name;
     const value = e.target.value;
-    let nextContagious = false;
     if (name === "positiveTestDate") {
-      nextContagious = Boolean(value !== "" || state.firstSymptomsDate);
+      const nextContagious = Boolean(value !== "" || state.firstSymptomsDate);
       if (contagious !== nextContagious) {
         props.setContagiousState(personData, nextContagious);
       }
     } else if (name === "firstSymptomsDate") {
-      nextContagious = Boolean(value !== "" || state.positiveTestDate);
+      const nextContagious = Boolean(value !== "" || state.positiveTestDate);
       if (contagious !== nextContagious) {
         props.setContagiousState(personData, nextContagious);
       }
@@ -173,13 +170,13 @@ export default function Person(props: Props) {
     };
 
     setEditing(false);
-    props.submitPersonData(personData, props.personIndex);
+    props.submitPersonData(personData, props.id);
   };
 
   const isContagious = Boolean(
     state.positiveTestDate || state.firstSymptomsDate
   );
-  const meaningfulInHouseExposures = props.householdPersonData.filter(
+  const meaningfulInHouseExposures = props.members.filter(
     (otherPerson: PersonData) => {
       const otherPersonContagious = Boolean(
         otherPerson.covidEvents.PositiveTest ||
@@ -223,7 +220,7 @@ export default function Person(props: Props) {
               className="w4"
               value={state.name}
               name="name"
-              id={`${props.personIndex}-${state.name}`}
+              id={`${props.id}-${state.name}`}
               type="text"
               onChange={handleChange}
             />
@@ -231,28 +228,28 @@ export default function Person(props: Props) {
 
           {buildQuestion(
             1,
-            props.personIndex,
+            props.id,
             "lastCloseContactDate",
             "Have you been exposed to someone covid positive outside the household?",
             "When is the last date you were exposed?"
           )}
           {buildQuestion(
             2,
-            props.personIndex,
+            props.id,
             "positiveTestDate",
             "Have you received a positive test result?",
             "What date did you take the test?"
           )}
           {buildQuestion(
             2,
-            props.personIndex,
+            props.id,
             "firstSymptomsDate",
             "Are you showing or have you shown positive symptoms?",
             "What date did you start showing symptoms?"
           )}
 
           <InHouseExposureQuestions
-            personIndex={props.personIndex}
+            personIndex={props.id}
             meaningfulInHouseExposures={meaningfulInHouseExposures}
             relevantInHouseExposureEvents={relevantInHouseExposureEvents}
             updateInHouseExposure={updateInHouseExposure}
