@@ -2,10 +2,11 @@ import React from "react";
 import { useState } from "@hookstate/core";
 import GridView from "./GridView";
 import Household from "./Household";
-import { InHouseExposureEvent, PersonData } from "./types";
-import { parseISO } from "date-fns";
+import { CalculationResult, InHouseExposureEvent, PersonData } from "./types";
+import { format, isValid, parseISO } from "date-fns";
 import { concat, compact, remove, flow } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
+import { computeHouseHoldQuarantinePeriod } from "./calculator";
 
 export default function App() {
   const initialMembers: PersonData[] = [
@@ -64,38 +65,36 @@ export default function App() {
   };
 
   return (
-    <main className="mt5 f7 f5-m f4-l bg-white ba b-black">
-      <h1 className="ph3 f3">Covid Quarantine Calculator</h1>
-      <div className="flex-l">
-        <div
-          className={"bw1 pb5 pb7-l pr5-l " + (editing ? "w-70-l" : "w-50-l")}
-        >
-          <div className="center mr0-l ml-auto-l">
-            <Household
-              membersState={members}
-              inHouseExposureEventsState={inHouseExposureEvents}
-              editingState={editing}
-              handleAddNewPerson={handleAddNewPerson}
-              handleFocusDateField={(fieldName: string) => {
-                console.log("In-app focused date field is ", fieldName);
-              }}
-              handleUnfocusDateField={(fieldName: string) => {
-                console.log("In-app unfocused date field is ", fieldName);
-              }}
-            />
-          </div>
+    <>
+      <div className="navbar navbar-dark bg-dark shadow-sm">
+        <div className="container d-flex justify-content-between">
+          <a href="#" className="navbar-brand d-flex align-items-center">
+            <strong>Covid Quarantine Calculator</strong>
+          </a>
         </div>
-        <div
-          className={
-            "pt2 pt5-l pb2 ph2 pr4-l " + (editing ? "w-30-l" : "w-50-l")
-          }
-        >
+      </div>
+      <main className={"row"}>
+        <div className={"col-md-5"}>
+          <Household
+            membersState={members}
+            inHouseExposureEventsState={inHouseExposureEvents}
+            editingState={editing}
+            handleAddNewPerson={handleAddNewPerson}
+            handleFocusDateField={(fieldName: string) => {
+              console.log("In-app focused date field is ", fieldName);
+            }}
+            handleUnfocusDateField={(fieldName: string) => {
+              console.log("In-app unfocused date field is ", fieldName);
+            }}
+          />
+        </div>
+        <div className={"col-md-7"}>
           <GridView
             members={members.get()}
             inHouseExposureEvents={inHouseExposureEvents.get()}
           />
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

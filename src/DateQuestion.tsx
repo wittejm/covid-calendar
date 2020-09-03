@@ -55,12 +55,12 @@ export default function DateQuestion(props: Props) {
   };
 
   return (
-    <div className="pa3">
-      <div className="pa2">
-        {props.questionText} <span className="f6 fw3">mm/dd/yyyy</span>
-      </div>
+    <div className="">
+      <label htmlFor={`${props.personIndex}-${props.questionText}`}>
+        Date <span className="f6 fw3">mm/dd/yyyy</span>
+      </label>
       <input
-        className="w4 ml2"
+        className="form-control"
         value={questionFieldText}
         name={props.questionFieldName}
         id={`${props.personIndex}-${props.questionText}`}
