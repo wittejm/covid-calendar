@@ -28,22 +28,7 @@ export default function GridView(props: Props) {
   }
 
   return (
-    <div>
-      <div className="pb3">(calendar will go here.)</div>
-      {computeHouseHoldQuarantinePeriod(
-        props.members,
-        props.inHouseExposureEvents
-      ).map((result: CalculationResult) => {
-        return (
-          <div className="p32">
-            {result.person.name} {" quarantined from "}{" "}
-            {isValid(result.startDate) &&
-              format(result.startDate, "MM/dd/yyyy")}
-            {" until "}{" "}
-            {isValid(result.endDate) && format(result.endDate, "MM/dd/yyyy")}
-          </div>
-        );
-      })}
+    <div className={"p-3"}>
       {
         <FullCalendar
           plugins={[dayGridPlugin]}

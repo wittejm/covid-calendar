@@ -1,7 +1,9 @@
 import React from "react";
-import { InHouseExposureEvent, PersonData } from "./types";
+import { CalculationResult, InHouseExposureEvent, PersonData } from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core/dist";
+import { computeHouseHoldQuarantinePeriod } from "./calculator";
+import { format, isValid } from "date-fns";
 
 interface Props {
   handleAddNewPerson: Function;
@@ -15,14 +17,21 @@ interface Props {
 
 export default function Household(props: Props) {
   const editing = props.editingState.get();
+  const members = props.membersState.get();
+  const inHouseExposureEvents = props.inHouseExposureEventsState.get();
   return (
-    <div className="">
-      <div className="f3 pa3">
-        {" "}
-        <span className="bg-light-green pv2 ph2 mr2 f7"> (icon) </span>{" "}
-        Household
-      </div>
-      <div className="pa2">
+    <>
+      <div className="p-3">
+        {editing === -1 && (
+          <button
+            className="btn btn-primary mb-2"
+            onClick={() => {
+              props.handleAddNewPerson();
+            }}
+          >
+            <i className="fa fa-user-plus" aria-hidden="true"></i> Add Person
+          </button>
+        )}
         {props.membersState.map(
           (personState: State<PersonData>, index: number) => {
             const person = personState.get();
@@ -41,17 +50,26 @@ export default function Household(props: Props) {
             );
           }
         )}
-        {editing === -1 && (
-          <button
-            className="pa2 f5 fw6"
-            onClick={() => {
-              props.handleAddNewPerson();
-            }}
-          >
-            Add Person
-          </button>
-        )}
+        <hr />
+        <div className={"p-1"}>
+          <h4>Guidance</h4>
+          {computeHouseHoldQuarantinePeriod(members, inHouseExposureEvents).map(
+            (result: CalculationResult) => {
+              return (
+                <div className="p32">
+                  {result.person.name} {" should quarantine from "}{" "}
+                  {isValid(result.startDate) &&
+                    format(result.startDate, "MM/dd/yyyy")}
+                  {" until "}{" "}
+                  {isValid(result.endDate) &&
+                    format(result.endDate, "MM/dd/yyyy")}
+                  {"."}
+                </div>
+              );
+            }
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

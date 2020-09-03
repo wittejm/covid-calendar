@@ -12,7 +12,7 @@ interface Props {
 export default function MultipleChoiceQuestion(props: Props) {
   return (
     <fieldset className="relative">
-      <legend className="mb2">{props.questionText}</legend>
+      <label>{props.questionText}</label>
       <div className="radio">
         {Object.keys(props.options).map((answer: string, index: number) => {
           return (

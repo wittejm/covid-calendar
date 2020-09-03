@@ -57,24 +57,21 @@ export default function Person(props: Props) {
     dateQuestionText: string
   ) => {
     return (
-      <div className="pa2 mb3 bg-light-gray b--green ba br2">
-        <div className="flex">
-          <div className="pr2"> {`${questionNumber}.`} </div>
-          <MultipleChoiceQuestion
-            personIndex={person.id}
-            questionText={firstQuestionText}
-            selected={selections[fieldName]}
-            onChange={(value: number) => {
-              setSelections((state: any) => {
-                return { ...state, [fieldName]: value };
-              });
-              if (value) {
-                covidEventsState.set(events => unset(fieldName)(events));
-              }
-            }}
-            options={["Yes", "No"]}
-          />
-        </div>
+      <div className="mb-3">
+        <MultipleChoiceQuestion
+          personIndex={person.id}
+          questionText={firstQuestionText}
+          selected={selections[fieldName]}
+          onChange={(value: number) => {
+            setSelections((state: any) => {
+              return { ...state, [fieldName]: value };
+            });
+            if (value) {
+              covidEventsState.set(events => unset(fieldName)(events));
+            }
+          }}
+          options={["Yes", "No"]}
+        />
         {selections[fieldName] === 0 ? (
           <DateQuestion
             personIndex={personIndex}
@@ -90,6 +87,7 @@ export default function Person(props: Props) {
             }}
           />
         ) : null}
+        <hr />
       </div>
     );
   };
@@ -152,13 +150,13 @@ export default function Person(props: Props) {
   }
 
   return (
-    <div className={"f4 ma2 br2 pv2 bg-washed-blue"}>
+    <div className={"card shadow-sm mb-2"}>
       {props.editingState.get() === person.id ? (
-        <div className="pa3">
-          <div className="pa2">
-            Name:{" "}
+        <div className="p-2">
+          <div className="mb-3">
+            <label htmlFor={`${person.id}-name`}>Name</label>
             <input
-              className="w4"
+              className="form-control"
               value={person.name}
               name="name"
               id={`${person.id}-name`}
@@ -196,15 +194,9 @@ export default function Person(props: Props) {
               relevantInHouseExposureEventsState
             }
           />
-          <div>
+          <div className={"d-flex justify-content-between align-items-center"}>
             <button
-              className="fw5 pa2 bg-mid-gray white bg-animate hover-bg-silver"
-              onClick={() => props.editingState.set(-1)}
-            >
-              {person.isNewPerson ? "Submit" : "Update"}
-            </button>
-            <button
-              className="ma2 fw5 pa2 bg-light-silver white bg-animate hover-bg-gray"
+              className="btn btn-secondary"
               onClick={() => {
                 removeFromMembers();
                 props.editingState.set(-1);
@@ -217,45 +209,54 @@ export default function Person(props: Props) {
                 className="pl2 fas fa-times-circle white"
               ></i>
             </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => props.editingState.set(-1)}
+            >
+              {person.isNewPerson ? "Submit" : "Update"}
+            </button>
           </div>
         </div>
       ) : (
-        <div>
-          <div className="pl5 fw5">
-            {person.name + " "}
-            {editing === -1 && (
-              <button onClick={() => props.editingState.set(person.id)}>
-                <span className="visually-hidden">Edit Person</span>
-                <span aria-hidden="true" className="pl2 f5 fas fa-pen"></span>
-              </button>
-            )}
-            <div className="pl3">
-              {Object.entries(person.covidEvents).map(([name, date]) => {
-                return (
-                  <div className="f5">
-                    {name} {": "} {date}
-                  </div>
-                );
-              })}
-              {Object.values(relevantInHouseExposureEvents).map(
-                (event: InHouseExposureEvent) => {
-                  if (event.exposed) {
-                    const quarantinedPersonName = members.find(
-                      member => member.id === event.quarantinedPerson
-                    )?.name;
-                    const contagiousPersonName = members.find(
-                      member => member.id === event.contagiousPerson
-                    )?.name;
-                    return (
-                      <div className="f5">
-                        {quarantinedPersonName} exposed to{" "}
-                        {contagiousPersonName} at {event.date}
-                      </div>
-                    );
-                  }
-                }
+        <div className="card-body">
+          <h4 className="d-flex justify-content-between align-items-center mb-3">
+            <span>{person.name + " "}</span>
+            <span>
+              {editing === -1 && (
+                <button onClick={() => props.editingState.set(person.id)}>
+                  <span className="visually-hidden">Edit Person</span>
+                  <span aria-hidden="true" className="f5 fas fa-pen"></span>
+                </button>
               )}
-            </div>
+            </span>
+          </h4>
+          <div className="">
+            {Object.entries(person.covidEvents).map(([name, date]) => {
+              return (
+                <div className="f5">
+                  {name}
+                  {": "} {date}
+                </div>
+              );
+            })}
+            {Object.values(relevantInHouseExposureEvents).map(
+              (event: InHouseExposureEvent) => {
+                if (event.exposed) {
+                  const quarantinedPersonName = members.find(
+                    member => member.id === event.quarantinedPerson
+                  )?.name;
+                  const contagiousPersonName = members.find(
+                    member => member.id === event.contagiousPerson
+                  )?.name;
+                  return (
+                    <div className="f5">
+                      {quarantinedPersonName} exposed to {contagiousPersonName}{" "}
+                      at {event.date}
+                    </div>
+                  );
+                }
+              }
+            )}
           </div>
         </div>
       )}
