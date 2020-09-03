@@ -144,6 +144,7 @@ export default function Person(props: Props) {
   );
 
   function removeFromMembers() {
+    relevantInHouseExposureEventsState.map(e => e.set(none)); // Remove all current exposures
     props.membersState.set(membersState => [
       ...membersState.slice(0, props.index),
       ...membersState.slice(props.index + 1)
@@ -205,32 +206,17 @@ export default function Person(props: Props) {
             <button
               className="ma2 fw5 pa2 bg-light-silver white bg-animate hover-bg-gray"
               onClick={() => {
-                if (person.isNewPerson) {
-                  removeFromMembers();
-                }
+                removeFromMembers();
                 props.editingState.set(-1);
               }}
             >
-              <span className="visually-hidden">Cancel</span>{" "}
-              {person.isNewPerson ? "Cancel Add" : "Cancel Edit"}
-              <i aria-hidden="true" className="pl2 fas fa-undo white"></i>
+              <span className="visually-hidden">Remove</span>
+              Remove
+              <i
+                aria-hidden="true"
+                className="pl2 fas fa-times-circle white"
+              ></i>
             </button>
-            {!person.isNewPerson && (
-              <button
-                className="ma2 fw5 pa2 bg-light-silver white bg-animate hover-bg-gray"
-                onClick={() => {
-                  removeFromMembers();
-                  props.editingState.set(-1);
-                }}
-              >
-                <span className="visually-hidden">Remove</span>
-                Remove
-                <i
-                  aria-hidden="true"
-                  className="pl2 fas fa-times-circle white"
-                ></i>
-              </button>
-            )}
           </div>
         </div>
       ) : (
