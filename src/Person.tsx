@@ -5,7 +5,7 @@ import DateQuestion from "./DateQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { none, State } from "@hookstate/core/dist";
-import { compact } from "lodash/fp";
+import { compact, unset } from "lodash/fp";
 import { isContagious } from "./util";
 
 interface Props {
@@ -68,6 +68,9 @@ export default function Person(props: Props) {
               setSelections((state: any) => {
                 return { ...state, [fieldName]: value };
               });
+              if (value) {
+                covidEventsState.set(events => unset(fieldName)(events));
+              }
             }}
             options={["Yes", "No"]}
           />
