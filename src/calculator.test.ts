@@ -14,7 +14,7 @@ const empty: PersonData = {
 };
 
 const jordan: PersonData = {
-  id: 0,
+  id: 1,
   name: "Jordan",
   covidEvents: {
     SymptomsStart: "01/01/2020"
@@ -24,7 +24,7 @@ const jordan: PersonData = {
 };
 
 const kent: PersonData = {
-  id: 0,
+  id: 2,
   name: "Foo",
   covidEvents: {
     PositiveTest: "01/01/2020"
@@ -34,7 +34,7 @@ const kent: PersonData = {
 };
 
 const personA: PersonData = {
-  id: 0,
+  id: 3,
   name: "Person A",
   covidEvents: {
     PositiveTest: "01/01/2020",
@@ -45,7 +45,7 @@ const personA: PersonData = {
 };
 
 const personB: PersonData = {
-  id: 0,
+  id: 4,
   name: "Person B",
   covidEvents: {
     PositiveTest: "01/01/2020",
@@ -57,7 +57,7 @@ const personB: PersonData = {
 };
 
 const personC: PersonData = {
-  id: 0,
+  id: 5,
   name: "Person C",
   covidEvents: {
     PositiveTest: "01/01/2020",
@@ -96,8 +96,8 @@ test("Isolation Period makes use of symptoms end", () => {
 
 test("Household calculation for one infected and one caretaker", () => {
   const inHouseExposureEvent = {
-    contagiousPerson: personA,
-    quarantinedPerson: empty,
+    contagiousPerson: personA.id,
+    quarantinedPerson: empty.id,
     exposed: true,
     ongoing: true,
     date: ""
@@ -112,8 +112,8 @@ test("Household calculation for one infected and one caretaker", () => {
 
 test("Household calculation for one infected and isolated peer", () => {
   const inHouseExposureEvent = {
-    contagiousPerson: personA,
-    quarantinedPerson: empty,
+    contagiousPerson: personA.id,
+    quarantinedPerson: empty.id,
     exposed: true,
     ongoing: false,
     date: "1/5/2020"

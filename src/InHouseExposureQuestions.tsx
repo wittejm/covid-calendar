@@ -17,8 +17,8 @@ export default function InHouseExposureQuestions(props: Props) {
           (eventState: State<InHouseExposureEvent>) => {
             const event = eventState.get();
             return (
-              event.quarantinedPerson.name === otherPerson.name ||
-              event.contagiousPerson.name === otherPerson.name
+              event.quarantinedPerson === otherPerson.id ||
+              event.contagiousPerson === otherPerson.id
             );
           }
         );

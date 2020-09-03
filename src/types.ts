@@ -20,8 +20,8 @@ export interface CovidEvents {
 }
 
 export interface InHouseExposureEvent {
-  contagiousPerson: PersonData;
-  quarantinedPerson: PersonData;
+  contagiousPerson: number;
+  quarantinedPerson: number;
   exposed: boolean;
   ongoing: boolean;
   date: string;
