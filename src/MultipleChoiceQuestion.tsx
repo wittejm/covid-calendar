@@ -19,7 +19,6 @@ export default function MultipleChoiceQuestion(props: Props) {
             <div className="dib" key={index}>
               <input
                 type="radio"
-                //name={answer}
                 id={`${props.personIndex}-${props.questionText}-${index}`}
                 value={index}
                 onChange={() => {

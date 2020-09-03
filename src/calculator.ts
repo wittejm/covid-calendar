@@ -45,7 +45,9 @@ export function computeHouseHoldQuarantinePeriod(
           return parse(event.date, "M/dd/yyyy", new Date());
         }
       });
-      const latestStatedExposureDate = person.covidEvents.LastCloseContact;
+      const latestStatedExposureDate = person.covidEvents.LastCloseContact
+        ? parse(person.covidEvents.LastCloseContact, "M/dd/yyyy", new Date())
+        : undefined;
       const earliestExposureDate = latestStatedExposureDate
         ? min([...exposureDates, latestStatedExposureDate])
         : min(exposureDates);
@@ -70,10 +72,13 @@ export function computeIsolationPeriod(person: PersonData): [Date, Date] {
     person.covidEvents.PositiveTest
   ])
     .compact()
+    .map(date => parse(date, "M/dd/yyyy", new Date()))
     .thru(dates => min(dates))
     .value();
   const tenDaysAfterOnset = illnessOnset && addDays(illnessOnset, 10);
-  const symptomsEnd = person.covidEvents.SymptomsEnd;
+  const symptomsEnd = person.covidEvents.SymptomsEnd
+    ? parse(person.covidEvents.SymptomsEnd, "M/dd/yyyy", new Date())
+    : undefined;
   const dayAfterSymptomsEnd = symptomsEnd && addDays(symptomsEnd, 1);
   const isolationEndDate = _.chain([tenDaysAfterOnset, dayAfterSymptomsEnd])
     .compact()

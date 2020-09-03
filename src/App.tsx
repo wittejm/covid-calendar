@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "@hookstate/core";
 import GridView from "./GridView";
 import Household from "./Household";
 import { InHouseExposureEvent, PersonData } from "./types";
 import { parseISO } from "date-fns";
 import { concat, compact, remove, flow } from "lodash/fp";
-import { getRandomInt } from "./util";
+import { getRandomInt, isContagious } from "./util";
 
 export default function App() {
   const initialMembers: PersonData[] = [
@@ -12,7 +13,7 @@ export default function App() {
       id: 1,
       name: `Alice`,
       covidEvents: {
-        LastCloseContact: parseISO("2020-08-25")
+        LastCloseContact: "8/25/2020"
       },
       isNewPerson: false,
       editing: false
@@ -21,103 +22,45 @@ export default function App() {
       id: 2,
       name: `Bob`,
       covidEvents: {
-        LastCloseContact: parseISO("2020-08-28")
+        LastCloseContact: "8/28/2020"
       },
       isNewPerson: false,
       editing: false
     }
   ];
-  const [members, setMembers] = useState(initialMembers);
-  const initialInHouseExposureEvents: InHouseExposureEvent[] = [];
-  const [inHouseExposureEvents, setInHouseExposureEvents] = useState(
-    initialInHouseExposureEvents
-  );
-  const [editing, setEditing] = useState(false);
-  const [id, setId] = useState(members.length + 1);
-
-  function isContagious(person: PersonData) {
-    return Boolean(
-      person.covidEvents.SymptomsStart || person.covidEvents.PositiveTest
-    );
-  }
-
-  function setContagiousState(person: PersonData, contagious: boolean) {
-    setInHouseExposureEvents(
-      (inHouseExposureEvents: InHouseExposureEvent[]) => {
-        const newExposureEvents = members.map((otherPerson: PersonData) => {
-          if (
-            person !== otherPerson &&
-            contagious !== isContagious(otherPerson)
-          ) {
-            return {
-              contagiousPerson: contagious ? person : otherPerson,
-              quarantinedPerson: contagious ? otherPerson : person,
-              exposed: true,
-              ongoing: false,
-              date: ""
-            };
-          }
-        });
-        return flow(
-          remove(
-            (event: InHouseExposureEvent) =>
-              event.contagiousPerson === person ||
-              event.quarantinedPerson === person
-          ),
-          concat(compact(newExposureEvents))
-        )(inHouseExposureEvents);
-      }
-    );
-  }
+  const members = useState(initialMembers);
+  const inHouseExposureEvents = useState([] as InHouseExposureEvent[]);
+  const editing = useState(-1); // ID of person being edited or -1 if no one
+  const id = useState(members.length + 1);
 
   function createInHouseExposureEvents(newPerson: PersonData) {
-    setInHouseExposureEvents(
-      (inHouseExposureEvents: InHouseExposureEvent[]) => {
-        const newExposureEvents = members.map((person: PersonData) => {
-          if (isContagious(person)) {
-            return {
-              contagiousPerson: person,
-              quarantinedPerson: newPerson,
-              exposed: true,
-              ongoing: false,
-              date: ""
-            };
-          }
-        });
-        return concat(inHouseExposureEvents, compact(newExposureEvents));
+    const newExposureEvents = members.get().map((person: PersonData) => {
+      if (isContagious(person)) {
+        return {
+          contagiousPerson: person,
+          quarantinedPerson: newPerson,
+          exposed: true,
+          ongoing: false,
+          date: ""
+        };
       }
-    );
+    });
+    inHouseExposureEvents.merge(compact(newExposureEvents));
   }
 
   const handleAddNewPerson = () => {
+    const currentId = id.get();
     const newPerson = {
-      id: id,
+      id: currentId,
       name: `Person ${getRandomInt(1000)}`,
       covidEvents: {},
       isNewPerson: true,
       editing: true
     };
-    setId(id => id + 1);
-    setMembers(members => [...members, newPerson]);
-    setEditing(true);
+    id.set(id => id + 1);
+    members.set(members => [...members, newPerson]);
+    editing.set(currentId);
     createInHouseExposureEvents(newPerson);
-  };
-
-  const handlePersonChanges = (updatedPersonData: PersonData, id: number) => {
-    setMembers(members =>
-      flow(
-        remove((member: PersonData) => member.id === id),
-        concat(updatedPersonData)
-      )(members)
-    );
-    setEditing(false);
-  };
-
-  const handleRemovePerson = (id: number) => {
-    setMembers(members =>
-      remove((member: PersonData) => member.id === id)(members)
-    );
-    setEditing(false);
   };
 
   return (
@@ -129,20 +72,10 @@ export default function App() {
         >
           <div className="center mr0-l ml-auto-l">
             <Household
-              members={members}
-              inHouseExposureEvents={inHouseExposureEvents}
-              setInHouseExposureEvents={setInHouseExposureEvents}
-              setContagiousState={setContagiousState}
+              membersState={members}
+              inHouseExposureEventsState={inHouseExposureEvents}
+              editingState={editing}
               handleAddNewPerson={handleAddNewPerson}
-              handlePersonChanges={handlePersonChanges}
-              handleRemovePerson={handleRemovePerson}
-              handleBeginEdit={() => {
-                setEditing(true);
-              }}
-              handleCancelEdit={() => {
-                setEditing(false);
-              }}
-              editing={editing}
               handleFocusDateField={(fieldName: string) => {
                 console.log("In-app focused date field is ", fieldName);
               }}
@@ -158,8 +91,8 @@ export default function App() {
           }
         >
           <GridView
-            members={members}
-            inHouseExposureEvents={inHouseExposureEvents}
+            members={members.get()}
+            inHouseExposureEvents={inHouseExposureEvents.get()}
           />
         </div>
       </div>
