@@ -76,7 +76,7 @@ export default function Person(props: Props) {
           <DateQuestion
             personIndex={personIndex}
             questionText={firstQuestionText}
-            questionFieldText={covidEventsState.fieldName.get()}
+            questionFieldText={covidEventsState[fieldName].get()}
             questionFieldName={fieldName}
             onChange={handleChange}
             onFocus={() => {
