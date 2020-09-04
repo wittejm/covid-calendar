@@ -13,6 +13,8 @@ jobs:
           persist-credentials: false
 
       - name: Install and Build 🔧
+        env:
+          CI: false
         run: |
           npm install
           npm run build
