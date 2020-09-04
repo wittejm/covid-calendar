@@ -10,14 +10,12 @@ export enum CovidEventName {
   LastCloseContact = "Most Recent Close Contact",
   SymptomsStart = "Illness Onset",
   SymptomsEnd = "Most Recent Symptoms",
-  PositiveTest = "Most Recent Positive Test",
-  NegativeTest = "Most Recent Negative Test",
-  InHouseExposure = "In-house Exposure"
+  PositiveTest = "Most Recent Positive Test"
 }
 
-export interface CovidEvents {
-  [key: string]: string;
-}
+export type CovidEvents = {
+  [key in CovidEventName]: string;
+};
 
 export interface InHouseExposureEvent {
   contagiousPerson: number;

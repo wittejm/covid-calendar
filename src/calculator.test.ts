@@ -2,13 +2,18 @@ import {
   computeHouseHoldQuarantinePeriod,
   computeIsolationPeriod
 } from "./calculator";
-import { PersonData } from "./types";
+import { CovidEventName, PersonData } from "./types";
 import { isValid, parseISO } from "date-fns";
 
 const empty: PersonData = {
   id: 0,
   name: "Empty",
-  covidEvents: {},
+  covidEvents: {
+    [CovidEventName.LastCloseContact]: "",
+    [CovidEventName.SymptomsStart]: "",
+    [CovidEventName.SymptomsEnd]: "",
+    [CovidEventName.PositiveTest]: ""
+  },
   isNewPerson: false,
   editing: false
 };
@@ -17,7 +22,10 @@ const jordan: PersonData = {
   id: 1,
   name: "Jordan",
   covidEvents: {
-    SymptomsStart: "01/01/2020"
+    [CovidEventName.SymptomsStart]: "01/01/2020",
+    [CovidEventName.LastCloseContact]: "",
+    [CovidEventName.SymptomsEnd]: "",
+    [CovidEventName.PositiveTest]: ""
   },
   isNewPerson: false,
   editing: false
@@ -27,7 +35,10 @@ const kent: PersonData = {
   id: 2,
   name: "Foo",
   covidEvents: {
-    PositiveTest: "01/01/2020"
+    [CovidEventName.PositiveTest]: "01/01/2020",
+    [CovidEventName.LastCloseContact]: "",
+    [CovidEventName.SymptomsStart]: "",
+    [CovidEventName.SymptomsEnd]: ""
   },
   isNewPerson: false,
   editing: false
@@ -37,8 +48,10 @@ const personA: PersonData = {
   id: 3,
   name: "Person A",
   covidEvents: {
-    PositiveTest: "01/01/2020",
-    SymptomsStart: "01/05/2020"
+    [CovidEventName.PositiveTest]: "01/01/2020",
+    [CovidEventName.SymptomsStart]: "01/05/2020",
+    [CovidEventName.LastCloseContact]: "",
+    [CovidEventName.SymptomsEnd]: ""
   },
   isNewPerson: false,
   editing: false
@@ -48,9 +61,10 @@ const personB: PersonData = {
   id: 4,
   name: "Person B",
   covidEvents: {
-    PositiveTest: "01/01/2020",
-    SymptomsStart: "01/05/2020",
-    SymptomsEnd: "01/11/2020"
+    [CovidEventName.PositiveTest]: "01/01/2020",
+    [CovidEventName.SymptomsStart]: "01/05/2020",
+    [CovidEventName.SymptomsEnd]: "01/11/2020",
+    [CovidEventName.LastCloseContact]: ""
   },
   isNewPerson: false,
   editing: false
@@ -60,9 +74,10 @@ const personC: PersonData = {
   id: 5,
   name: "Person C",
   covidEvents: {
-    PositiveTest: "01/01/2020",
-    SymptomsStart: "01/05/2020",
-    SymptomsEnd: "01/07/2020"
+    [CovidEventName.PositiveTest]: "01/01/2020",
+    [CovidEventName.SymptomsStart]: "01/05/2020",
+    [CovidEventName.SymptomsEnd]: "01/07/2020",
+    [CovidEventName.LastCloseContact]: ""
   },
   isNewPerson: false,
   editing: false

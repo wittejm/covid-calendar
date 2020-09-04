@@ -1,4 +1,9 @@
-import { CalculationResult, InHouseExposureEvent, PersonData } from "./types";
+import {
+  CalculationResult,
+  CovidEventName,
+  InHouseExposureEvent,
+  PersonData
+} from "./types";
 import * as _ from "lodash";
 import { addDays, max, min, isValid, parse } from "date-fns";
 
@@ -45,8 +50,14 @@ export function computeHouseHoldQuarantinePeriod(
           return parse(event.date, "M/dd/yyyy", new Date());
         }
       });
-      const latestStatedExposureDate = person.covidEvents.LastCloseContact
-        ? parse(person.covidEvents.LastCloseContact, "M/dd/yyyy", new Date())
+      const latestStatedExposureDate = person.covidEvents[
+        CovidEventName.LastCloseContact
+      ]
+        ? parse(
+            person.covidEvents[CovidEventName.LastCloseContact],
+            "M/dd/yyyy",
+            new Date()
+          )
         : undefined;
       const earliestExposureDate = latestStatedExposureDate
         ? min([...exposureDates, latestStatedExposureDate])
@@ -68,16 +79,20 @@ export function computeHouseHoldQuarantinePeriod(
 
 export function computeIsolationPeriod(person: PersonData): [Date, Date] {
   const illnessOnset = _.chain([
-    person.covidEvents.SymptomsStart,
-    person.covidEvents.PositiveTest
+    person.covidEvents[CovidEventName.SymptomsStart],
+    person.covidEvents[CovidEventName.PositiveTest]
   ])
     .compact()
     .map(date => parse(date, "M/dd/yyyy", new Date()))
     .thru(dates => min(dates))
     .value();
   const tenDaysAfterOnset = illnessOnset && addDays(illnessOnset, 10);
-  const symptomsEnd = person.covidEvents.SymptomsEnd
-    ? parse(person.covidEvents.SymptomsEnd, "M/dd/yyyy", new Date())
+  const symptomsEnd = person.covidEvents[CovidEventName.SymptomsEnd]
+    ? parse(
+        person.covidEvents[CovidEventName.SymptomsEnd],
+        "M/dd/yyyy",
+        new Date()
+      )
     : undefined;
   const dayAfterSymptomsEnd = symptomsEnd && addDays(symptomsEnd, 1);
   const isolationEndDate = _.chain([tenDaysAfterOnset, dayAfterSymptomsEnd])

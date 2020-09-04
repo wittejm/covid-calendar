@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "@hookstate/core";
 
-import { PersonData, CovidEvents, InHouseExposureEvent } from "./types";
+import { CovidEventName, InHouseExposureEvent, PersonData } from "./types";
 import DateQuestion from "./DateQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
@@ -41,11 +41,9 @@ export default function Person(props: Props) {
   );
   const contagious = isContagious(person);
   const selectionsState: any = useState(
-    ["LastCloseContact", "PositiveTest", "SymptomsStart", "SymptomsEnd"].reduce(
-      (selections: any, key) => (
-        (selections[key] =
-          covidEventsState[key].get() && covidEventsState[key].get() !== ""),
-        selections
+    Object.values(CovidEventName).reduce(
+      (selections: any, key: CovidEventName) => (
+        (selections[key] = covidEventsState[key].get() !== ""), selections
       ),
       {}
     )
@@ -53,7 +51,7 @@ export default function Person(props: Props) {
 
   const buildQuestion = (
     questionNumber: number,
-    fieldName: string,
+    fieldName: CovidEventName,
     firstQuestionText: string
   ) => {
     return (
@@ -91,20 +89,20 @@ export default function Person(props: Props) {
   };
 
   const handleChange = (e: React.BaseSyntheticEvent) => {
-    const name = e.target.name;
-    const value = e.target.value;
+    const name: CovidEventName = e.target.name;
+    const value: string = e.target.value;
     const isNonEmpty = value && value !== "";
     covidEventsState[name].set(value);
-    if (name === "PositiveTest") {
+    if (name === CovidEventName.PositiveTest) {
       const nextContagious = Boolean(
-        isNonEmpty || covidEventsState.firstSymptomsDate.get()
+        isNonEmpty || covidEventsState[CovidEventName.SymptomsStart].get()
       );
       if (contagious !== nextContagious) {
         setContagiousState(nextContagious);
       }
-    } else if (name === "SymptomsStart") {
+    } else if (name === CovidEventName.SymptomsStart) {
       const nextContagious = Boolean(
-        isNonEmpty || covidEventsState.positiveTestDate.get()
+        isNonEmpty || covidEventsState[CovidEventName.PositiveTest].get()
       );
       if (contagious !== nextContagious) {
         setContagiousState(nextContagious);
@@ -130,13 +128,8 @@ export default function Person(props: Props) {
   }
 
   const meaningfulInHouseExposures = members.filter(
-    (otherPerson: PersonData) => {
-      const otherPersonContagious = Boolean(
-        otherPerson.covidEvents.PositiveTest ||
-          otherPerson.covidEvents.SymptomsStart
-      );
-      return person !== otherPerson && contagious !== otherPersonContagious;
-    }
+    (otherPerson: PersonData) =>
+      person !== otherPerson && contagious !== isContagious(otherPerson)
   );
 
   function removeFromMembers() {
@@ -166,15 +159,19 @@ export default function Person(props: Props) {
           </div>
           {buildQuestion(
             1,
-            "LastCloseContact",
+            CovidEventName.LastCloseContact,
             "I have been exposed to someone covid positive (outside the household)"
           )}
           {buildQuestion(
             2,
-            "PositiveTest",
+            CovidEventName.PositiveTest,
             "I have received a positive test result"
           )}
-          {buildQuestion(2, "SymptomsStart", "I have shown positive symptoms")}
+          {buildQuestion(
+            2,
+            CovidEventName.SymptomsStart,
+            "I have shown positive symptoms"
+          )}
           <InHouseExposureQuestions
             id={person.id}
             meaningfulInHouseExposures={meaningfulInHouseExposures}
@@ -219,14 +216,18 @@ export default function Person(props: Props) {
             </span>
           </h4>
           <div className="">
-            {Object.entries(person.covidEvents).map(([name, date]) => {
-              return (
-                <div className="f5">
-                  {name}
-                  {": "} {date}
-                </div>
-              );
-            })}
+            {Object.entries(person.covidEvents).map(
+              ([name, date]: [string, string]) => {
+                if (date !== "") {
+                  return (
+                    <div className="f5">
+                      {name}
+                      {": "} {date}
+                    </div>
+                  );
+                }
+              }
+            )}
             {Object.values(relevantInHouseExposureEvents).map(
               (event: InHouseExposureEvent) => {
                 if (event.exposed) {
