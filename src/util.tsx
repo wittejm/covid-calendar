@@ -1,5 +1,5 @@
 import { flow, remove, concat } from "lodash/fp";
-import { PersonData } from "./types";
+import { CovidEventName, PersonData } from "./types";
 
 export function replace<T>(array: Array<T>, old: T, updated: T): Array<T> {
   return flow(
@@ -14,6 +14,7 @@ export function getRandomInt(max: number) {
 
 export function isContagious(person: PersonData) {
   return Boolean(
-    person.covidEvents.SymptomsStart || person.covidEvents.PositiveTest
+    person.covidEvents[CovidEventName.PositiveTest] ||
+      person.covidEvents[CovidEventName.SymptomsStart]
   );
 }

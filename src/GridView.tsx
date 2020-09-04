@@ -3,18 +3,24 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
-import { PersonData, CalculationResult, InHouseExposureEvent } from "./types";
+import {
+  PersonData,
+  CalculationResult,
+  InHouseExposureEvent,
+  CovidEventName
+} from "./types";
 import { format, isValid } from "date-fns";
 import { State } from "@hookstate/core/dist";
 interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEvents: InHouseExposureEvent[];
   editing: number;
-  selectingDateFieldState: State<string>;
+  selectingDateFieldState: State<CovidEventName | undefined>;
 }
 
 export default function GridView(props: Props) {
   const members = props.membersState.get();
+  const selectingDateField = props.selectingDateFieldState.get();
   function computeEvents(
     members: PersonData[],
     inHouseExposureEvents: InHouseExposureEvent[]
@@ -34,22 +40,17 @@ export default function GridView(props: Props) {
   return (
     <div className={"p-3"}>
       {
-        <div
-          className={
-            props.selectingDateFieldState.get() ? "ba bw2 b--light-yellow" : ""
-          }
-        >
+        <div className={selectingDateField ? "ba bw2 b--light-yellow" : ""}>
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             events={computeEvents(members, props.inHouseExposureEvents)}
             dateClick={(info: any) => {
-              if (props.editing >= 0) {
+              if (props.editing >= 0 && selectingDateField) {
                 props.membersState[props.editing - 1].covidEvents[
-                  props.selectingDateFieldState.get()
+                  selectingDateField
                 ].set(format(info.date, "MM/dd/yyyy"));
               }
-              props.selectingDateFieldState.set("");
             }}
           />
         </div>

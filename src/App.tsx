@@ -2,7 +2,12 @@ import React from "react";
 import { useState } from "@hookstate/core";
 import GridView from "./GridView";
 import Household from "./Household";
-import { CalculationResult, InHouseExposureEvent, PersonData } from "./types";
+import {
+  CalculationResult,
+  CovidEventName,
+  InHouseExposureEvent,
+  PersonData
+} from "./types";
 import { format, isValid, parseISO } from "date-fns";
 import { concat, compact, remove, flow } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
@@ -13,7 +18,10 @@ export default function App() {
       id: 1,
       name: `Alice`,
       covidEvents: {
-        LastCloseContact: "8/25/2020"
+        [CovidEventName.LastCloseContact]: "8/25/2020",
+        [CovidEventName.SymptomsStart]: "",
+        [CovidEventName.SymptomsEnd]: "",
+        [CovidEventName.PositiveTest]: ""
       },
       isNewPerson: false,
       editing: false
@@ -22,7 +30,10 @@ export default function App() {
       id: 2,
       name: `Bob`,
       covidEvents: {
-        LastCloseContact: "8/28/2020"
+        [CovidEventName.LastCloseContact]: "8/28/2020",
+        [CovidEventName.SymptomsStart]: "",
+        [CovidEventName.SymptomsEnd]: "",
+        [CovidEventName.PositiveTest]: ""
       },
       isNewPerson: false,
       editing: false
@@ -32,7 +43,9 @@ export default function App() {
   const inHouseExposureEvents = useState([] as InHouseExposureEvent[]);
   const editing = useState(-1); // ID of person being edited or -1 if no one
   const id = useState(members.length + 1);
-  const selectingDateFieldState = useState("");
+  const selectingDateFieldState = useState<CovidEventName | undefined>(
+    undefined
+  );
 
   function createInHouseExposureEvents(newPerson: PersonData) {
     const newExposureEvents = members.get().map((person: PersonData) => {
@@ -54,7 +67,12 @@ export default function App() {
     const newPerson = {
       id: currentId,
       name: `Person ${getRandomInt(1000)}`,
-      covidEvents: {},
+      covidEvents: {
+        [CovidEventName.LastCloseContact]: "",
+        [CovidEventName.SymptomsStart]: "",
+        [CovidEventName.SymptomsEnd]: "",
+        [CovidEventName.PositiveTest]: ""
+      },
       isNewPerson: true,
       editing: true
     };
@@ -80,11 +98,11 @@ export default function App() {
             inHouseExposureEventsState={inHouseExposureEvents}
             editingState={editing}
             handleAddNewPerson={handleAddNewPerson}
-            handleFocusDateField={(fieldName: string) => {
+            handleFocusDateField={(fieldName: CovidEventName) => {
               selectingDateFieldState.set(fieldName);
             }}
-            handleUnfocusDateField={(fieldName: string) => {
-              selectingDateFieldState.set("");
+            handleUnfocusDateField={(fieldName: CovidEventName) => {
+              selectingDateFieldState.set(undefined);
             }}
           />
         </div>
