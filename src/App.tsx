@@ -2,14 +2,8 @@ import React from "react";
 import { useState } from "@hookstate/core";
 import GridView from "./GridView";
 import Household from "./Household";
-import {
-  CalculationResult,
-  CovidEventName,
-  InHouseExposureEvent,
-  PersonData
-} from "./types";
-import { format, isValid, parseISO } from "date-fns";
-import { concat, compact, remove, flow } from "lodash/fp";
+import { CovidEventName, InHouseExposureEvent, PersonData } from "./types";
+import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
 
 export default function App() {

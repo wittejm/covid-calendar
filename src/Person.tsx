@@ -39,7 +39,6 @@ export default function Person(props: Props) {
   const relevantInHouseExposureEvents = relevantInHouseExposureEventsState.map(
     e => e.get()
   );
-  const contagious = isContagious(person);
   const selectionsState: any = useState(
     Object.values(CovidEventName).reduce(
       (selections: any, key: CovidEventName) => (
@@ -48,6 +47,10 @@ export default function Person(props: Props) {
       {}
     )
   );
+  const selections = selectionsState.get();
+  const contagious =
+    selections[CovidEventName.PositiveTest] ||
+    selections[CovidEventName.SymptomsStart];
 
   const buildQuestion = (
     questionNumber: number,
@@ -63,8 +66,23 @@ export default function Person(props: Props) {
           onChange={(e: React.BaseSyntheticEvent) => {
             const checked = e.target.checked;
             selectionsState[fieldName].set(checked);
+            if (fieldName === CovidEventName.PositiveTest) {
+              const nextContagious = Boolean(
+                checked || selections[CovidEventName.SymptomsStart]
+              );
+              if (contagious !== nextContagious) {
+                setContagiousState(nextContagious);
+              }
+            } else if (fieldName === CovidEventName.SymptomsStart) {
+              const nextContagious = Boolean(
+                checked || selections[CovidEventName.PositiveTest]
+              );
+              if (contagious !== nextContagious) {
+                setContagiousState(nextContagious);
+              }
+            }
             if (!checked) {
-              covidEventsState.set(events => unset(fieldName)(events));
+              covidEventsState[fieldName].set("");
             }
           }}
         />
@@ -91,23 +109,7 @@ export default function Person(props: Props) {
   const handleChange = (e: React.BaseSyntheticEvent) => {
     const name: CovidEventName = e.target.name;
     const value: string = e.target.value;
-    const isNonEmpty = value && value !== "";
     covidEventsState[name].set(value);
-    if (name === CovidEventName.PositiveTest) {
-      const nextContagious = Boolean(
-        isNonEmpty || covidEventsState[CovidEventName.SymptomsStart].get()
-      );
-      if (contagious !== nextContagious) {
-        setContagiousState(nextContagious);
-      }
-    } else if (name === CovidEventName.SymptomsStart) {
-      const nextContagious = Boolean(
-        isNonEmpty || covidEventsState[CovidEventName.PositiveTest].get()
-      );
-      if (contagious !== nextContagious) {
-        setContagiousState(nextContagious);
-      }
-    }
   };
 
   function setContagiousState(contagious: boolean) {
