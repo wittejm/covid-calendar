@@ -24,13 +24,16 @@ export default function InHouseExposureQuestions(props: Props) {
         );
         if (inHouseExposureEventState) {
           return (
-            <InHouseExposureQuestion
-              key={props.id + "-" + index}
-              id={props.id}
-              index={index}
-              otherPerson={otherPerson}
-              inHouseExposureEventState={inHouseExposureEventState}
-            />
+            <>
+              <InHouseExposureQuestion
+                key={props.id + "-" + index}
+                id={props.id}
+                index={index}
+                otherPerson={otherPerson}
+                inHouseExposureEventState={inHouseExposureEventState}
+              />
+              <hr />
+            </>
           );
         } else {
           return <></>;

@@ -121,7 +121,7 @@ export default function Person(props: Props) {
           contagiousPerson: contagious ? person.id : otherPerson.id,
           quarantinedPerson: contagious ? otherPerson.id : person.id,
           exposed: true,
-          ongoing: false,
+          ongoing: true,
           date: ""
         };
       }
@@ -167,7 +167,7 @@ export default function Person(props: Props) {
           {buildQuestion(
             1,
             "LastCloseContact",
-            "I have been exposed to someone covid positive"
+            "I have been exposed to someone covid positive (outside the household)"
           )}
           {buildQuestion(
             2,
@@ -236,12 +236,21 @@ export default function Person(props: Props) {
                   const contagiousPersonName = members.find(
                     member => member.id === event.contagiousPerson
                   )?.name;
-                  return (
-                    <div className="f5">
-                      {quarantinedPersonName} exposed to {contagiousPersonName}{" "}
-                      at {event.date}
-                    </div>
-                  );
+                  if (event.ongoing) {
+                    return (
+                      <div className="f5">
+                        {quarantinedPersonName} has an ongoing exposure to{" "}
+                        {contagiousPersonName}{" "}
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="f5">
+                        {quarantinedPersonName} exposed to{" "}
+                        {contagiousPersonName} at {event.date}
+                      </div>
+                    );
+                  }
                 }
               }
             )}
