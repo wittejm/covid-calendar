@@ -15,15 +15,10 @@ jobs:
       - name: Install and Build 🔧
         env:
           CI: false
+          PUBLIC_URL: /covid-calendar
         run: |
           npm install
           npm run build
-          
-          mkdir covid-calendar
-          mv build/* covid-calendar/
-          mv covid-calendar/index.html build/
-          mv covid-calendar/ build/covid-calendar/
-
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
