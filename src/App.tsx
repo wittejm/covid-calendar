@@ -41,7 +41,7 @@ export default function App() {
           contagiousPerson: person.id,
           quarantinedPerson: newPerson.id,
           exposed: true,
-          ongoing: false,
+          ongoing: true,
           date: ""
         };
       }
