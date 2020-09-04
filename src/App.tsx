@@ -83,6 +83,11 @@ export default function App() {
           <a href="#" className="navbar-brand d-flex align-items-center">
             <strong>Covid Quarantine Calculator</strong>
           </a>
+          <div className="white f7 fw5">
+            This page is a work in progress.
+            Its instructions may be incorrect.
+            Consult <a href="https://multco.us/novel-coronavirus-covid-19/if-you-have-been-around-someone-covid-19">
+              the MultCo website</a> or the latest CDC guildlines for accurate Covid information. </div>
         </div>
       </div>
       <main className={"row"}>
