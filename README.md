@@ -6,7 +6,7 @@ Please read our [code of conduct](http://www.codeforpdx.org/about/conduct).
 
 To join as a developer, contact jordan.witte@codeforpdx.org, kent@kentshikama.com, or hugh@codeforpdx.org for an invite to our [Github organization](https://github.com/codeforpdx/) and to our Slack channel.
 
-The latest dev version of the app is live at our temporary server here: https://codeforpdx.neocities.org/
+The latest dev version of the app is live at our temporary server here: https://codeforpdx.github.io/covid-calendar/
 
 ## Installation
 
@@ -29,7 +29,7 @@ npm start
 
 ## Live dev server
 
-Merging a pull request into master triggers a production build to our temporary server at: https://codeforpdx.neocities.org/
+Merging a pull request into master triggers a production build to our temporary server at: https://codeforpdx.github.io/covid-calendar/
 
 ## Manual Production build
 
