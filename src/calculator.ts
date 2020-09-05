@@ -4,15 +4,15 @@ import {
   InHouseExposureEvent,
   PersonData
 } from "./types";
-import * as _ from "lodash";
 import { addDays, max, min, isValid, parse } from "date-fns";
+import { flow, compact, map, thru, partition, filter } from "lodash/fp";
 
 export function computeHouseHoldQuarantinePeriod(
   household: PersonData[],
   inHouseExposureEvents: InHouseExposureEvent[]
 ): CalculationResult[] {
-  const [infected, quarantined] = _.chain(household)
-    .map((person: PersonData) => {
+  const [infected, quarantined] = flow(
+    map((person: PersonData) => {
       const [illnessOnset, isolationEndDate] = computeIsolationPeriod(person);
       if (isValid(isolationEndDate)) {
         return {
@@ -29,42 +29,39 @@ export function computeHouseHoldQuarantinePeriod(
           infected: false
         };
       }
-    })
-    .partition("infected")
-    .value();
-  const quarantinedCalculations: CalculationResult[] = _.map(
-    quarantined,
+    }),
+    partition(c => c.infected)
+  )(household);
+  const quarantinedCalculations: CalculationResult[] = quarantined.map(
     calculation => {
       const person = calculation.person;
-      const exposureEvents = inHouseExposureEvents.filter(
-        event => event.quarantinedPerson === person.id && event.exposed
-      );
-      const exposureDates = exposureEvents.map(event => {
-        if (event.ongoing) {
-          return (
-            infected.find(
+      const inHouseExposureDates = flow(
+        filter(
+          (event: InHouseExposureEvent) =>
+            event.quarantinedPerson === person.id && event.exposed
+        ),
+        map((event: InHouseExposureEvent) => {
+          if (event.ongoing) {
+            return infected.find(
               calculation => calculation.person.id === event.contagiousPerson
-            )?.endDate || new Date()
-          );
-        } else {
-          return parse(event.date, "M/dd/yyyy", new Date());
-        }
-      });
-      const latestStatedExposureDate = person.covidEvents[
-        CovidEventName.LastCloseContact
-      ]
-        ? parse(
-            person.covidEvents[CovidEventName.LastCloseContact],
-            "M/dd/yyyy",
-            new Date()
-          )
+            )?.endDate;
+          } else {
+            return parse(event.date, "M/dd/yyyy", new Date());
+          }
+        }),
+        compact
+      )(inHouseExposureEvents);
+      const outHouseExposureDateString =
+        person.covidEvents[CovidEventName.LastCloseContact];
+      const outHouseExposureDate = outHouseExposureDateString
+        ? parse(outHouseExposureDateString, "M/dd/yyyy", new Date())
         : undefined;
-      const earliestExposureDate = latestStatedExposureDate
-        ? min([...exposureDates, latestStatedExposureDate])
-        : min(exposureDates);
-      const latestExposureDate = latestStatedExposureDate
-        ? max([...exposureDates, latestStatedExposureDate])
-        : max(exposureDates);
+      const exposureDates = compact([
+        ...inHouseExposureDates,
+        outHouseExposureDate
+      ]);
+      const earliestExposureDate = min(exposureDates); // TODO: Redo start date
+      const latestExposureDate = max(exposureDates);
       const fourteenDaysFromLastExposure = addDays(latestExposureDate, 14);
       return {
         person: person,
@@ -78,14 +75,15 @@ export function computeHouseHoldQuarantinePeriod(
 }
 
 export function computeIsolationPeriod(person: PersonData): [Date, Date] {
-  const illnessOnset = _.chain([
+  const covidPositiveEvents = [
     person.covidEvents[CovidEventName.SymptomsStart],
     person.covidEvents[CovidEventName.PositiveTest]
-  ])
-    .compact()
-    .map(date => parse(date, "M/dd/yyyy", new Date()))
-    .thru(dates => min(dates))
-    .value();
+  ];
+  const illnessOnset = flow(
+    compact,
+    map((date: string) => parse(date, "M/dd/yyyy", new Date())),
+    thru((dates: Date[]) => min(dates))
+  )(covidPositiveEvents);
   const tenDaysAfterOnset = illnessOnset && addDays(illnessOnset, 10);
   const symptomsEnd = person.covidEvents[CovidEventName.SymptomsEnd]
     ? parse(
@@ -95,9 +93,9 @@ export function computeIsolationPeriod(person: PersonData): [Date, Date] {
       )
     : undefined;
   const dayAfterSymptomsEnd = symptomsEnd && addDays(symptomsEnd, 1);
-  const isolationEndDate = _.chain([tenDaysAfterOnset, dayAfterSymptomsEnd])
-    .compact()
-    .thru(dates => max(dates))
-    .value();
+  const isolationEndDate = flow(
+    compact,
+    thru((dates: Date[]) => max(dates))
+  )([tenDaysAfterOnset, dayAfterSymptomsEnd]);
   return [illnessOnset, isolationEndDate];
 }
