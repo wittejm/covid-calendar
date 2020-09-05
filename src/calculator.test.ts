@@ -121,6 +121,8 @@ test("Household calculation for one infected and one caretaker", () => {
     [personA, empty],
     [inHouseExposureEvent]
   );
+  expect(calcluations[0].startDate).toStrictEqual(parseISO("2020-01-01"));
+  expect(calcluations[1].startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-11"));
   expect(calcluations[1].endDate).toStrictEqual(parseISO("2020-01-25"));
 });

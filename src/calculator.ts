@@ -35,33 +35,41 @@ export function computeHouseHoldQuarantinePeriod(
   const quarantinedCalculations: CalculationResult[] = quarantined.map(
     calculation => {
       const person = calculation.person;
-      const inHouseExposureDates = flow(
-        filter(
-          (event: InHouseExposureEvent) =>
-            event.quarantinedPerson === person.id && event.exposed
-        ),
-        map((event: InHouseExposureEvent) => {
-          if (event.ongoing) {
-            return infected.find(
-              calculation => calculation.person.id === event.contagiousPerson
-            )?.endDate;
-          } else {
-            return parse(event.date, "M/dd/yyyy", new Date());
-          }
-        }),
-        compact
+      const relevantInHouseExposureEvents = filter(
+        (event: InHouseExposureEvent) =>
+          event.quarantinedPerson === person.id && event.exposed
       )(inHouseExposureEvents);
+      const firstExposureDate = map((event: InHouseExposureEvent) => {
+        return infected.find(
+          calculation => calculation.person.id === event.contagiousPerson
+        )?.startDate;
+      });
+      const lastExposureDate = map((event: InHouseExposureEvent) => {
+        if (event.ongoing) {
+          return infected.find(
+            calculation => calculation.person.id === event.contagiousPerson
+          )?.endDate;
+        } else {
+          return parse(event.date, "M/dd/yyyy", new Date());
+        }
+      });
       const outHouseExposureDateString =
         person.covidEvents[CovidEventName.LastCloseContact];
       const outHouseExposureDate = outHouseExposureDateString
         ? parse(outHouseExposureDateString, "M/dd/yyyy", new Date())
         : undefined;
-      const exposureDates = compact([
-        ...inHouseExposureDates,
-        outHouseExposureDate
-      ]);
-      const earliestExposureDate = min(exposureDates); // TODO: Redo start date
-      const latestExposureDate = max(exposureDates);
+      const earliestExposureDate = min(
+        compact([
+          ...firstExposureDate(relevantInHouseExposureEvents),
+          outHouseExposureDate
+        ])
+      );
+      const latestExposureDate = max(
+        compact([
+          ...lastExposureDate(relevantInHouseExposureEvents),
+          outHouseExposureDate
+        ])
+      );
       const fourteenDaysFromLastExposure = addDays(latestExposureDate, 14);
       return {
         person: person,
