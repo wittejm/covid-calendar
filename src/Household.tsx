@@ -55,17 +55,16 @@ export default function Household(props: Props) {
           <h4>Guidance</h4>
           {computeHouseHoldQuarantinePeriod(members, inHouseExposureEvents).map(
             (result: CalculationResult) => {
-              return (
-                <div className="p32">
-                  {result.person.name} {" should quarantine from "}{" "}
-                  {isValid(result.startDate) &&
-                    format(result.startDate, "MM/dd/yyyy")}
-                  {" until "}{" "}
-                  {isValid(result.endDate) &&
-                    format(result.endDate, "MM/dd/yyyy")}
-                  {"."}
-                </div>
-              );
+              if (isValid(result.startDate) && isValid(result.endDate)) {
+                return (
+                  <div className="p32">
+                    {result.person.name} {" should quarantine from "}{" "}
+                    {format(result.startDate, "MM/dd/yyyy")}
+                    {" until "} {format(result.endDate, "MM/dd/yyyy")}
+                    {"."}
+                  </div>
+                );
+              }
             }
           )}
         </div>
