@@ -8,6 +8,8 @@ interface Props {
   onChange: (e: React.BaseSyntheticEvent) => void;
   onFocus: () => void;
   onUnfocus: () => void;
+  missing: boolean;
+  invalid: boolean;
 }
 
 export default function DateQuestion(props: Props) {
@@ -33,11 +35,17 @@ export default function DateQuestion(props: Props) {
     props.questionFieldTextState.set(fixedDate);
     props.onUnfocus();
   };
-
   return (
     <div className="">
       <label htmlFor={`${props.id}-${props.questionFieldName}`}>
         Date <span className="f6 fw3">mm/dd/yyyy</span>
+        <div role="alert">
+          {props.missing ? (
+            <span className="f5 fw5 red">required</span>
+          ) : props.invalid ? (
+            <span className="f5 fw5 red">mm/dd/yyyy format required</span>
+          ) : null}
+        </div>
       </label>
       <input
         className="form-control"
