@@ -9,18 +9,18 @@ import {
   InHouseExposureEvent,
   CovidEventName
 } from "./types";
-import { format, isValid } from "date-fns";
+import { format } from "date-fns";
 import { State } from "@hookstate/core/dist";
 interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEvents: InHouseExposureEvent[];
   editing: number;
-  selectingDateFieldState: State<CovidEventName | undefined>;
+  editingDateFieldState: State<CovidEventName | undefined>;
 }
 
 export default function GridView(props: Props) {
   const members = props.membersState.get();
-  const selectingDateField = props.selectingDateFieldState.get();
+  const editingDateField = props.editingDateFieldState.get();
   function computeEvents(
     members: PersonData[],
     inHouseExposureEvents: InHouseExposureEvent[]
@@ -40,18 +40,18 @@ export default function GridView(props: Props) {
   return (
     <div className={"p-3"}>
       {
-        <div className={selectingDateField ? "ba bw2 b--light-yellow" : ""}>
+        <div className={editingDateField ? "ba bw2 b--light-yellow" : ""}>
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             events={computeEvents(members, props.inHouseExposureEvents)}
             dateClick={(info: any) => {
-              if (props.editing >= 0 && selectingDateField) {
+              if (props.editing >= 0 && editingDateField) {
                 const index = props.membersState.findIndex(
                   memberState => memberState.get().id === props.editing
                 );
                 if (index) {
-                  props.membersState[index].covidEvents[selectingDateField].set(
+                  props.membersState[index].covidEvents[editingDateField].set(
                     format(info.date, "MM/dd/yyyy")
                   );
                 }

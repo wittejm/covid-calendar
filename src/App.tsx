@@ -37,9 +37,7 @@ export default function App() {
   const inHouseExposureEvents = useState([] as InHouseExposureEvent[]);
   const editing = useState(-1); // ID of person being edited or -1 if no one
   const id = useState(members.length + 1);
-  const selectingDateFieldState = useState<CovidEventName | undefined>(
-    undefined
-  );
+  const editingDateField = useState<CovidEventName | undefined>(undefined);
 
   function createInHouseExposureEvents(newPerson: PersonData) {
     const newExposureEvents = members.get().map((person: PersonData) => {
@@ -56,7 +54,7 @@ export default function App() {
     inHouseExposureEvents.merge(compact(newExposureEvents));
   }
 
-  const handleAddNewPerson = () => {
+  const addNewPerson = () => {
     const currentId = id.get();
     const newPerson = {
       id: currentId,
@@ -84,10 +82,13 @@ export default function App() {
             <strong>Covid Quarantine Calculator</strong>
           </a>
           <div className="white f7 fw5">
-            This page is a work in progress.
-            Its instructions may be incorrect.
-            Consult <a href="https://multco.us/novel-coronavirus-covid-19/if-you-have-been-around-someone-covid-19">
-              the MultCo website</a> or the latest CDC guildlines for accurate Covid information. </div>
+            This page is a work in progress. Its instructions may be incorrect.
+            Consult{" "}
+            <a href="https://multco.us/novel-coronavirus-covid-19/if-you-have-been-around-someone-covid-19">
+              the MultCo website
+            </a>{" "}
+            or the latest CDC guildlines for accurate Covid information.{" "}
+          </div>
         </div>
       </div>
       <main className={"row"}>
@@ -96,20 +97,15 @@ export default function App() {
             membersState={members}
             inHouseExposureEventsState={inHouseExposureEvents}
             editingState={editing}
-            handleAddNewPerson={handleAddNewPerson}
-            handleFocusDateField={(fieldName: CovidEventName) => {
-              selectingDateFieldState.set(fieldName);
-            }}
-            handleUnfocusDateField={(fieldName: CovidEventName) => {
-              selectingDateFieldState.set(undefined);
-            }}
+            editingDateFieldState={editingDateField}
+            addNewPerson={addNewPerson}
           />
         </div>
         <div className={"col-md-7"}>
           <GridView
             membersState={members}
             editing={editing.get()}
-            selectingDateFieldState={selectingDateFieldState}
+            editingDateFieldState={editingDateField}
             inHouseExposureEvents={inHouseExposureEvents.get()}
           />
         </div>
