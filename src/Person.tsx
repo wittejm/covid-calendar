@@ -6,18 +6,16 @@ import DateQuestion from "./DateQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { none, State } from "@hookstate/core/dist";
-import { compact, unset } from "lodash/fp";
+import { compact } from "lodash/fp";
 import { isContagious } from "./util";
 
 interface Props {
   index: number;
-  handleFocusDateField: Function;
-  handleUnfocusDateField: Function;
-
   personState: State<PersonData>;
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
   editingState: State<number>;
+  editingDateFieldState: State<CovidEventName | undefined>;
 }
 
 export default function Person(props: Props) {
@@ -94,10 +92,10 @@ export default function Person(props: Props) {
             questionFieldName={fieldName}
             onChange={handleChange}
             onFocus={() => {
-              props.handleFocusDateField(fieldName);
+              props.editingDateFieldState.set(fieldName);
             }}
             onUnfocus={() => {
-              props.handleUnfocusDateField(fieldName);
+              props.editingDateFieldState.set(undefined);
             }}
           />
         ) : null}

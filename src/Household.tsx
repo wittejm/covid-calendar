@@ -1,18 +1,21 @@
 import React from "react";
-import { CalculationResult, InHouseExposureEvent, PersonData } from "./types";
+import {
+  CalculationResult,
+  CovidEventName,
+  InHouseExposureEvent,
+  PersonData
+} from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core/dist";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
 import { format, isValid } from "date-fns";
 
 interface Props {
-  handleAddNewPerson: Function;
-  handleFocusDateField: Function;
-  handleUnfocusDateField: Function;
-
+  addNewPerson: Function;
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
   editingState: State<number>;
+  editingDateFieldState: State<CovidEventName | undefined>;
 }
 
 export default function Household(props: Props) {
@@ -25,9 +28,7 @@ export default function Household(props: Props) {
         {editing === -1 && (
           <button
             className="btn btn-primary mb-2"
-            onClick={() => {
-              props.handleAddNewPerson();
-            }}
+            onClick={() => props.addNewPerson()}
           >
             <i className="fa fa-user-plus" aria-hidden="true"></i> Add Person
           </button>
@@ -44,8 +45,7 @@ export default function Household(props: Props) {
                 membersState={props.membersState}
                 inHouseExposureEventsState={props.inHouseExposureEventsState}
                 editingState={props.editingState}
-                handleFocusDateField={props.handleFocusDateField}
-                handleUnfocusDateField={props.handleUnfocusDateField}
+                editingDateFieldState={props.editingDateFieldState}
               />
             );
           }
