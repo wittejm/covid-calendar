@@ -39,22 +39,7 @@ export default function App() {
   const id = useState(members.length + 1);
   const editingDateField = useState<CovidEventName | undefined>(undefined);
 
-  function createInHouseExposureEvents(newPerson: PersonData) {
-    const newExposureEvents = members.get().map((person: PersonData) => {
-      if (isContagious(person)) {
-        return {
-          contagiousPerson: person.id,
-          quarantinedPerson: newPerson.id,
-          exposed: true,
-          ongoing: true,
-          date: ""
-        };
-      }
-    });
-    inHouseExposureEvents.merge(compact(newExposureEvents));
-  }
-
-  const addNewPerson = () => {
+  function addNewPerson() {
     const currentId = id.get();
     const newPerson = {
       id: currentId,
@@ -71,8 +56,19 @@ export default function App() {
     id.set(id => id + 1);
     members.set(members => [...members, newPerson]);
     editing.set(currentId);
-    createInHouseExposureEvents(newPerson);
-  };
+    const newExposureEvents = members.get().map((person: PersonData) => {
+      if (isContagious(person)) {
+        return {
+          contagiousPerson: person.id,
+          quarantinedPerson: newPerson.id,
+          exposed: true,
+          ongoing: true,
+          date: ""
+        };
+      }
+    });
+    inHouseExposureEvents.merge(compact(newExposureEvents));
+  }
 
   return (
     <>

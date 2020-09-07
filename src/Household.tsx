@@ -11,7 +11,7 @@ import { computeHouseHoldQuarantinePeriod } from "./calculator";
 import { format, isValid } from "date-fns";
 
 interface Props {
-  addNewPerson: Function;
+  addNewPerson: () => void;
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
   editingState: State<number | undefined>;
@@ -26,10 +26,7 @@ export default function Household(props: Props) {
     <>
       <div className="p-3">
         {!editing && (
-          <button
-            className="btn btn-primary mb-2"
-            onClick={() => props.addNewPerson()}
-          >
+          <button className="btn btn-primary mb-2" onClick={props.addNewPerson}>
             <i className="fa fa-user-plus" aria-hidden="true"></i> Add Person
           </button>
         )}
