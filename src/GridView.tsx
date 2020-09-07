@@ -50,11 +50,9 @@ export default function GridView(props: Props) {
                 const index = props.membersState.findIndex(
                   memberState => memberState.get().id === props.editing
                 );
-                if (index) {
-                  props.membersState[index].covidEvents[editingDateField].set(
-                    format(info.date, "MM/dd/yyyy")
-                  );
-                }
+                props.membersState[index].covidEvents[editingDateField].set(
+                  format(info.date, "MM/dd/yyyy")
+                );
               }
             }}
           />
