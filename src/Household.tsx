@@ -33,23 +33,20 @@ export default function Household(props: Props) {
             <i className="fa fa-user-plus" aria-hidden="true"></i> Add Person
           </button>
         )}
-        {props.membersState.map(
-          (personState: State<PersonData>, index: number) => {
-            const person = personState.get();
-            const id = person.id;
-            return (
-              <Person
-                key={id}
-                index={index}
-                personState={personState}
-                membersState={props.membersState}
-                inHouseExposureEventsState={props.inHouseExposureEventsState}
-                editingState={props.editingState}
-                editingDateFieldState={props.editingDateFieldState}
-              />
-            );
-          }
-        )}
+        {props.membersState.map((personState: State<PersonData>) => {
+          const person = personState.get();
+          const id = person.id;
+          return (
+            <Person
+              key={id}
+              personState={personState}
+              membersState={props.membersState}
+              inHouseExposureEventsState={props.inHouseExposureEventsState}
+              editingState={props.editingState}
+              editingDateFieldState={props.editingDateFieldState}
+            />
+          );
+        })}
         <hr />
         <div className={"p-1"}>
           <h4>Guidance</h4>

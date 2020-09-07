@@ -1,16 +1,14 @@
 import React from "react";
-import { useState } from "@hookstate/core";
+import { useState, none, State } from "@hookstate/core";
 
 import { CovidEventName, InHouseExposureEvent, PersonData } from "./types";
 import DateQuestion from "./DateQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
-import { none, State } from "@hookstate/core/dist";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
 
 interface Props {
-  index: number;
   personState: State<PersonData>;
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
@@ -134,10 +132,7 @@ export default function Person(props: Props) {
 
   function removeFromMembers() {
     relevantInHouseExposureEventsState.map(e => e.set(none)); // Remove all current exposures
-    props.membersState.set(membersState => [
-      ...membersState.slice(0, props.index),
-      ...membersState.slice(props.index + 1)
-    ]);
+    props.personState.set(none);
   }
 
   return (
