@@ -47,9 +47,14 @@ export default function GridView(props: Props) {
             events={computeEvents(members, props.inHouseExposureEvents)}
             dateClick={(info: any) => {
               if (props.editing >= 0 && selectingDateField) {
-                props.membersState[props.editing - 1].covidEvents[
-                  selectingDateField
-                ].set(format(info.date, "MM/dd/yyyy"));
+                const index = props.membersState.findIndex(
+                  memberState => memberState.get().id === props.editing
+                );
+                if (index) {
+                  props.membersState[index].covidEvents[selectingDateField].set(
+                    format(info.date, "MM/dd/yyyy")
+                  );
+                }
               }
             }}
           />
