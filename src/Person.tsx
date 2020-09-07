@@ -12,7 +12,7 @@ interface Props {
   personState: State<PersonData>;
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
-  editingState: State<number>;
+  editingState: State<number | undefined>;
   editingDateFieldState: State<CovidEventName | undefined>;
 }
 
@@ -179,7 +179,7 @@ export default function Person(props: Props) {
               className="btn btn-secondary"
               onClick={() => {
                 removeFromMembers();
-                props.editingState.set(-1);
+                props.editingState.set(undefined);
               }}
             >
               <span className="visually-hidden">Remove</span>
@@ -191,7 +191,7 @@ export default function Person(props: Props) {
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => props.editingState.set(-1)}
+              onClick={() => props.editingState.set(undefined)}
             >
               {person.isNewPerson ? "Submit" : "Update"}
             </button>
@@ -202,7 +202,7 @@ export default function Person(props: Props) {
           <h4 className="d-flex justify-content-between align-items-center mb-3">
             <span>{person.name + " "}</span>
             <span>
-              {editing === -1 && (
+              {!editing && (
                 <button onClick={() => props.editingState.set(person.id)}>
                   <span className="visually-hidden">Edit Person</span>
                   <span aria-hidden="true" className="f5 fas fa-pen"></span>

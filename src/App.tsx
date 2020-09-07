@@ -34,8 +34,8 @@ export default function App() {
     }
   ];
   const members = useState(initialMembers);
-  const inHouseExposureEvents = useState([] as InHouseExposureEvent[]);
-  const editing = useState(-1); // ID of person being edited or -1 if no one
+  const inHouseExposureEvents = useState<InHouseExposureEvent[]>([]);
+  const editing = useState<number | undefined>(undefined);
   const id = useState(members.length + 1);
   const editingDateField = useState<CovidEventName | undefined>(undefined);
 

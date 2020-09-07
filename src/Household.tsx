@@ -14,7 +14,7 @@ interface Props {
   addNewPerson: Function;
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
-  editingState: State<number>;
+  editingState: State<number | undefined>;
   editingDateFieldState: State<CovidEventName | undefined>;
 }
 
@@ -25,7 +25,7 @@ export default function Household(props: Props) {
   return (
     <>
       <div className="p-3">
-        {editing === -1 && (
+        {!editing && (
           <button
             className="btn btn-primary mb-2"
             onClick={() => props.addNewPerson()}
