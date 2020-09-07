@@ -100,7 +100,7 @@ export default function Person(props: Props) {
           checked={selectionsState[fieldName].get()}
           onChange={onCheckboxChange(fieldName)}
         />
-        {selectionsState[fieldName].get() ? (
+        {selectionsState[fieldName].get() && (
           <DateQuestion
             id={person.id}
             questionFieldTextState={covidEventsState[fieldName]}
@@ -111,7 +111,7 @@ export default function Person(props: Props) {
             missing={datesMissing[fieldName].get()}
             invalid={datesInvalid[fieldName].get()}
           />
-        ) : null}
+        )}
       </>
     );
   }
