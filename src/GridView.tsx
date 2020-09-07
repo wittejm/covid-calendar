@@ -1,7 +1,7 @@
 import React from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
 import {
   PersonData,
@@ -14,7 +14,7 @@ import { State } from "@hookstate/core/dist";
 interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEvents: InHouseExposureEvent[];
-  editing: number;
+  editing: number | undefined;
   editingDateFieldState: State<CovidEventName | undefined>;
 }
 
@@ -45,8 +45,8 @@ export default function GridView(props: Props) {
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             events={computeEvents(members, props.inHouseExposureEvents)}
-            dateClick={(info: any) => {
-              if (props.editing >= 0 && editingDateField) {
+            dateClick={(info: DateClickArg) => {
+              if (props.editing && editingDateField) {
                 const index = props.membersState.findIndex(
                   memberState => memberState.get().id === props.editing
                 );
