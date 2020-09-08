@@ -6,7 +6,7 @@ import {
   PersonData
 } from "./types";
 import Person from "./Person";
-import { State } from "@hookstate/core/dist";
+import { State } from "@hookstate/core";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
 import { format, isValid } from "date-fns";
 

@@ -14,9 +14,9 @@ export default function App() {
       covidEvents: {
         [CovidEventName.LastCloseContact]: "8/25/2020",
         [CovidEventName.SymptomsStart]: "",
-        [CovidEventName.SymptomsEnd]: "",
         [CovidEventName.PositiveTest]: ""
       },
+      noSymptomsFor24Hours: true,
       isNewPerson: false,
       editing: false
     },
@@ -26,9 +26,9 @@ export default function App() {
       covidEvents: {
         [CovidEventName.LastCloseContact]: "8/28/2020",
         [CovidEventName.SymptomsStart]: "",
-        [CovidEventName.SymptomsEnd]: "",
         [CovidEventName.PositiveTest]: ""
       },
+      noSymptomsFor24Hours: true,
       isNewPerson: false,
       editing: false
     }
@@ -47,9 +47,9 @@ export default function App() {
       covidEvents: {
         [CovidEventName.LastCloseContact]: "",
         [CovidEventName.SymptomsStart]: "",
-        [CovidEventName.SymptomsEnd]: "",
         [CovidEventName.PositiveTest]: ""
       },
+      noSymptomsFor24Hours: true,
       isNewPerson: true,
       editing: true
     };

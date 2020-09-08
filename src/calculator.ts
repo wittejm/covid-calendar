@@ -93,17 +93,10 @@ export function computeIsolationPeriod(person: PersonData): [Date, Date] {
     thru((dates: Date[]) => min(dates))
   )(covidPositiveEvents);
   const tenDaysAfterOnset = illnessOnset && addDays(illnessOnset, 10);
-  const symptomsEnd = person.covidEvents[CovidEventName.SymptomsEnd]
-    ? parse(
-        person.covidEvents[CovidEventName.SymptomsEnd],
-        "M/dd/yyyy",
-        new Date()
-      )
-    : undefined;
-  const dayAfterSymptomsEnd = symptomsEnd && addDays(symptomsEnd, 1);
+  const symptomsEnd = person.noSymptomsFor24Hours ? undefined : new Date(); // TODO: Rethink
   const isolationEndDate = flow(
     compact,
     thru((dates: Date[]) => max(dates))
-  )([tenDaysAfterOnset, dayAfterSymptomsEnd]);
+  )([tenDaysAfterOnset, symptomsEnd]);
   return [illnessOnset, isolationEndDate];
 }

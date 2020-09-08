@@ -48,59 +48,94 @@ export default function Person(props: Props) {
     selections[CovidEventName.PositiveTest] ||
     selections[CovidEventName.SymptomsStart];
 
-  const buildQuestion = (
-    questionNumber: number,
+  function onCheckboxChange(fieldName: CovidEventName) {
+    return (e: React.BaseSyntheticEvent) => {
+      const checked = e.target.checked;
+      selectionsState[fieldName].set(checked);
+      if (fieldName === CovidEventName.PositiveTest) {
+        const nextContagious = Boolean(
+          checked || selections[CovidEventName.SymptomsStart]
+        );
+        if (contagious !== nextContagious) {
+          setContagiousState(nextContagious);
+        }
+      } else if (fieldName === CovidEventName.SymptomsStart) {
+        const nextContagious = Boolean(
+          checked || selections[CovidEventName.PositiveTest]
+        );
+        if (contagious !== nextContagious) {
+          setContagiousState(nextContagious);
+        }
+      }
+      if (!checked) {
+        covidEventsState[fieldName].set("");
+      }
+    };
+  }
+
+  function buildCovidEventQuestion(
     fieldName: CovidEventName,
-    firstQuestionText: string
-  ) => {
+    questionText: string
+  ) {
     return (
-      <div className="mb-3">
+      <>
         <MultipleChoiceQuestion
           id={person.id}
-          questionText={firstQuestionText}
+          questionText={questionText}
           checked={selectionsState[fieldName].get()}
-          onChange={(e: React.BaseSyntheticEvent) => {
-            const checked = e.target.checked;
-            selectionsState[fieldName].set(checked);
-            if (fieldName === CovidEventName.PositiveTest) {
-              const nextContagious = Boolean(
-                checked || selections[CovidEventName.SymptomsStart]
-              );
-              if (contagious !== nextContagious) {
-                setContagiousState(nextContagious);
-              }
-            } else if (fieldName === CovidEventName.SymptomsStart) {
-              const nextContagious = Boolean(
-                checked || selections[CovidEventName.PositiveTest]
-              );
-              if (contagious !== nextContagious) {
-                setContagiousState(nextContagious);
-              }
-            }
-            if (!checked) {
-              covidEventsState[fieldName].set("");
-            }
-          }}
+          onChange={onCheckboxChange(fieldName)}
         />
         {selectionsState[fieldName].get() ? (
           <DateQuestion
             id={person.id}
-            questionNumber={questionNumber}
             questionFieldTextState={covidEventsState[fieldName]}
             questionFieldName={fieldName}
             onChange={handleChange}
-            onFocus={() => {
-              props.editingDateFieldState.set(fieldName);
-            }}
-            onUnfocus={() => {
-              props.editingDateFieldState.set(undefined);
-            }}
+            onFocus={() => props.editingDateFieldState.set(fieldName)}
+            onUnfocus={() => props.editingDateFieldState.set(undefined)}
           />
         ) : null}
-        <hr />
-      </div>
+      </>
     );
-  };
+  }
+
+  function buildSymptomsQuestion() {
+    const symptomsStartState = selectionsState[CovidEventName.SymptomsStart];
+    const symptomsStart = symptomsStartState.get();
+    return (
+      <>
+        <MultipleChoiceQuestion
+          id={person.id}
+          questionText={"I have shown positive symptoms"}
+          checked={symptomsStart}
+          onChange={onCheckboxChange(CovidEventName.SymptomsStart)}
+        />
+        {symptomsStart ? (
+          <DateQuestion
+            id={person.id}
+            questionFieldTextState={
+              covidEventsState[CovidEventName.SymptomsStart]
+            }
+            questionFieldName={CovidEventName.SymptomsStart}
+            onChange={handleChange}
+            onFocus={() =>
+              props.editingDateFieldState.set(CovidEventName.SymptomsStart)
+            }
+            onUnfocus={() => props.editingDateFieldState.set(undefined)}
+          />
+        ) : null}
+        <div className={"mb-3"} />
+        {symptomsStart ? (
+          <MultipleChoiceQuestion
+            id={person.id}
+            questionText={"I have shown no symptoms for 24 hours"}
+            checked={props.personState.noSymptomsFor24Hours.get()}
+            onChange={() => props.personState.noSymptomsFor24Hours.set(c => !c)}
+          />
+        ) : null}
+      </>
+    );
+  }
 
   const handleChange = (e: React.BaseSyntheticEvent) => {
     const name: CovidEventName = e.target.name;
@@ -152,21 +187,24 @@ export default function Person(props: Props) {
               }
             />
           </div>
-          {buildQuestion(
-            1,
-            CovidEventName.LastCloseContact,
-            "I have been exposed to someone covid positive (outside the household)"
-          )}
-          {buildQuestion(
-            2,
-            CovidEventName.PositiveTest,
-            "I have received a positive test result"
-          )}
-          {buildQuestion(
-            2,
-            CovidEventName.SymptomsStart,
-            "I have shown positive symptoms"
-          )}
+          <div className="mb-3">
+            {buildCovidEventQuestion(
+              CovidEventName.LastCloseContact,
+              "I have been exposed to someone covid positive (outside the household)"
+            )}
+            <hr />
+          </div>
+          <div className="mb-3">
+            {buildCovidEventQuestion(
+              CovidEventName.PositiveTest,
+              "I have received a positive test result"
+            )}
+            <hr />
+          </div>
+          <div className="mb-3">
+            {buildSymptomsQuestion()}
+            <hr />
+          </div>
           <InHouseExposureQuestions
             id={person.id}
             meaningfulInHouseExposures={meaningfulInHouseExposures}

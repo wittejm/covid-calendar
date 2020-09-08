@@ -3,12 +3,11 @@ import { State } from "@hookstate/core/dist";
 
 interface Props {
   id: number;
-  questionNumber: number;
   questionFieldTextState: State<string>;
   questionFieldName: string;
-  onChange: Function;
-  onFocus: Function;
-  onUnfocus: Function;
+  onChange: (e: React.BaseSyntheticEvent) => void;
+  onFocus: () => void;
+  onUnfocus: () => void;
 }
 
 export default function DateQuestion(props: Props) {
@@ -32,26 +31,22 @@ export default function DateQuestion(props: Props) {
       fixedDate = fixedDate + "/2020";
     }
     props.questionFieldTextState.set(fixedDate);
-    props.onUnfocus(props.questionFieldName);
-  };
-
-  const handleFocus = () => {
-    props.onFocus(props.questionFieldName);
+    props.onUnfocus();
   };
 
   return (
     <div className="">
-      <label htmlFor={`${props.id}-${props.questionNumber}`}>
+      <label htmlFor={`${props.id}-${props.questionFieldName}`}>
         Date <span className="f6 fw3">mm/dd/yyyy</span>
       </label>
       <input
         className="form-control"
         value={props.questionFieldTextState.get()}
         name={props.questionFieldName}
-        id={`${props.id}-${props.questionNumber}`}
+        id={`${props.id}-${props.questionFieldName}`}
         type="text"
         onChange={handleTextChange}
-        onFocus={handleFocus}
+        onFocus={props.onFocus}
         onBlur={handleUnfocus}
       />
     </div>

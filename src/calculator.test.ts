@@ -11,9 +11,9 @@ const empty: PersonData = {
   covidEvents: {
     [CovidEventName.LastCloseContact]: "",
     [CovidEventName.SymptomsStart]: "",
-    [CovidEventName.SymptomsEnd]: "",
     [CovidEventName.PositiveTest]: ""
   },
+  noSymptomsFor24Hours: true,
   isNewPerson: false,
   editing: false
 };
@@ -24,9 +24,9 @@ const jordan: PersonData = {
   covidEvents: {
     [CovidEventName.SymptomsStart]: "01/01/2020",
     [CovidEventName.LastCloseContact]: "",
-    [CovidEventName.SymptomsEnd]: "",
     [CovidEventName.PositiveTest]: ""
   },
+  noSymptomsFor24Hours: true,
   isNewPerson: false,
   editing: false
 };
@@ -37,9 +37,9 @@ const kent: PersonData = {
   covidEvents: {
     [CovidEventName.PositiveTest]: "01/01/2020",
     [CovidEventName.LastCloseContact]: "",
-    [CovidEventName.SymptomsStart]: "",
-    [CovidEventName.SymptomsEnd]: ""
+    [CovidEventName.SymptomsStart]: ""
   },
+  noSymptomsFor24Hours: true,
   isNewPerson: false,
   editing: false
 };
@@ -50,9 +50,9 @@ const personA: PersonData = {
   covidEvents: {
     [CovidEventName.PositiveTest]: "01/01/2020",
     [CovidEventName.SymptomsStart]: "01/05/2020",
-    [CovidEventName.LastCloseContact]: "",
-    [CovidEventName.SymptomsEnd]: ""
+    [CovidEventName.LastCloseContact]: ""
   },
+  noSymptomsFor24Hours: true,
   isNewPerson: false,
   editing: false
 };
@@ -63,9 +63,9 @@ const personB: PersonData = {
   covidEvents: {
     [CovidEventName.PositiveTest]: "01/01/2020",
     [CovidEventName.SymptomsStart]: "01/05/2020",
-    [CovidEventName.SymptomsEnd]: "01/11/2020",
     [CovidEventName.LastCloseContact]: ""
   },
+  noSymptomsFor24Hours: false,
   isNewPerson: false,
   editing: false
 };
@@ -76,9 +76,9 @@ const personC: PersonData = {
   covidEvents: {
     [CovidEventName.PositiveTest]: "01/01/2020",
     [CovidEventName.SymptomsStart]: "01/05/2020",
-    [CovidEventName.SymptomsEnd]: "01/07/2020",
     [CovidEventName.LastCloseContact]: ""
   },
+  noSymptomsFor24Hours: true,
   isNewPerson: false,
   editing: false
 };
@@ -103,7 +103,7 @@ test("Isolation Period should use min of symptoms and positive test", () => {
 
 test("Isolation Period makes use of symptoms end", () => {
   const [startDate, endDate] = computeIsolationPeriod(personB);
-  expect(endDate).toStrictEqual(parseISO("2020-01-12"));
+  expect(endDate).not.toStrictEqual(parseISO("2020-01-11"));
 
   const [startDate2, endDate2] = computeIsolationPeriod(personC);
   expect(endDate2).toStrictEqual(parseISO("2020-01-11"));
