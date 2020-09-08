@@ -43,6 +43,21 @@ export default function Person(props: Props) {
       {}
     )
   );
+  const datePattern = new RegExp(
+    "^[0-9][0-9]?/[0-9][0-9]?/[0-9][0-9][0-9][0-9]$"
+  );
+  const datesInvalid: any = useState(
+    Object.values(CovidEventName).reduce((d: any, key: CovidEventName) => {
+      return (d[key] = false), d;
+    }, {})
+  );
+
+  const datesMissing: any = useState(
+    Object.values(CovidEventName).reduce((d: any, key: CovidEventName) => {
+      return (d[key] = false), d;
+    }, {})
+  );
+
   const selections = selectionsState.get();
   const contagious =
     selections[CovidEventName.PositiveTest] ||
@@ -93,6 +108,8 @@ export default function Person(props: Props) {
             onChange={handleChange}
             onFocus={() => props.editingDateFieldState.set(fieldName)}
             onUnfocus={() => props.editingDateFieldState.set(undefined)}
+            missing={datesMissing[fieldName].get()}
+            invalid={datesInvalid[fieldName].get()}
           />
         ) : null}
       </>
@@ -122,6 +139,8 @@ export default function Person(props: Props) {
               props.editingDateFieldState.set(CovidEventName.SymptomsStart)
             }
             onUnfocus={() => props.editingDateFieldState.set(undefined)}
+            missing={datesMissing[CovidEventName.SymptomsStart].get()}
+            invalid={datesInvalid[CovidEventName.SymptomsStart].get()}
           />
         ) : null}
         <div className={"mb-3"} />
@@ -141,6 +160,24 @@ export default function Person(props: Props) {
     const name: CovidEventName = e.target.name;
     const value: string = e.target.value;
     covidEventsState[name].set(value);
+  };
+  const handleSubmit = () => {
+    Object.values(CovidEventName).map(
+      (key: CovidEventName) => {
+        datesMissing[key].set(selectionsState.get()[key] && covidEventsState[key].get() === "")
+        datesInvalid[key].set(
+          selectionsState.get()[key] &&
+          covidEventsState[key].get() !== "" &&
+          !Boolean(datePattern.exec(covidEventsState[key].get()))
+        )
+      }
+    );
+    if (
+      !Object.values(datesMissing.get()).includes(true) &&
+      !Object.values(datesInvalid.get()).includes(true)
+    ) {
+      props.editingState.set(undefined);
+    }
   };
 
   function setContagiousState(contagious: boolean) {
@@ -227,10 +264,7 @@ export default function Person(props: Props) {
                 className="pl2 fas fa-times-circle white"
               ></i>
             </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => props.editingState.set(undefined)}
-            >
+            <button className="btn btn-primary" onClick={handleSubmit}>
               {person.isNewPerson ? "Submit" : "Update"}
             </button>
           </div>
