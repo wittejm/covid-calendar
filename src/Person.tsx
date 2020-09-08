@@ -162,31 +162,15 @@ export default function Person(props: Props) {
     covidEventsState[name].set(value);
   };
   const handleSubmit = () => {
-    datesMissing.set(
-      Object.values(CovidEventName).reduce(
-        (d: { [key: string]: boolean }, key: CovidEventName) => {
-          return (
-            (d[key] =
-              selectionsState.get()[key] && covidEventsState[key].get() === ""),
-            d
-          );
-        },
-        {}
-      )
-    );
-    datesInvalid.set(
-      Object.values(CovidEventName).reduce(
-        (d: { [key: string]: boolean }, key: CovidEventName) => {
-          return (
-            (d[key] =
-              selectionsState.get()[key] &&
-              covidEventsState[key].get() !== "" &&
-              !Boolean(datePattern.exec(covidEventsState[key].get()))),
-            d
-          );
-        },
-        {}
-      )
+    Object.values(CovidEventName).map(
+      (key: CovidEventName) => {
+        datesMissing[key].set(selectionsState.get()[key] && covidEventsState[key].get() === "")
+        datesInvalid[key].set(
+          selectionsState.get()[key] &&
+          covidEventsState[key].get() !== "" &&
+          !Boolean(datePattern.exec(covidEventsState[key].get()))
+        )
+      }
     );
     if (
       !Object.values(datesMissing.get()).includes(true) &&
