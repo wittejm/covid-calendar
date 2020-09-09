@@ -95,7 +95,8 @@ export default function Person(props: Props) {
 
   function buildCovidEventQuestion(
     fieldName: CovidEventName,
-    questionText: string
+    questionText: string,
+    tooltip?: JSX.Element
   ) {
     return (
       <>
@@ -104,6 +105,7 @@ export default function Person(props: Props) {
           questionText={questionText}
           checked={selectionsState[fieldName].get()}
           onChange={onCheckboxChange(fieldName)}
+          tooltip={tooltip}
         />
         {selectionsState[fieldName].get() && (
           <DateQuestion
@@ -131,6 +133,15 @@ export default function Person(props: Props) {
           questionText={"I have shown positive symptoms"}
           checked={symptomsStart}
           onChange={onCheckboxChange(CovidEventName.SymptomsStart)}
+          tooltip={
+            <span>
+              Consult the{" "}
+              <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
+                CDC web site
+              </a>{" "}
+              for a common list of symptoms of Covid{" "}
+            </span>
+          }
         />
         {symptomsStart ? (
           <DateQuestion
@@ -152,9 +163,19 @@ export default function Person(props: Props) {
         {symptomsStart ? (
           <MultipleChoiceQuestion
             id={person.id}
-            questionText={"I have shown no symptoms for 24 hours"}
+            questionText={"My symptoms have been improved for 24 hours."}
             checked={props.personState.noSymptomsFor24Hours.get()}
             onChange={() => props.personState.noSymptomsFor24Hours.set(c => !c)}
+            tooltip={
+              <span>
+                Improved symptoms are a requirement for you to end isolation. If
+                your symptoms improve AND you have had no fever for 24 hours
+                without the use of medicine, check this box.
+                <a href="https://multco.us/novel-coronavirus-covid-19/if-you-test-positive-covid-19">
+                  Source
+                </a>{" "}
+              </span>
+            }
           />
         ) : null}
       </>
@@ -177,7 +198,6 @@ export default function Person(props: Props) {
           !Boolean(datePattern.exec(covidEventsState[key].get()))
       );
     });
-
     props.inHouseExposureEventsState.map((e: State<InHouseExposureEvent>) => {
       e.dateMissing.set(!e.ongoing.get() && e.date.get() === "");
       e.dateInvalid.set(
@@ -248,7 +268,19 @@ export default function Person(props: Props) {
           <div className="mb-3">
             {buildCovidEventQuestion(
               CovidEventName.LastCloseContact,
-              "I have been exposed to someone covid positive (outside the household)"
+              "I have had close contact to someone presumed covid positive (outside the household)",
+              <div>
+                Someone is presumed covid positive if they show symptoms or have
+                tested positive for the virus. Close contact means spending at
+                least 15 minutes or more at one time within 6 feet of someone,
+                with or without a face covering. If you have been exposed to
+                someone presumed covid positive, you are at a higher risk of
+                getting sick and spreading the disease to others, and should
+                quarantine for 14 days following the date of exposure.{" "}
+                <a href="https://multco.us/novel-coronavirus-covid-19/if-you-have-been-around-someone-covid-19">
+                  Source
+                </a>
+              </div>
             )}
             <hr />
           </div>

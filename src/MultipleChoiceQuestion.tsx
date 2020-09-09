@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { parse, format } from "date-fns";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel
+} from "@reach/disclosure";
 
 interface Props {
   id: number;
   questionText: string;
   checked: boolean;
   onChange: (e: React.BaseSyntheticEvent) => void;
+  tooltip?: JSX.Element;
 }
 
 export default function MultipleChoiceQuestion(props: Props) {
@@ -24,6 +30,19 @@ export default function MultipleChoiceQuestion(props: Props) {
       >
         {props.questionText}
       </label>
+      {props.tooltip && (
+        <Disclosure>
+          <DisclosureButton>
+            <i
+              aria-hidden="true"
+              className="ph2 f4 fas fa-question-circle link hover-dark-blue gray"
+            ></i>
+          </DisclosureButton>
+          <DisclosurePanel>
+            <div className="f5 pa2 gray">{props.tooltip}</div>
+          </DisclosurePanel>
+        </Disclosure>
+      )}
     </div>
   );
 }
