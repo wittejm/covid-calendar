@@ -24,25 +24,27 @@ export default function MultipleChoiceQuestion(props: Props) {
         type="checkbox"
         onChange={props.onChange}
       />
-      <label
-        className="custom-control-label"
-        htmlFor={`checkbox-${props.id}-${props.questionText}`}
-      >
-        {props.questionText}
-      </label>
-      {props.tooltip && (
-        <Disclosure>
-          <DisclosureButton>
-            <i
-              aria-hidden="true"
-              className="ph2 f4 fas fa-question-circle link hover-dark-blue gray"
-            ></i>
-          </DisclosureButton>
+      <Disclosure>
+        <label
+          className="custom-control-label"
+          htmlFor={`checkbox-${props.id}-${props.questionText}`}
+        >
+          {props.questionText}
+          {props.tooltip && (
+            <DisclosureButton>
+              <i
+                aria-hidden="true"
+                className="px-1 fas fa-question-circle link hover-dark-blue gray"
+              ></i>
+            </DisclosureButton>
+          )}
+        </label>
+        {props.tooltip && (
           <DisclosurePanel>
-            <div className="f5 pa2 gray">{props.tooltip}</div>
+            <div className="f5 gray">{props.tooltip}</div>
           </DisclosurePanel>
-        </Disclosure>
-      )}
+        )}
+      </Disclosure>
     </div>
   );
 }
