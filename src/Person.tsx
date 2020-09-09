@@ -170,9 +170,9 @@ export default function Person(props: Props) {
               <span>
                 Improved symptoms are a requirement for you to end isolation. If
                 your symptoms improve AND you have had no fever for 24 hours
-                without the use of medicine, check this box.
+                without the use of medicine, check this box.{" "}
                 <a href="https://multco.us/novel-coronavirus-covid-19/if-you-test-positive-covid-19">
-                  Source
+                  Link.
                 </a>{" "}
               </span>
             }
@@ -278,7 +278,7 @@ export default function Person(props: Props) {
                 getting sick and spreading the disease to others, and should
                 quarantine for 14 days following the date of exposure.{" "}
                 <a href="https://multco.us/novel-coronavirus-covid-19/if-you-have-been-around-someone-covid-19">
-                  Source
+                  Link.
                 </a>
               </div>
             )}
