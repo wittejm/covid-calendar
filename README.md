@@ -40,3 +40,7 @@ npm build
 ```
 
 which places the production-ready files in the `build/` directory. You may then copy those files onto your own site.
+
+## License
+
+This project is open source under the terms of the [MIT License](LICENSE.md).
