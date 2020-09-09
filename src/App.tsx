@@ -37,7 +37,9 @@ export default function App() {
   const inHouseExposureEvents = useState<InHouseExposureEvent[]>([]);
   const editing = useState<number | undefined>(undefined);
   const id = useState(members.length + 1);
-  const editingDateField = useState<CovidEventName | undefined>(undefined);
+  const eventSetterState = useState<((date: string) => void) | undefined>(
+    undefined
+  );
 
   function addNewPerson() {
     const currentId = id.get();
@@ -95,7 +97,7 @@ export default function App() {
             membersState={members}
             inHouseExposureEventsState={inHouseExposureEvents}
             editingState={editing}
-            editingDateFieldState={editingDateField}
+            eventSetterState={eventSetterState}
             addNewPerson={addNewPerson}
           />
         </div>
@@ -103,7 +105,7 @@ export default function App() {
           <GridView
             membersState={members}
             editing={editing.get()}
-            editingDateFieldState={editingDateField}
+            eventSetterState={eventSetterState}
             inHouseExposureEvents={inHouseExposureEvents.get()}
           />
         </div>

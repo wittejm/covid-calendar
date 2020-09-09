@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  CalculationResult,
-  CovidEventName,
-  InHouseExposureEvent,
-  PersonData
-} from "./types";
+import { CalculationResult, InHouseExposureEvent, PersonData } from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
@@ -15,7 +10,7 @@ interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
   editingState: State<number | undefined>;
-  editingDateFieldState: State<CovidEventName | undefined>;
+  eventSetterState: State<((date: string) => void) | undefined>;
 }
 
 export default function Household(props: Props) {
@@ -40,7 +35,7 @@ export default function Household(props: Props) {
               membersState={props.membersState}
               inHouseExposureEventsState={props.inHouseExposureEventsState}
               editingState={props.editingState}
-              editingDateFieldState={props.editingDateFieldState}
+              eventSetterState={props.eventSetterState}
             />
           );
         })}
