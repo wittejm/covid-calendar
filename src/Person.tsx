@@ -1,7 +1,12 @@
 import React from "react";
 import { useState, none, State } from "@hookstate/core";
 
-import { CovidEventName, InHouseExposureEvent, PersonData, colorNames } from "./types";
+import {
+  CovidEventName,
+  InHouseExposureEvent,
+  PersonData,
+  colorNames
+} from "./types";
 import DateQuestion from "./DateQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
@@ -288,7 +293,13 @@ export default function Person(props: Props) {
       ) : (
         <div className="card-body">
           <h4 className="d-flex justify-content-between align-items-center mb-3">
-            <span className={"pv1 ph2 br3 " + colorNames[person.id-1 % colorNames.length]} >{person.name + " "}</span>
+            <span
+              className={
+                "pv1 ph2 br3 " + colorNames[person.id - (1 % colorNames.length)]
+              }
+            >
+              {person.name + " "}
+            </span>
             <span>
               {!editing && (
                 <button onClick={() => props.editingState.set(person.id)}>

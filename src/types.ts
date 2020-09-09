@@ -39,10 +39,10 @@ export const colors = [
   "#96CCFF", // bg-light-blue
   "#A463F2", // bg-light-purple
   "#FF6300" // bg-orange
-  ]
+];
 export const colorNames = [
   "bg-light-green",
   "bg-light-blue",
   "bg-light-purple",
-  "bg-orange",
-  ]
+  "bg-orange"
+];

@@ -34,7 +34,7 @@ export default function GridView(props: Props) {
           title: result.person.name,
           start: result.startDate,
           end: result.endDate,
-          color: colors[result.person.id-1 % colors.length],
+          color: colors[result.person.id - (1 % colors.length)],
           textColor: "#000000"
         };
       }

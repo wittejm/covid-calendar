@@ -33,17 +33,17 @@ export default function InHouseExposureQuestion(props: Props) {
       )}
       {isExposed && !isOngoing && (
         <DateQuestion
-            id={props.id}
-            questionFieldTextState={props.inHouseExposureEventState.date}
-            questionFieldName={`crossExposure-${props.index}`}
-            onChange={(e: React.BaseSyntheticEvent) =>
-              props.inHouseExposureEventState.date.set(e.target.value)
-            }
-            onFocus={()=>{}}
-            onUnfocus={()=>{}}
-            missing={inHouseExposureEvent.dateMissing}
-            invalid={inHouseExposureEvent.dateInvalid}
-          />
+          id={props.id}
+          questionFieldTextState={props.inHouseExposureEventState.date}
+          questionFieldName={`crossExposure-${props.index}`}
+          onChange={(e: React.BaseSyntheticEvent) =>
+            props.inHouseExposureEventState.date.set(e.target.value)
+          }
+          onFocus={() => {}}
+          onUnfocus={() => {}}
+          missing={inHouseExposureEvent.dateMissing}
+          invalid={inHouseExposureEvent.dateInvalid}
+        />
       )}
     </div>
   );
