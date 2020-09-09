@@ -5,24 +5,19 @@ import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
 import { colors } from "./types";
 
-import {
-  PersonData,
-  CalculationResult,
-  InHouseExposureEvent,
-  CovidEventName
-} from "./types";
+import { PersonData, CalculationResult, InHouseExposureEvent } from "./types";
 import { format } from "date-fns";
 import { State } from "@hookstate/core/dist";
 interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEvents: InHouseExposureEvent[];
   editing: number | undefined;
-  editingDateFieldState: State<CovidEventName | undefined>;
+  eventSetterState: State<((date: string) => void) | undefined>;
 }
 
 export default function GridView(props: Props) {
   const members = props.membersState.get();
-  const editingDateField = props.editingDateFieldState.get();
+  const eventSetter = props.eventSetterState.get();
   function computeEvents(
     members: PersonData[],
     inHouseExposureEvents: InHouseExposureEvent[]
@@ -44,19 +39,14 @@ export default function GridView(props: Props) {
   return (
     <div className={"p-3"}>
       {
-        <div className={editingDateField ? "ba bw2 b--light-yellow" : ""}>
+        <div className={eventSetter ? "ba bw2 b--light-yellow" : ""}>
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
             events={computeEvents(members, props.inHouseExposureEvents)}
             dateClick={(info: DateClickArg) => {
-              if (props.editing && editingDateField) {
-                const index = props.membersState.findIndex(
-                  memberState => memberState.get().id === props.editing
-                );
-                props.membersState[index].covidEvents[editingDateField].set(
-                  format(info.date, "MM/dd/yyyy")
-                );
+              if (eventSetter) {
+                eventSetter(format(info.date, "MM/dd/yyyy"));
               }
             }}
           />

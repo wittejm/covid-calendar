@@ -18,7 +18,7 @@ interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
   editingState: State<number | undefined>;
-  editingDateFieldState: State<CovidEventName | undefined>;
+  eventSetterState: State<((date: string) => void) | undefined>;
 }
 
 export default function Person(props: Props) {
@@ -113,8 +113,12 @@ export default function Person(props: Props) {
             questionFieldTextState={covidEventsState[fieldName]}
             questionFieldName={fieldName}
             onChange={handleChange}
-            onFocus={() => props.editingDateFieldState.set(fieldName)}
-            onUnfocus={() => props.editingDateFieldState.set(undefined)}
+            onFocus={() =>
+              props.eventSetterState.set(() => (date: string) =>
+                covidEventsState[fieldName].set(date)
+              )
+            }
+            onUnfocus={() => props.eventSetterState.set(undefined)}
             missing={datesMissing[fieldName].get()}
             invalid={datesInvalid[fieldName].get()}
           />
@@ -152,9 +156,11 @@ export default function Person(props: Props) {
             questionFieldName={CovidEventName.SymptomsStart}
             onChange={handleChange}
             onFocus={() =>
-              props.editingDateFieldState.set(CovidEventName.SymptomsStart)
+              props.eventSetterState.set(() => (date: string) =>
+                covidEventsState[CovidEventName.SymptomsStart].set(date)
+              )
             }
-            onUnfocus={() => props.editingDateFieldState.set(undefined)}
+            onUnfocus={() => props.eventSetterState.set(undefined)}
             missing={datesMissing[CovidEventName.SymptomsStart].get()}
             invalid={datesInvalid[CovidEventName.SymptomsStart].get()}
           />
@@ -301,6 +307,7 @@ export default function Person(props: Props) {
             relevantInHouseExposureEventsState={
               relevantInHouseExposureEventsState
             }
+            eventSetterState={props.eventSetterState}
           />
           <div className={"d-flex justify-content-between align-items-center"}>
             <button
