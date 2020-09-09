@@ -1,6 +1,8 @@
 import React from "react";
 import { InHouseExposureEvent, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
+import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
+import DateQuestion from "./DateQuestion";
 
 interface Props {
   id: number;
@@ -15,59 +17,33 @@ export default function InHouseExposureQuestion(props: Props) {
   const isOngoing = inHouseExposureEvent.ongoing;
   return (
     <div className="mb-3">
-      <div className="custom-control custom-checkbox mb-3">
-        <input
-          className="custom-control-input"
-          checked={isExposed}
-          name={`crossExposure-${props.index}-checkbox-exposure`}
-          id={`crossExposure-${props.id}-${props.index}-checkbox-exposure`}
-          type="checkbox"
-          onChange={() => props.inHouseExposureEventState.exposed.set(v => !v)}
-        />
-        <label
-          className="custom-control-label"
-          htmlFor={`crossExposure-${props.id}-${props.index}-checkbox-exposure`}
-        >
-          I was exposed to {props.otherPerson.name}
-        </label>
-      </div>
+      <MultipleChoiceQuestion
+        id={props.id}
+        questionText={`I was exposed to ${props.otherPerson.name}`}
+        checked={isExposed}
+        onChange={() => props.inHouseExposureEventState.exposed.set(v => !v)}
+      />
       {isExposed && (
-        <div className="custom-control custom-checkbox mb-3">
-          <input
-            className="custom-control-input"
-            checked={isOngoing}
-            name={`crossExposure-${props.index}-checkbox-ongoing`}
-            id={`crossExposure-${props.id}-${props.index}-checkbox-ongoing`}
-            type="checkbox"
-            onChange={() =>
-              props.inHouseExposureEventState.ongoing.set(v => !v)
-            }
-          />
-          <label
-            className="custom-control-label"
-            htmlFor={`crossExposure-${props.id}-${props.index}-checkbox-ongoing`}
-          >
-            My exposure to {props.otherPerson.name} is ongoing
-          </label>
-        </div>
+        <MultipleChoiceQuestion
+          id={props.id}
+          questionText={`My exposure to ${props.otherPerson.name} is ongoing`}
+          checked={isOngoing}
+          onChange={() => props.inHouseExposureEventState.ongoing.set(v => !v)}
+        />
       )}
       {isExposed && !isOngoing && (
-        <>
-          <label htmlFor={`crossExposure-${props.id}-${props.index}`}>
-            Date exposed to {props.otherPerson.name}{" "}
-            <span className="f6 fw3">mm/dd/yyyy</span>
-          </label>
-          <input
-            className="form-control"
-            value={inHouseExposureEvent.date}
-            name={`crossExposure-${props.index}`}
-            id={`crossExposure-${props.id}-${props.index}`}
-            type="text"
+        <DateQuestion
+            id={props.id}
+            questionFieldTextState={props.inHouseExposureEventState.date}
+            questionFieldName={`crossExposure-${props.index}`}
             onChange={(e: React.BaseSyntheticEvent) =>
               props.inHouseExposureEventState.date.set(e.target.value)
             }
+            onFocus={()=>{}}
+            onUnfocus={()=>{}}
+            missing={inHouseExposureEvent.dateMissing}
+            invalid={inHouseExposureEvent.dateInvalid}
           />
-        </>
       )}
     </div>
   );

@@ -100,7 +100,7 @@ export default function Person(props: Props) {
           checked={selectionsState[fieldName].get()}
           onChange={onCheckboxChange(fieldName)}
         />
-        {selectionsState[fieldName].get() ? (
+        {selectionsState[fieldName].get() && (
           <DateQuestion
             id={person.id}
             questionFieldTextState={covidEventsState[fieldName]}
@@ -111,7 +111,7 @@ export default function Person(props: Props) {
             missing={datesMissing[fieldName].get()}
             invalid={datesInvalid[fieldName].get()}
           />
-        ) : null}
+        )}
       </>
     );
   }
@@ -162,19 +162,33 @@ export default function Person(props: Props) {
     covidEventsState[name].set(value);
   };
   const handleSubmit = () => {
-    Object.values(CovidEventName).map(
-      (key: CovidEventName) => {
-        datesMissing[key].set(selectionsState.get()[key] && covidEventsState[key].get() === "")
-        datesInvalid[key].set(
-          selectionsState.get()[key] &&
+    Object.values(CovidEventName).map((key: CovidEventName) => {
+      datesMissing[key].set(
+        selectionsState.get()[key] && covidEventsState[key].get() === ""
+      );
+      datesInvalid[key].set(
+        selectionsState.get()[key] &&
           covidEventsState[key].get() !== "" &&
           !Boolean(datePattern.exec(covidEventsState[key].get()))
-        )
-      }
-    );
+      );
+    });
+
+    props.inHouseExposureEventsState.map((e: State<InHouseExposureEvent>) => {
+      e.dateMissing.set(!e.ongoing.get() && e.date.get() === "");
+      e.dateInvalid.set(
+        !e.ongoing.get() &&
+          e.date.get() !== "" &&
+          !Boolean(datePattern.exec(e.date.get()))
+      );
+    });
     if (
       !Object.values(datesMissing.get()).includes(true) &&
-      !Object.values(datesInvalid.get()).includes(true)
+      !Object.values(datesInvalid.get()).includes(true) &&
+      !props.inHouseExposureEventsState
+        .map((e: State<InHouseExposureEvent>) => {
+          return e.dateMissing.get() || e.dateInvalid.get();
+        })
+        .includes(true)
     ) {
       props.editingState.set(undefined);
     }
@@ -190,7 +204,9 @@ export default function Person(props: Props) {
           quarantinedPerson: contagious ? otherPerson.id : person.id,
           exposed: true,
           ongoing: true,
-          date: ""
+          date: "",
+          dateMissing: false,
+          dateInvalid: false
         };
       }
     });

@@ -63,7 +63,9 @@ export default function App() {
           quarantinedPerson: newPerson.id,
           exposed: true,
           ongoing: true,
-          date: ""
+          date: "",
+          dateMissing: false,
+          dateInvalid: false
         };
       }
     });
