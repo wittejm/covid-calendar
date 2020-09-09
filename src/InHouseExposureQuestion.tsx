@@ -9,6 +9,7 @@ interface Props {
   index: number;
   otherPerson: PersonData;
   inHouseExposureEventState: State<InHouseExposureEvent>;
+  eventSetterState: State<((date: string) => void) | undefined>;
 }
 
 export default function InHouseExposureQuestion(props: Props) {
@@ -39,8 +40,12 @@ export default function InHouseExposureQuestion(props: Props) {
           onChange={(e: React.BaseSyntheticEvent) =>
             props.inHouseExposureEventState.date.set(e.target.value)
           }
-          onFocus={() => {}}
-          onUnfocus={() => {}}
+          onFocus={() =>
+            props.eventSetterState.set(() => (date: string) => {
+              props.inHouseExposureEventState.date.set(date);
+            })
+          }
+          onUnfocus={() => props.eventSetterState.set(undefined)}
           missing={inHouseExposureEvent.dateMissing}
           invalid={inHouseExposureEvent.dateInvalid}
         />
