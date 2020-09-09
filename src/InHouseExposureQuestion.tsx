@@ -46,6 +46,13 @@ export default function InHouseExposureQuestion(props: Props) {
               props.inHouseExposureEventState.date.set(e.target.value)
             }
           />
+          <div role="alert">
+            {props.inHouseExposureEventState.dateMissing.get() ? (
+              <span className="f5 fw5 red">required</span>
+            ) : props.inHouseExposureEventState.dateInvalid.get() ? (
+              <span className="f5 fw5 red">mm/dd/yyyy format required</span>
+            ) : null}
+          </div>
         </>
       )}
     </div>
