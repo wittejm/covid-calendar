@@ -2,6 +2,7 @@ import React from "react";
 import { InHouseExposureEvent, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
+import DateQuestion from "./DateQuestion";
 
 interface Props {
   id: number;
@@ -31,29 +32,18 @@ export default function InHouseExposureQuestion(props: Props) {
         />
       )}
       {isExposed && !isOngoing && (
-        <>
-          <label htmlFor={`crossExposure-${props.id}-${props.index}`}>
-            Date exposed to {props.otherPerson.name}{" "}
-            <span className="f6 fw3">mm/dd/yyyy</span>
-          </label>
-          <input
-            className="form-control"
-            value={inHouseExposureEvent.date}
-            name={`crossExposure-${props.index}`}
-            id={`crossExposure-${props.id}-${props.index}`}
-            type="text"
+        <DateQuestion
+            id={props.id}
+            questionFieldTextState={props.inHouseExposureEventState.date}
+            questionFieldName={`crossExposure-${props.index}`}
             onChange={(e: React.BaseSyntheticEvent) =>
               props.inHouseExposureEventState.date.set(e.target.value)
             }
+            onFocus={()=>{}}
+            onUnfocus={()=>{}}
+            missing={inHouseExposureEvent.dateMissing}
+            invalid={inHouseExposureEvent.dateInvalid}
           />
-          <div role="alert">
-            {props.inHouseExposureEventState.dateMissing.get() ? (
-              <span className="f5 fw5 red">required</span>
-            ) : props.inHouseExposureEventState.dateInvalid.get() ? (
-              <span className="f5 fw5 red">mm/dd/yyyy format required</span>
-            ) : null}
-          </div>
-        </>
       )}
     </div>
   );
