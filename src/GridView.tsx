@@ -3,6 +3,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
+import { colors } from "./types";
+
 import {
   PersonData,
   CalculationResult,
@@ -31,7 +33,9 @@ export default function GridView(props: Props) {
           classNames: ["TODO"],
           title: result.person.name,
           start: result.startDate,
-          end: result.endDate
+          end: result.endDate,
+          color: colors[result.person.id - (1 % colors.length)],
+          textColor: "#000000"
         };
       }
     );
