@@ -35,14 +35,12 @@ export interface CalculationResult {
 }
 
 export const colors = [
-  "#91DADF", // bg-light-green",
-  "#96CCFF", // bg-light-blue
-  "#A463F2", // bg-light-purple
-  "#FF6300" // bg-orange
-];
-export const colorNames = [
-  "bg-light-green",
-  "bg-light-blue",
-  "bg-light-purple",
-  "bg-orange"
+  "#b35806",
+  "#e08214",
+  "#fdb863",
+  "#fee0b6",
+  "#d8daeb",
+  "#b2abd2",
+  "#8073ac",
+  "#542788"
 ];

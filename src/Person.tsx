@@ -5,7 +5,6 @@ import {
   CovidEventName,
   InHouseExposureEvent,
   PersonData,
-  colorNames,
   colors
 } from "./types";
 import DateQuestion from "./DateQuestion";
@@ -346,7 +345,7 @@ export default function Person(props: Props) {
             <span className="">
               {person.name + " "}
               <i
-                style={{ color: colors[person.id - (1 % colorNames.length)] }}
+                style={{ color: colors[person.id - (1 % colors.length)] }}
                 className={"fa fa-xss fa-circle px-1"}
               ></i>
             </span>
