@@ -1,5 +1,11 @@
 import React from "react";
-import { CalculationResult, InHouseExposureEvent, PersonData } from "./types";
+import {
+  CalculationResult,
+  colorNames,
+  colors,
+  InHouseExposureEvent,
+  PersonData
+} from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
@@ -47,7 +53,17 @@ export default function Household(props: Props) {
               if (isValid(result.startDate) && isValid(result.endDate)) {
                 return (
                   <div className="p32">
-                    {result.person.name} {" should quarantine from "}{" "}
+                    <span className="">
+                      <i
+                        style={{
+                          color:
+                            colors[result.person.id - (1 % colorNames.length)]
+                        }}
+                        className={"fa fa-xss fa-circle pr-1"}
+                      ></i>
+                      {result.person.name + " "}
+                    </span>{" "}
+                    {" should quarantine from "}{" "}
                     {format(result.startDate, "MM/dd/yyyy")}
                     {" until "} {format(result.endDate, "MM/dd/yyyy")}
                     {"."}
