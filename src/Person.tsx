@@ -5,7 +5,8 @@ import {
   CovidEventName,
   InHouseExposureEvent,
   PersonData,
-  colorNames
+  colorNames,
+  colors
 } from "./types";
 import DateQuestion from "./DateQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
@@ -331,13 +332,13 @@ export default function Person(props: Props) {
         </div>
       ) : (
         <div className="card-body">
-          <h4 className="d-flex justify-content-between align-items-center mb-3">
-            <span
-              className={
-                "pv1 ph2 br3 " + colorNames[person.id - (1 % colorNames.length)]
-              }
-            >
+          <h4 className="d-flex justify-content-between align-items-center">
+            <span className="">
               {person.name + " "}
+              <i
+                style={{ color: colors[person.id - (1 % colorNames.length)] }}
+                className={"fa fa-xss fa-circle px-1"}
+              ></i>
             </span>
             <span>
               {!editing && (
