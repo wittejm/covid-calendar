@@ -142,7 +142,7 @@ export default function Person(props: Props) {
             <span>
               Consult the{" "}
               <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
-                CDC web site
+                CDC website
               </a>{" "}
               for a common list of symptoms of Covid{" "}
             </span>
@@ -277,14 +277,24 @@ export default function Person(props: Props) {
               CovidEventName.LastCloseContact,
               "I have had close contact to someone presumed covid positive (outside the household)",
               <div>
-                Someone is presumed covid positive if they show symptoms or have
-                tested positive for the virus. Close contact means spending at
-                least 15 minutes or more at one time within 6 feet of someone,
-                with or without a face covering. If you have been exposed to
-                someone presumed covid positive, you are at a higher risk of
-                getting sick and spreading the disease to others, and should
-                quarantine for 14 days following the date of exposure.{" "}
-                <a href="https://multco.us/novel-coronavirus-covid-19/if-you-have-been-around-someone-covid-19">
+                Close contact means any of the following:
+                <ul className="ph3">
+                  <li>
+                    You were within 6 feet of them for a total of 15 minutes or
+                    more
+                  </li>
+                  <li>You provided care at home to the person</li>
+                  <li>
+                    You had direct physical contact with the person (hugged or
+                    kissed them)
+                  </li>
+                  <li>You shared eating or drinking utensils</li>
+                  <li>
+                    They sneezed, coughed, or somehow got respiratory droplets
+                    on you
+                  </li>
+                </ul>{" "}
+                <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
                   Link.
                 </a>
               </div>

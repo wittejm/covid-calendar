@@ -26,6 +26,18 @@ export default function Household(props: Props) {
   return (
     <>
       <div className="p-3">
+        <div className="ph4 pv3">
+          The instructions given in this app are based on the latest CDC
+          guidelines for protecting yourself and others from the spread of
+          COVID-19. The same information is available on their{" "}
+          <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/index.html">
+            COVID-19 webpage.
+          </a>
+        </div>
+        <div className="ph4 pb3">
+          Please add all members of your household and answer the all of the
+          provided questions for each.
+        </div>
         {!editing && (
           <button className="btn btn-primary mb-2" onClick={props.addNewPerson}>
             <i className="fa fa-user-plus" aria-hidden="true"></i> Add Person
@@ -63,15 +75,33 @@ export default function Household(props: Props) {
                       ></i>
                       {result.person.name + " "}
                     </span>{" "}
-                    {" should quarantine from "}{" "}
+                    {` should ${
+                      result.infected ? "isolate" : "quarantine"
+                    } from `}{" "}
                     {format(result.startDate, "MM/dd/yyyy")}
                     {" until "} {format(result.endDate, "MM/dd/yyyy")}
                     {"."}
+                    {result.infected && (
+                      <div className="pa2">
+                        If showing symptoms, continue to isolate until 24 hours
+                        after symptoms improve.
+                      </div>
+                    )}
                   </div>
                 );
               }
             }
           )}
+          <div className="pa1">
+            <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/isolation.html">
+              CDC guidelines on isolation.
+            </a>
+          </div>
+          <div className="ph1">
+            <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
+              CDC guidelines on quarantine.
+            </a>
+          </div>
         </div>
       </div>
     </>
