@@ -84,10 +84,10 @@ export default function App() {
           <div className="white f7 fw5">
             This page is a work in progress. Its instructions may be incorrect.
             Consult{" "}
-            <a href="https://multco.us/novel-coronavirus-covid-19/if-you-have-been-around-someone-covid-19">
-              the MultCo website
+            <a href="https://www.cdc.gov/coronavirus/2019-nCoV/index.html">
+            the latest CDC guidelines{" "}
             </a>{" "}
-            or the latest CDC guildlines for accurate Covid information.{" "}
+            for accurate information on COVID-19.{" "}
           </div>
         </div>
       </div>

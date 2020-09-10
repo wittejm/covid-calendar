@@ -20,14 +20,14 @@ export default function InHouseExposureQuestion(props: Props) {
     <div className="mb-3">
       <MultipleChoiceQuestion
         id={props.id}
-        questionText={`I was exposed to ${props.otherPerson.name}`}
+        questionText={`I had close contact with ${props.otherPerson.name}`}
         checked={isExposed}
         onChange={() => props.inHouseExposureEventState.exposed.set(v => !v)}
       />
       {isExposed && (
         <MultipleChoiceQuestion
           id={props.id}
-          questionText={`My exposure to ${props.otherPerson.name} is ongoing`}
+          questionText={`My close contact with ${props.otherPerson.name} is ongoing`}
           checked={isOngoing}
           onChange={() => props.inHouseExposureEventState.ongoing.set(v => !v)}
         />
