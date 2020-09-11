@@ -18,9 +18,9 @@ const empty: PersonData = {
   editing: false
 };
 
-const jordan: PersonData = {
+const personWithPositiveSymptoms: PersonData = {
   id: 1,
-  name: "Jordan",
+  name: "Person with positive symptoms",
   covidEvents: {
     [CovidEventName.SymptomsStart]: "01/01/2020",
     [CovidEventName.LastCloseContact]: "",
@@ -31,9 +31,9 @@ const jordan: PersonData = {
   editing: false
 };
 
-const kent: PersonData = {
+const personWithPositiveTest: PersonData = {
   id: 2,
-  name: "Foo",
+  name: "Person with positive test",
   covidEvents: {
     [CovidEventName.PositiveTest]: "01/01/2020",
     [CovidEventName.LastCloseContact]: "",
@@ -44,9 +44,9 @@ const kent: PersonData = {
   editing: false
 };
 
-const personA: PersonData = {
+const personWithPositiveSymptomsAndTest: PersonData = {
   id: 3,
-  name: "Person A",
+  name: "Person with positive symptoms and test",
   covidEvents: {
     [CovidEventName.PositiveTest]: "01/01/2020",
     [CovidEventName.SymptomsStart]: "01/05/2020",
@@ -57,9 +57,9 @@ const personA: PersonData = {
   editing: false
 };
 
-const personB: PersonData = {
+const personWithOngoingSymptoms: PersonData = {
   id: 4,
-  name: "Person B",
+  name: "Person with ongoing symptoms",
   covidEvents: {
     [CovidEventName.PositiveTest]: "01/01/2020",
     [CovidEventName.SymptomsStart]: "01/05/2020",
@@ -70,13 +70,13 @@ const personB: PersonData = {
   editing: false
 };
 
-const personC: PersonData = {
+const personWithOutsideExposure: PersonData = {
   id: 5,
-  name: "Person C",
+  name: "Person with outside exposure",
   covidEvents: {
-    [CovidEventName.PositiveTest]: "01/01/2020",
-    [CovidEventName.SymptomsStart]: "01/05/2020",
-    [CovidEventName.LastCloseContact]: ""
+    [CovidEventName.PositiveTest]: "",
+    [CovidEventName.SymptomsStart]: "",
+    [CovidEventName.LastCloseContact]: "01/01/2020"
   },
   noSymptomsFor24Hours: true,
   isNewPerson: false,
@@ -84,41 +84,61 @@ const personC: PersonData = {
 };
 
 test("Empty", () => {
-  const [startDate, endDate] = computeIsolationPeriod(empty);
+  const [, endDate] = computeIsolationPeriod(empty);
   expect(isValid(endDate)).toBe(false);
 });
 
-test("Isolation Period with one event", () => {
-  const [startDate, endDate] = computeIsolationPeriod(jordan);
-  expect(endDate).toStrictEqual(parseISO("2020-01-11"));
-
-  const [startDate2, endDate2] = computeIsolationPeriod(kent);
-  expect(endDate2).toStrictEqual(parseISO("2020-01-11"));
-});
-
-test("Isolation Period should use min of symptoms and positive test", () => {
-  const [startDate, endDate] = computeIsolationPeriod(personA);
+test("Person with positive symptoms isolates for 10 days", () => {
+  const [startDate, endDate] = computeIsolationPeriod(
+    personWithPositiveSymptoms
+  );
+  expect(startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(endDate).toStrictEqual(parseISO("2020-01-11"));
 });
 
-test("Isolation Period makes use of symptoms end", () => {
-  const [startDate, endDate] = computeIsolationPeriod(personB);
+test("Person with positive test isolates for 10 days", () => {
+  const [startDate, endDate] = computeIsolationPeriod(personWithPositiveTest);
+  expect(startDate).toStrictEqual(parseISO("2020-01-01"));
+  expect(endDate).toStrictEqual(parseISO("2020-01-11"));
+});
+
+test("Person starts isolating on earlier of positive symptoms and positive test date", () => {
+  const [startDate, endDate] = computeIsolationPeriod(
+    personWithPositiveSymptomsAndTest
+  );
+  expect(startDate).toStrictEqual(parseISO("2020-01-01"));
+  expect(endDate).toStrictEqual(parseISO("2020-01-11"));
+});
+
+test("Person continues to isolate if symptoms have not improved in 24 hours", () => {
+  const [, endDate] = computeIsolationPeriod(personWithOngoingSymptoms);
   expect(endDate).not.toStrictEqual(parseISO("2020-01-11"));
 
-  const [startDate2, endDate2] = computeIsolationPeriod(personC);
+  const [, endDate2] = computeIsolationPeriod(
+    personWithPositiveSymptomsAndTest
+  );
   expect(endDate2).toStrictEqual(parseISO("2020-01-11"));
 });
 
-test("Household calculation for one infected and one caretaker", () => {
+test("Person exposed outside the household quarantines for 14 days", () => {
+  const calcluations = computeHouseHoldQuarantinePeriod(
+    [personWithOutsideExposure],
+    []
+  );
+  expect(calcluations[0].startDate).toStrictEqual(parseISO("2020-01-01"));
+  expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-15"));
+});
+
+test("Given a household with a person with a positive test and a caretaker, the caretaker quarantines for 24 days", () => {
   const inHouseExposureEvent = {
-    contagiousPerson: personA.id,
+    contagiousPerson: personWithPositiveTest.id,
     quarantinedPerson: empty.id,
     exposed: true,
     ongoing: true,
     date: ""
   };
   const calcluations = computeHouseHoldQuarantinePeriod(
-    [personA, empty],
+    [personWithPositiveTest, empty],
     [inHouseExposureEvent]
   );
   expect(calcluations[0].startDate).toStrictEqual(parseISO("2020-01-01"));
@@ -127,20 +147,22 @@ test("Household calculation for one infected and one caretaker", () => {
   expect(calcluations[1].endDate).toStrictEqual(parseISO("2020-01-25"));
 });
 
-test("Household calculation for one infected and isolated peer", () => {
+test("Given a household with a person with a positive test and an isolated family member, the isolated family member quarantines for 14 days after last exposure", () => {
   const inHouseExposureEvent = {
-    contagiousPerson: personA.id,
+    contagiousPerson: personWithPositiveTest.id,
     quarantinedPerson: empty.id,
     exposed: true,
     ongoing: false,
     date: "1/5/2020"
   };
   const calcluations = computeHouseHoldQuarantinePeriod(
-    [personA, empty],
+    [personWithPositiveTest, empty],
     [inHouseExposureEvent]
   );
+  expect(calcluations[0].startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-11"));
+  expect(calcluations[1].startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(calcluations[1].endDate).toStrictEqual(parseISO("2020-01-19"));
 });
 
-// TODO: Add test for earliest exposure date
+// TODO: Given a household with person A who has received a positive test and an person B who was exposed to person A and also another covid-positive person outside the household, person B quarantines for 14 days after latter exposure
