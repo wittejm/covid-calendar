@@ -64,7 +64,7 @@ export default function Household(props: Props) {
           {computeHouseHoldQuarantinePeriod(members, inHouseExposureEvents)
             .sort((r1, r2) => r1.person.id - r2.person.id)
             .map((result: CalculationResult) => {
-              if (isValid(result.startDate) && isValid(result.endDate)) {
+              if (isValid(result.endDate)) {
                 return (
                   <div className="p32">
                     <span className="">
@@ -76,10 +76,7 @@ export default function Household(props: Props) {
                       ></i>
                       {result.person.name + " "}
                     </span>{" "}
-                    {` should ${
-                      result.infected ? "isolate" : "quarantine"
-                    } from `}{" "}
-                    {format(result.startDate, "MM/dd/yyyy")}
+                    should {result.infected ? "isolate" : "quarantine"}
                     {" until "}
                     {result.person.noSymptomsFor24Hours
                       ? format(result.endDate, "MM/dd/yyyy")

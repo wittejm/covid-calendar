@@ -13,18 +13,16 @@ export function computeHouseHoldQuarantinePeriod(
 ): CalculationResult[] {
   const [infected, quarantined] = flow(
     map((person: PersonData) => {
-      const [illnessOnset, isolationEndDate] = computeIsolationPeriod(person);
+      const isolationEndDate = computeIsolationPeriod(person);
       if (isValid(isolationEndDate)) {
         return {
           person: person,
-          startDate: illnessOnset,
           endDate: isolationEndDate,
           infected: true
         };
       } else {
         return {
           person: person,
-          startDate: new Date(),
           endDate: new Date(),
           infected: false
         };
@@ -39,11 +37,6 @@ export function computeHouseHoldQuarantinePeriod(
         (event: InHouseExposureEvent) =>
           event.quarantinedPerson === person.id && event.exposed
       )(inHouseExposureEvents);
-      const firstExposureDate = map((event: InHouseExposureEvent) => {
-        return infected.find(
-          calculation => calculation.person.id === event.contagiousPerson
-        )?.startDate;
-      });
       const lastExposureDate = map((event: InHouseExposureEvent) => {
         if (event.ongoing) {
           return infected.find(
@@ -58,12 +51,6 @@ export function computeHouseHoldQuarantinePeriod(
       const outHouseExposureDate = outHouseExposureDateString
         ? parse(outHouseExposureDateString, "M/dd/yyyy", new Date())
         : undefined;
-      const earliestExposureDate = min(
-        compact([
-          ...firstExposureDate(relevantInHouseExposureEvents),
-          outHouseExposureDate
-        ])
-      );
       const latestExposureDate = max(
         compact([
           ...lastExposureDate(relevantInHouseExposureEvents),
@@ -73,7 +60,6 @@ export function computeHouseHoldQuarantinePeriod(
       const fourteenDaysFromLastExposure = addDays(latestExposureDate, 14);
       return {
         person: person,
-        startDate: earliestExposureDate,
         endDate: fourteenDaysFromLastExposure,
         infected: false
       };
@@ -82,7 +68,7 @@ export function computeHouseHoldQuarantinePeriod(
   return [...infected, ...quarantinedCalculations];
 }
 
-export function computeIsolationPeriod(person: PersonData): [Date, Date] {
+export function computeIsolationPeriod(person: PersonData): Date {
   const covidPositiveEvents = [
     person.covidEvents[CovidEventName.SymptomsStart],
     person.covidEvents[CovidEventName.PositiveTest]
@@ -98,5 +84,5 @@ export function computeIsolationPeriod(person: PersonData): [Date, Date] {
     compact,
     thru((dates: Date[]) => max(dates))
   )([tenDaysAfterOnset, symptomsEnd]);
-  return [illnessOnset, isolationEndDate];
+  return isolationEndDate;
 }
