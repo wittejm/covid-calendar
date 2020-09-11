@@ -61,8 +61,9 @@ export default function Household(props: Props) {
         <hr />
         <div className={"p-1"}>
           <h4>Guidance</h4>
-          {computeHouseHoldQuarantinePeriod(members, inHouseExposureEvents).map(
-            (result: CalculationResult) => {
+          {computeHouseHoldQuarantinePeriod(members, inHouseExposureEvents)
+            .sort((r1, r2) => r1.person.id - r2.person.id)
+            .map((result: CalculationResult) => {
               if (isValid(result.startDate) && isValid(result.endDate)) {
                 return (
                   <div className="p32">
@@ -87,8 +88,7 @@ export default function Household(props: Props) {
                   </div>
                 );
               }
-            }
-          )}
+            })}
           <div className="my-2" />
           <div>
             <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/isolation.html">
