@@ -57,10 +57,24 @@ export function computeHouseHoldQuarantinePeriod(
           outHouseExposureDate
         ])
       );
+      const peopleWithOngoingExposureWithSymptoms = flow(
+        map((event: InHouseExposureEvent) => {
+          if (event.ongoing) {
+            const personWithOngoingExposure = infected.find(
+              calculation => calculation.person.id === event.contagiousPerson
+            )?.person;
+            if (!personWithOngoingExposure?.noSymptomsFor24Hours) {
+              return personWithOngoingExposure?.name;
+            }
+          }
+        }),
+        compact
+      )(relevantInHouseExposureEvents);
       const fourteenDaysFromLastExposure = addDays(latestExposureDate, 14);
       return {
         person: person,
         endDate: fourteenDaysFromLastExposure,
+        peopleWithOngoingExposureWithSymptoms: peopleWithOngoingExposureWithSymptoms,
         infected: false
       };
     }

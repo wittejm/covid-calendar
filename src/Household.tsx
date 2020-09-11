@@ -22,6 +22,25 @@ export default function Household(props: Props) {
   const editing = props.editingState.get();
   const members = props.membersState.get();
   const inHouseExposureEvents = props.inHouseExposureEventsState.get();
+
+  function guidanceMessage(result: CalculationResult) {
+    const date = format(result.endDate, "MM/dd/yyyy");
+    if (result.infected) {
+      if (result.person.noSymptomsFor24Hours) {
+        return `should isolate until ${date}.`;
+      } else {
+        return `should isolate until at least ${date} and 24 hours after symptoms improve.`;
+      }
+    } else {
+      if (result.peopleWithOngoingExposureWithSymptoms?.length) {
+        const names = result.peopleWithOngoingExposureWithSymptoms?.join(", ");
+        return `should quarantine until at least ${date} and 11 days after symptoms improve for ${names}.`;
+      } else {
+        return `should quarantine until ${date}.`;
+      }
+    }
+  }
+
   return (
     <>
       <div className="p-3">
@@ -76,12 +95,7 @@ export default function Household(props: Props) {
                       ></i>
                       {result.person.name + " "}
                     </span>{" "}
-                    should {result.infected ? "isolate" : "quarantine"}
-                    {" until "}
-                    {result.person.noSymptomsFor24Hours
-                      ? format(result.endDate, "MM/dd/yyyy")
-                      : " 24 hours after symptoms improve"}
-                    {"."}
+                    {guidanceMessage(result)}
                   </div>
                 );
               }
