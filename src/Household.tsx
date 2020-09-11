@@ -1,7 +1,6 @@
 import React from "react";
 import {
   CalculationResult,
-  colorNames,
   colors,
   InHouseExposureEvent,
   PersonData
@@ -68,8 +67,7 @@ export default function Household(props: Props) {
                     <span className="">
                       <i
                         style={{
-                          color:
-                            colors[result.person.id - (1 % colorNames.length)]
+                          color: colors[result.person.id - (1 % colors.length)]
                         }}
                         className={"fa fa-xss fa-circle pr-1"}
                       ></i>
