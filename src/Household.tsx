@@ -79,14 +79,11 @@ export default function Household(props: Props) {
                       result.infected ? "isolate" : "quarantine"
                     } from `}{" "}
                     {format(result.startDate, "MM/dd/yyyy")}
-                    {" until "} {format(result.endDate, "MM/dd/yyyy")}
+                    {" until "}
+                    {result.person.noSymptomsFor24Hours
+                      ? format(result.endDate, "MM/dd/yyyy")
+                      : " 24 hours after symptoms improve"}
                     {"."}
-                    {result.infected && (
-                      <div className="pa2">
-                        If showing symptoms, continue to isolate until 24 hours
-                        after symptoms improve.
-                      </div>
-                    )}
                   </div>
                 );
               }
