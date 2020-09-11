@@ -61,8 +61,9 @@ export default function Household(props: Props) {
         <hr />
         <div className={"p-1"}>
           <h4>Guidance</h4>
-          {computeHouseHoldQuarantinePeriod(members, inHouseExposureEvents).map(
-            (result: CalculationResult) => {
+          {computeHouseHoldQuarantinePeriod(members, inHouseExposureEvents)
+            .sort((r1, r2) => r1.person.id - r2.person.id)
+            .map((result: CalculationResult) => {
               if (isValid(result.startDate) && isValid(result.endDate)) {
                 return (
                   <div className="p32">
@@ -79,19 +80,15 @@ export default function Household(props: Props) {
                       result.infected ? "isolate" : "quarantine"
                     } from `}{" "}
                     {format(result.startDate, "MM/dd/yyyy")}
-                    {" until "} {format(result.endDate, "MM/dd/yyyy")}
+                    {" until "}
+                    {result.person.noSymptomsFor24Hours
+                      ? format(result.endDate, "MM/dd/yyyy")
+                      : " 24 hours after symptoms improve"}
                     {"."}
-                    {result.infected && (
-                      <div className="pa2">
-                        If showing symptoms, continue to isolate until 24 hours
-                        after symptoms improve.
-                      </div>
-                    )}
                   </div>
                 );
               }
-            }
-          )}
+            })}
           <div className="my-2" />
           <div>
             <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/isolation.html">
