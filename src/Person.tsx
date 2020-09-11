@@ -143,7 +143,7 @@ export default function Person(props: Props) {
               <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
                 CDC website
               </a>{" "}
-              for a common list of symptoms of Covid{" "}
+              for a common list of symptoms of Covid.{" "}
             </span>
           }
         />
@@ -277,7 +277,7 @@ export default function Person(props: Props) {
               "I have had close contact to someone presumed covid positive (outside the household)",
               <div>
                 Close contact means any of the following:
-                <ul className="ph3">
+                <ul className="mx-3 mb-1">
                   <li>
                     You were within 6 feet of them for a total of 15 minutes or
                     more
