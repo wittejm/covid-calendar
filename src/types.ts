@@ -30,6 +30,7 @@ export interface InHouseExposureEvent {
 export interface CalculationResult {
   person: PersonData;
   endDate: Date;
+  peopleWithOngoingExposureWithSymptoms?: string[];
   infected?: boolean;
 }
 
