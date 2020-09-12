@@ -2,7 +2,8 @@ import {
   CalculationResult,
   CovidEventName,
   InHouseExposureEvent,
-  PersonData
+  PersonData,
+  today
 } from "./types";
 import { addDays, max, min, isValid, parse } from "date-fns";
 import { flow, compact, map, thru, partition, filter } from "lodash/fp";
@@ -76,10 +77,13 @@ export function computeHouseHoldQuarantinePeriod(
         endDate: fourteenDaysFromLastExposure,
         peopleWithOngoingExposureWithSymptoms: peopleWithOngoingExposureWithSymptoms,
         infected: false
+
       };
     }
   );
-  return [...infected, ...quarantinedCalculations];
+  const stillInfected = filter((result: CalculationResult)=>result.endDate >= today)(infected);
+  const stillQuarantined = filter((result: CalculationResult)=>result.endDate >= today)(quarantinedCalculations);
+  return [...stillInfected, ...stillQuarantined];
 }
 
 export function computeIsolationPeriod(person: PersonData): Date {

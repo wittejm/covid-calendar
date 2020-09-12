@@ -44,3 +44,5 @@ export const colors = [
   "#8073ac",
   "#542788"
 ];
+
+export const today: Date = new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate());
