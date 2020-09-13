@@ -269,7 +269,7 @@ export default function Person(props: Props) {
     } else {
       if (result.peopleWithOngoingExposureWithSymptoms?.length) {
         const names = result.peopleWithOngoingExposureWithSymptoms?.join(", ");
-        return `Until at least ${date} and 11 days after symptoms improve for ${names}`;
+        return `Until at least ${date} and 14 days after isolation period ends for ${names}`;
       } else {
         return `Until ${date}`;
       }
