@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "@hookstate/core";
 import GridView from "./GridView";
 import Household from "./Household";
@@ -7,33 +7,15 @@ import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
 
 export default function App() {
-  const initialMembers: PersonData[] = [
-    {
-      id: 1,
-      name: `Alice`,
-      covidEvents: {
-        [CovidEventName.LastCloseContact]: "8/25/2020",
-        [CovidEventName.SymptomsStart]: "",
-        [CovidEventName.PositiveTest]: ""
-      },
-      noSymptomsFor24Hours: true,
-      isNewPerson: false,
-      editing: false
-    },
-    {
-      id: 2,
-      name: `Bob`,
-      covidEvents: {
-        [CovidEventName.LastCloseContact]: "8/28/2020",
-        [CovidEventName.SymptomsStart]: "",
-        [CovidEventName.PositiveTest]: ""
-      },
-      noSymptomsFor24Hours: true,
-      isNewPerson: false,
-      editing: false
-    }
-  ];
-  const members = useState(initialMembers);
+  const height = useState(window.innerHeight);
+  const updateHeight = () => {
+    height.set(window.innerHeight);
+  };
+  useEffect(() => {
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
+  const members = useState([] as PersonData[]);
   const inHouseExposureEvents = useState<InHouseExposureEvent[]>([]);
   const editing = useState<number | undefined>(undefined);
   const id = useState(members.length + 1);
@@ -74,41 +56,67 @@ export default function App() {
     inHouseExposureEvents.merge(compact(newExposureEvents));
   }
 
+  function renderTitle() {
+    if (members.get().length) {
+      if (editing.get()) {
+        return <h3>Please fill out questions.</h3>;
+      } else {
+        return <h3>Here's our recommendation for your household.</h3>;
+      }
+    } else {
+      return <h3>Get quarantine and isolation guidance for your household.</h3>;
+    }
+  }
+
   return (
     <>
-      <div className="navbar navbar-dark bg-dark shadow-sm">
-        <div className="container d-flex justify-content-between">
-          <a href="#" className="navbar-brand d-flex align-items-center">
-            <strong>Covid Quarantine Calculator</strong>
-          </a>
-          <div className="white f7 fw5">
-            This page is a work in progress. Its instructions may be incorrect.
-            Consult{" "}
-            <a href="https://www.cdc.gov/coronavirus/2019-nCoV/index.html">
-            the latest CDC guidelines{" "}
-            </a>{" "}
-            for accurate information on COVID-19.{" "}
+      <main className={"container"}>
+        <div className={"row my-4"}>
+          <div className={"col-md-6"}>
+            <div>Covid Quarantine Calculator [Work in Progress]</div>
+            {renderTitle()}
           </div>
+          <div className={"col-md-6"} />
         </div>
-      </div>
-      <main className={"row"}>
-        <div className={"col-md-5"}>
-          <Household
-            membersState={members}
-            inHouseExposureEventsState={inHouseExposureEvents}
-            editingState={editing}
-            eventSetterState={eventSetterState}
-            addNewPerson={addNewPerson}
-          />
-        </div>
-        <div className={"col-md-7"}>
-          <GridView
-            membersState={members}
-            editing={editing.get()}
-            eventSetterState={eventSetterState}
-            inHouseExposureEvents={inHouseExposureEvents.get()}
-          />
-        </div>
+        <Household
+          membersState={members}
+          inHouseExposureEventsState={inHouseExposureEvents}
+          editingState={editing}
+          eventSetterState={eventSetterState}
+          addNewPerson={addNewPerson}
+          height={height}
+        />
+        <div className={"my-5"} />
+        <GridView
+          membersState={members}
+          editing={editing.get()}
+          eventSetterState={eventSetterState}
+          inHouseExposureEvents={inHouseExposureEvents.get()}
+        />
+        <hr />
+        <footer>
+          <div>
+            <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/isolation.html">
+              Link
+            </a>{" "}
+            to CDC guidelines on isolation.
+          </div>
+          <div className="">
+            <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
+              Link
+            </a>{" "}
+            to CDC guidelines on quarantine.
+          </div>
+          <p>
+            The guidance given in this app is based on the latest CDC guidelines
+            for protecting yourself and others from the spread of COVID-19. The
+            same information is available on their{" "}
+            <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/index.html">
+              COVID-19 webpage
+            </a>
+            .
+          </p>
+        </footer>
       </main>
     </>
   );
