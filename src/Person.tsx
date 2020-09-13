@@ -5,13 +5,15 @@ import {
   CovidEventName,
   InHouseExposureEvent,
   PersonData,
-  colors
+  colors,
+  CalculationResult
 } from "./types";
 import DateQuestion from "./DateQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
+import { format, isValid } from "date-fns";
 
 interface Props {
   personState: State<PersonData>;
@@ -19,6 +21,7 @@ interface Props {
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
   editingState: State<number | undefined>;
   eventSetterState: State<((date: string) => void) | undefined>;
+  guidance: CalculationResult;
 }
 
 export default function Person(props: Props) {
@@ -67,6 +70,7 @@ export default function Person(props: Props) {
   const contagious =
     selections[CovidEventName.PositiveTest] ||
     selections[CovidEventName.SymptomsStart];
+  const hovering = useState(false);
 
   function onCheckboxChange(fieldName: CovidEventName) {
     return (e: React.BaseSyntheticEvent) => {
@@ -254,153 +258,206 @@ export default function Person(props: Props) {
     props.personState.set(none);
   }
 
-  return (
-    <div className={"card shadow-sm mb-2"}>
-      {props.editingState.get() === person.id ? (
-        <div className="p-2">
-          <div className="mb-3">
-            <label htmlFor={`${person.id}-name`}>Name</label>
-            <input
-              className="form-control"
-              value={person.name}
-              name="name"
-              id={`${person.id}-name`}
-              type="text"
-              onChange={(e: React.BaseSyntheticEvent) =>
-                props.personState.name.set(e.target.value)
-              }
-            />
-          </div>
-          <div className="mb-3">
-            {buildCovidEventQuestion(
-              CovidEventName.LastCloseContact,
-              "I have had close contact to someone presumed covid positive (outside the household)",
-              <div>
-                Close contact means any of the following:
-                <ul className="mx-3 mb-1">
-                  <li>
-                    You were within 6 feet of them for a total of 15 minutes or
-                    more
-                  </li>
-                  <li>You provided care at home to the person</li>
-                  <li>
-                    You had direct physical contact with the person (hugged or
-                    kissed them)
-                  </li>
-                  <li>You shared eating or drinking utensils</li>
-                  <li>
-                    They sneezed, coughed, or somehow got respiratory droplets
-                    on you
-                  </li>
-                </ul>{" "}
-                <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
-                  Link.
-                </a>
-              </div>
-            )}
-            <hr />
-          </div>
-          <div className="mb-3">
-            {buildCovidEventQuestion(
-              CovidEventName.PositiveTest,
-              "I have received a positive test result"
-            )}
-            <hr />
-          </div>
-          <div className="mb-3">
-            {buildSymptomsQuestion()}
-            <hr />
-          </div>
-          <InHouseExposureQuestions
-            id={person.id}
-            meaningfulInHouseExposures={meaningfulInHouseExposures}
-            relevantInHouseExposureEventsState={
-              relevantInHouseExposureEventsState
+  function guidanceMessage(result: CalculationResult) {
+    const date = format(result.endDate, "MM/dd/yyyy");
+    if (result.infected) {
+      if (result.person.noSymptomsFor24Hours) {
+        return `Until ${date}`;
+      } else {
+        return `Until at least ${date} and 24 hours after symptoms improve`;
+      }
+    } else {
+      if (result.peopleWithOngoingExposureWithSymptoms?.length) {
+        const names = result.peopleWithOngoingExposureWithSymptoms?.join(", ");
+        return `Until at least ${date} and 11 days after symptoms improve for ${names}`;
+      } else {
+        return `Until ${date}`;
+      }
+    }
+  }
+
+  function renderFeedback() {
+    return (
+      <div className="">
+        {Object.entries(person.covidEvents).map(
+          ([name, date]: [string, string]) => {
+            if (date !== "") {
+              return (
+                <div className="f5">
+                  {name}
+                  {": "} {date}
+                </div>
+              );
             }
-            eventSetterState={props.eventSetterState}
-          />
-          <div className={"d-flex justify-content-between align-items-center"}>
-            <button
-              className="btn btn-secondary"
-              onClick={() => {
-                removeFromMembers();
-                props.editingState.set(undefined);
-              }}
-            >
-              <span className="visually-hidden">Remove</span>
-              Remove
-              <i
-                aria-hidden="true"
-                className="pl2 fas fa-times-circle white"
-              ></i>
-            </button>
-            <button className="btn btn-primary" onClick={handleSubmit}>
-              {person.isNewPerson ? "Submit" : "Update"}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="card-body">
-          <h4 className="d-flex justify-content-between align-items-center">
-            <span className="">
-              {person.name + " "}
-              <i
-                style={{ color: colors[(person.id - 1) % colors.length] }}
-                className={"fa fa-xss fa-circle px-1"}
-              ></i>
-            </span>
-            <span>
-              {!editing && (
-                <button onClick={() => props.editingState.set(person.id)}>
-                  <span className="visually-hidden">Edit Person</span>
-                  <span aria-hidden="true" className="f5 fas fa-pen"></span>
-                </button>
+          }
+        )}
+        {Object.values(relevantInHouseExposureEvents).map(
+          (event: InHouseExposureEvent) => {
+            if (event.exposed) {
+              const quarantinedPersonName = members.find(
+                member => member.id === event.quarantinedPerson
+              )?.name;
+              const contagiousPersonName = members.find(
+                member => member.id === event.contagiousPerson
+              )?.name;
+              if (event.ongoing) {
+                return (
+                  <div className="f5">
+                    {quarantinedPersonName} has an ongoing exposure to{" "}
+                    {contagiousPersonName}{" "}
+                  </div>
+                );
+              } else {
+                return (
+                  <div className="f5">
+                    {quarantinedPersonName} exposed to {contagiousPersonName} at{" "}
+                    {event.date}
+                  </div>
+                );
+              }
+            }
+          }
+        )}
+      </div>
+    );
+  }
+
+  function renderEditing() {
+    return (
+      <div className={"col-md-12"}>
+        <div className={"card shadow-sm mb-2"}>
+          <div className="p-2">
+            <div className="mb-3">
+              <label htmlFor={`${person.id}-name`}>Name</label>
+              <input
+                className="form-control"
+                value={person.name}
+                name="name"
+                id={`${person.id}-name`}
+                type="text"
+                onChange={(e: React.BaseSyntheticEvent) =>
+                  props.personState.name.set(e.target.value)
+                }
+              />
+            </div>
+            <div className="mb-3">
+              {buildCovidEventQuestion(
+                CovidEventName.LastCloseContact,
+                "I have had close contact to someone presumed covid positive (outside the household)",
+                <div>
+                  Close contact means any of the following:
+                  <ul className="mx-3 mb-1">
+                    <li>
+                      You were within 6 feet of them for a total of 15 minutes
+                      or more
+                    </li>
+                    <li>You provided care at home to the person</li>
+                    <li>
+                      You had direct physical contact with the person (hugged or
+                      kissed them)
+                    </li>
+                    <li>You shared eating or drinking utensils</li>
+                    <li>
+                      They sneezed, coughed, or somehow got respiratory droplets
+                      on you
+                    </li>
+                  </ul>{" "}
+                  <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
+                    Link.
+                  </a>
+                </div>
               )}
-            </span>
-          </h4>
-          <div className="">
-            {Object.entries(person.covidEvents).map(
-              ([name, date]: [string, string]) => {
-                if (date !== "") {
-                  return (
-                    <div className="f5">
-                      {name}
-                      {": "} {date}
-                    </div>
-                  );
-                }
+              <hr />
+            </div>
+            <div className="mb-3">
+              {buildCovidEventQuestion(
+                CovidEventName.PositiveTest,
+                "I have received a positive test result"
+              )}
+              <hr />
+            </div>
+            <div className="mb-3">
+              {buildSymptomsQuestion()}
+              <hr />
+            </div>
+            <InHouseExposureQuestions
+              id={person.id}
+              meaningfulInHouseExposures={meaningfulInHouseExposures}
+              relevantInHouseExposureEventsState={
+                relevantInHouseExposureEventsState
               }
-            )}
-            {Object.values(relevantInHouseExposureEvents).map(
-              (event: InHouseExposureEvent) => {
-                if (event.exposed) {
-                  const quarantinedPersonName = members.find(
-                    member => member.id === event.quarantinedPerson
-                  )?.name;
-                  const contagiousPersonName = members.find(
-                    member => member.id === event.contagiousPerson
-                  )?.name;
-                  if (event.ongoing) {
-                    return (
-                      <div className="f5">
-                        {quarantinedPersonName} has an ongoing exposure to{" "}
-                        {contagiousPersonName}{" "}
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div className="f5">
-                        {quarantinedPersonName} exposed to{" "}
-                        {contagiousPersonName} at {event.date}
-                      </div>
-                    );
-                  }
-                }
-              }
-            )}
+              eventSetterState={props.eventSetterState}
+            />
+            <div
+              className={"d-flex justify-content-between align-items-center"}
+            >
+              <button
+                className="btn btn-secondary"
+                onClick={() => {
+                  removeFromMembers();
+                  props.editingState.set(undefined);
+                }}
+              >
+                <span className="visually-hidden">Remove</span>
+                Remove
+                <i
+                  aria-hidden="true"
+                  className="pl2 fas fa-times-circle white"
+                ></i>
+              </button>
+              <button className="btn btn-primary" onClick={handleSubmit}>
+                {person.isNewPerson ? "Submit" : "Update"}
+              </button>
+            </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+
+  function renderNonEditing() {
+    return (
+      <div className={"col-md-6"}>
+        <div className={"card shadow-sm mb-2"}>
+          <div
+            className="card-body"
+            onMouseEnter={() => {
+              hovering.set(true);
+            }}
+            onMouseLeave={() => {
+              hovering.set(false);
+            }}
+          >
+            <div className={""}>
+              <h4 className="d-flex justify-content-between align-items-center">
+                <span className="">
+                  {person.name + ""}
+                  {isValid(props.guidance.endDate) && props.guidance.infected
+                    ? " - Isolate"
+                    : " - Quarantine"}
+                </span>
+                <span>
+                  {!editing && (
+                    <button onClick={() => props.editingState.set(person.id)}>
+                      <span className="visually-hidden">Edit Person</span>
+                      <span aria-hidden="true" className="f5 fas fa-pen"></span>
+                    </button>
+                  )}
+                </span>
+              </h4>
+              {isValid(props.guidance.endDate) && (
+                <div className="p32">{guidanceMessage(props.guidance)}</div>
+              )}
+            </div>
+            <div className={"my-3"} />
+            {hovering.get() && renderFeedback()}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return props.editingState.get() === person.id
+    ? renderEditing()
+    : renderNonEditing();
 }
