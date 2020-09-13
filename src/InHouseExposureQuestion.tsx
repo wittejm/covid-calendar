@@ -7,6 +7,7 @@ import DateQuestion from "./DateQuestion";
 interface Props {
   id: number;
   index: number;
+  person: PersonData;
   otherPerson: PersonData;
   inHouseExposureEventState: State<InHouseExposureEvent>;
   eventSetterState: State<((date: string) => void) | undefined>;
@@ -20,14 +21,14 @@ export default function InHouseExposureQuestion(props: Props) {
     <div className="mb-3">
       <MultipleChoiceQuestion
         id={props.id}
-        questionText={`I had close contact with ${props.otherPerson.name}`}
+        questionText={`${props.person.name} had close contact with ${props.otherPerson.name}`}
         checked={isExposed}
         onChange={() => props.inHouseExposureEventState.exposed.set(v => !v)}
       />
       {isExposed && (
         <MultipleChoiceQuestion
           id={props.id}
-          questionText={`My close contact with ${props.otherPerson.name} is ongoing`}
+          questionText={`${props.person.name}'s close contact with ${props.otherPerson.name} is ongoing`}
           checked={isOngoing}
           onChange={() => props.inHouseExposureEventState.ongoing.set(v => !v)}
         />

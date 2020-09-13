@@ -138,7 +138,7 @@ export default function Person(props: Props) {
       <>
         <MultipleChoiceQuestion
           id={person.id}
-          questionText={"I have shown positive symptoms"}
+          questionText={`${person.name} has shown positive symptoms`}
           checked={symptomsStart}
           onChange={onCheckboxChange(CovidEventName.SymptomsStart)}
           tooltip={
@@ -173,7 +173,7 @@ export default function Person(props: Props) {
         {symptomsStart ? (
           <MultipleChoiceQuestion
             id={person.id}
-            questionText={"My symptoms have been improved for 24 hours."}
+            questionText={`${person.name}'s symptoms have been improved for 24 hours.`}
             checked={props.personState.noSymptomsFor24Hours.get()}
             onChange={() => props.personState.noSymptomsFor24Hours.set(c => !c)}
             tooltip={
@@ -343,7 +343,7 @@ export default function Person(props: Props) {
             <div className="mb-3">
               {buildCovidEventQuestion(
                 CovidEventName.LastCloseContact,
-                "I have had close contact to someone presumed covid positive (outside the household)",
+                `${person.name} has had close contact to someone presumed covid positive (outside the household)`,
                 <div>
                   Close contact means any of the following:
                   <ul className="mx-3 mb-1">
@@ -372,7 +372,7 @@ export default function Person(props: Props) {
             <div className="mb-3">
               {buildCovidEventQuestion(
                 CovidEventName.PositiveTest,
-                "I have received a positive test result"
+                `${person.name} has received a positive test result`
               )}
               <hr />
             </div>
@@ -381,7 +381,7 @@ export default function Person(props: Props) {
               <hr />
             </div>
             <InHouseExposureQuestions
-              id={person.id}
+              person={person}
               meaningfulInHouseExposures={meaningfulInHouseExposures}
               relevantInHouseExposureEventsState={
                 relevantInHouseExposureEventsState
