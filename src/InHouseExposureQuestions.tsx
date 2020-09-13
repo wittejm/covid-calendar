@@ -4,7 +4,7 @@ import React from "react";
 import { State } from "@hookstate/core/dist";
 
 interface Props {
-  id: number;
+  person: PersonData;
   meaningfulInHouseExposures: PersonData[];
   relevantInHouseExposureEventsState: State<InHouseExposureEvent>[];
   eventSetterState: State<((date: string) => void) | undefined>;
@@ -27,9 +27,10 @@ export default function InHouseExposureQuestions(props: Props) {
           return (
             <>
               <InHouseExposureQuestion
-                key={props.id + "-" + index}
-                id={props.id}
+                key={props.person.id + "-" + index}
+                id={props.person.id}
                 index={index}
+                person={props.person}
                 otherPerson={otherPerson}
                 inHouseExposureEventState={inHouseExposureEventState}
                 eventSetterState={props.eventSetterState}
