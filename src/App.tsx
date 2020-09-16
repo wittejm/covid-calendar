@@ -5,6 +5,7 @@ import Household from "./Household";
 import { CovidEventName, InHouseExposureEvent, PersonData } from "./types";
 import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
+import { useTranslation } from "react-i18next";
 
 export default function App() {
   const height = useState(window.innerHeight);
@@ -22,6 +23,12 @@ export default function App() {
   const eventSetterState = useState<((date: string) => void) | undefined>(
     undefined
   );
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = () => {
+    const nextLanguage = i18n.language === "en" ? "sp" : "en";
+    i18n.changeLanguage(nextLanguage);
+  };
 
   function addNewPerson() {
     const currentId = id.get();
@@ -59,12 +66,16 @@ export default function App() {
   function renderTitle() {
     if (members.get().length) {
       if (editing.get()) {
-        return <h3>Please fill out questions.</h3>;
+        return <h3>{t("Please fill out questions.")}</h3>;
       } else {
-        return <h3>Here's our recommendation for your household.</h3>;
+        return <h3>{t("Here's our recommendation for your household.")}</h3>;
       }
     } else {
-      return <h3>Get quarantine and isolation guidance for your household.</h3>;
+      return (
+        <h3>
+          {t("Get quarantine and isolation guidance for your household.")}
+        </h3>
+      );
     }
   }
 
@@ -76,6 +87,9 @@ export default function App() {
             <div>Covid Quarantine Calculator [Work in Progress]</div>
             {renderTitle()}
           </div>
+          <button onClick={changeLanguage}>
+            <span className="blue">{t("otherLanguage")}</span>
+          </button>
           <div className={"col-md-6"} />
         </div>
         <Household
