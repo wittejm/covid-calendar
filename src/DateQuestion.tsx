@@ -1,6 +1,8 @@
 import React from "react";
 import { State } from "@hookstate/core/dist";
-
+import DatePicker from "react-datepicker";
+import { useState } from "@hookstate/core";
+import "react-datepicker/dist/react-datepicker.css";
 interface Props {
   id: number;
   questionFieldTextState: State<string>;
@@ -18,6 +20,7 @@ export default function DateQuestion(props: Props) {
   );
   const dayMonthPattern = new RegExp("^[0-9][0-9]?/[0-9][0-9]?$");
 
+  const pickedDate = useState(new Date());
   const handleTextChange = (e: React.BaseSyntheticEvent) => {
     props.onChange(e);
   };
@@ -35,8 +38,14 @@ export default function DateQuestion(props: Props) {
     props.questionFieldTextState.set(fixedDate);
     props.onUnfocus();
   };
+  console.log("pickedDate.get()", pickedDate.get());
   return (
     <div className="">
+      <DatePicker
+        selected={pickedDate.get()}
+        onChange={(date: Date) => {pickedDate.set(date)}}
+      />
+
       <label htmlFor={`${props.id}-${props.questionFieldName}`}>
         Date <span className="f6 fw3">mm/dd/yyyy</span>
         <div role="alert">
