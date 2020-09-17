@@ -11,7 +11,6 @@ import { State } from "@hookstate/core/dist";
 interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEvents: InHouseExposureEvent[];
-  editing: number | undefined;
   eventSetterState: State<((date: string) => void) | undefined>;
 }
 
