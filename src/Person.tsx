@@ -5,7 +5,6 @@ import {
   CovidEventName,
   InHouseExposureEvent,
   PersonData,
-  colors,
   CalculationResult
 } from "./types";
 import DateQuestion from "./DateQuestion";
@@ -19,7 +18,8 @@ interface Props {
   personState: State<PersonData>;
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
-  editingState: State<number | undefined>;
+  editingHouseholdState: State<boolean>;
+  editingPersonState: State<number | undefined>;
   eventSetterState: State<((date: string) => void) | undefined>;
   guidance: CalculationResult;
 }
@@ -28,7 +28,8 @@ export default function Person(props: Props) {
   const person = props.personState.get();
   const members = props.membersState.get();
   const covidEventsState = props.personState.covidEvents;
-  const editing = props.editingState.get();
+  const editingPerson = props.editingPersonState.get();
+  const editingHousehold = props.editingHouseholdState.get();
   const relevantInHouseExposureEventsState: State<
     InHouseExposureEvent
   >[] = props.inHouseExposureEventsState.filter(
@@ -70,7 +71,6 @@ export default function Person(props: Props) {
   const contagious =
     selections[CovidEventName.PositiveTest] ||
     selections[CovidEventName.SymptomsStart];
-  const hovering = useState(false);
 
   function onCheckboxChange(fieldName: CovidEventName) {
     return (e: React.BaseSyntheticEvent) => {
@@ -225,7 +225,7 @@ export default function Person(props: Props) {
         })
         .includes(true)
     ) {
-      props.editingState.set(undefined);
+      props.editingPersonState.set(undefined);
     }
   };
 
@@ -256,6 +256,16 @@ export default function Person(props: Props) {
   function removeFromMembers() {
     relevantInHouseExposureEventsState.map(e => e.set(none)); // Remove all current exposures
     props.personState.set(none);
+  }
+
+  function renderGuidance() {
+    if (editingHousehold) {
+      return null;
+    } else {
+      return isValid(props.guidance.endDate) && props.guidance.infected
+        ? " - Isolate"
+        : " - Quarantine";
+    }
   }
 
   function guidanceMessage(result: CalculationResult) {
@@ -324,91 +334,87 @@ export default function Person(props: Props) {
 
   function renderEditing() {
     return (
-      <div className={"col-md-12"}>
-        <div className={"card shadow-sm mb-2"}>
-          <div className="p-2">
-            <div className="mb-3">
-              <label htmlFor={`${person.id}-name`}>Name</label>
-              <input
-                className="form-control"
-                value={person.name}
-                name="name"
-                id={`${person.id}-name`}
-                type="text"
-                onChange={(e: React.BaseSyntheticEvent) =>
-                  props.personState.name.set(e.target.value)
-                }
-              />
-            </div>
-            <div className="mb-3">
-              {buildCovidEventQuestion(
-                CovidEventName.LastCloseContact,
-                `${person.name} has had close contact to someone presumed covid positive (outside the household)`,
-                <div>
-                  Close contact means any of the following:
-                  <ul className="mx-3 mb-1">
-                    <li>
-                      You were within 6 feet of them for a total of 15 minutes
-                      or more
-                    </li>
-                    <li>You provided care at home to the person</li>
-                    <li>
-                      You had direct physical contact with the person (hugged or
-                      kissed them)
-                    </li>
-                    <li>You shared eating or drinking utensils</li>
-                    <li>
-                      They sneezed, coughed, or somehow got respiratory droplets
-                      on you
-                    </li>
-                  </ul>{" "}
-                  <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
-                    Link.
-                  </a>
-                </div>
-              )}
-              <hr />
-            </div>
-            <div className="mb-3">
-              {buildCovidEventQuestion(
-                CovidEventName.PositiveTest,
-                `${person.name} has received a positive test result`
-              )}
-              <hr />
-            </div>
-            <div className="mb-3">
-              {buildSymptomsQuestion()}
-              <hr />
-            </div>
-            <InHouseExposureQuestions
-              person={person}
-              meaningfulInHouseExposures={meaningfulInHouseExposures}
-              relevantInHouseExposureEventsState={
-                relevantInHouseExposureEventsState
+      <div className={"card shadow-sm mb-2"}>
+        <div className="p-2">
+          <div className="mb-3">
+            <label htmlFor={`${person.id}-name`}>Name</label>
+            <input
+              className="form-control"
+              value={person.name}
+              name="name"
+              id={`${person.id}-name`}
+              type="text"
+              onChange={(e: React.BaseSyntheticEvent) =>
+                props.personState.name.set(e.target.value)
               }
-              eventSetterState={props.eventSetterState}
             />
-            <div
-              className={"d-flex justify-content-between align-items-center"}
+          </div>
+          <div className="mb-3">
+            {buildCovidEventQuestion(
+              CovidEventName.LastCloseContact,
+              `${person.name} has had close contact to someone presumed covid positive (outside the household)`,
+              <div>
+                Close contact means any of the following:
+                <ul className="mx-3 mb-1">
+                  <li>
+                    You were within 6 feet of them for a total of 15 minutes or
+                    more
+                  </li>
+                  <li>You provided care at home to the person</li>
+                  <li>
+                    You had direct physical contact with the person (hugged or
+                    kissed them)
+                  </li>
+                  <li>You shared eating or drinking utensils</li>
+                  <li>
+                    They sneezed, coughed, or somehow got respiratory droplets
+                    on you
+                  </li>
+                </ul>{" "}
+                <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
+                  Link.
+                </a>
+              </div>
+            )}
+            <hr />
+          </div>
+          <div className="mb-3">
+            {buildCovidEventQuestion(
+              CovidEventName.PositiveTest,
+              `${person.name} has received a positive test result`
+            )}
+            <hr />
+          </div>
+          <div className="mb-3">
+            {buildSymptomsQuestion()}
+            <hr />
+          </div>
+          <InHouseExposureQuestions
+            person={person}
+            meaningfulInHouseExposures={meaningfulInHouseExposures}
+            relevantInHouseExposureEventsState={
+              relevantInHouseExposureEventsState
+            }
+            eventSetterState={props.eventSetterState}
+          />
+          <div className={"d-flex justify-content-between align-items-center"}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                removeFromMembers();
+                props.editingPersonState.set(undefined);
+              }}
             >
-              <button
-                className="btn btn-secondary"
-                onClick={() => {
-                  removeFromMembers();
-                  props.editingState.set(undefined);
-                }}
-              >
-                <span className="visually-hidden">Remove</span>
-                Remove
-                <i
-                  aria-hidden="true"
-                  className="pl2 fas fa-times-circle white"
-                ></i>
-              </button>
-              <button className="btn btn-primary" onClick={handleSubmit}>
-                {person.isNewPerson ? "Submit" : "Update"}
-              </button>
-            </div>
+              <span className="visually-hidden">Remove</span>
+              Remove
+              <i
+                aria-hidden="true"
+                className="pl2 fas fa-times-circle white"
+              ></i>
+            </button>
+            <button className="btn btn-primary" onClick={handleSubmit}>
+              {person.isNewPerson ? "Submit" : "Update"}
+            </button>
           </div>
         </div>
       </div>
@@ -417,47 +423,40 @@ export default function Person(props: Props) {
 
   function renderNonEditing() {
     return (
-      <div className={"col-md-6"}>
-        <div className={"card shadow-sm mb-2"}>
-          <div
-            className="card-body"
-            onMouseEnter={() => {
-              hovering.set(true);
-            }}
-            onMouseLeave={() => {
-              hovering.set(false);
-            }}
-          >
-            <div className={""}>
-              <h4 className="d-flex justify-content-between align-items-center">
-                <span className="">
-                  {person.name + ""}
-                  {isValid(props.guidance.endDate) && props.guidance.infected
-                    ? " - Isolate"
-                    : " - Quarantine"}
-                </span>
-                <span>
-                  {!editing && (
-                    <button onClick={() => props.editingState.set(person.id)}>
-                      <span className="visually-hidden">Edit Person</span>
-                      <span aria-hidden="true" className="f5 fas fa-pen"></span>
-                    </button>
-                  )}
-                </span>
-              </h4>
-              {isValid(props.guidance.endDate) && (
-                <div className="p32">{guidanceMessage(props.guidance)}</div>
-              )}
-            </div>
-            <div className={"my-3"} />
-            {hovering.get() && renderFeedback()}
+      <div className={"card shadow-sm mb-2"}>
+        <div className="card-body">
+          <div className={""}>
+            <h4 className="d-flex justify-content-between align-items-center">
+              <span className="">
+                {person.name + ""}
+                {renderGuidance()}
+              </span>
+              <span>
+                {!editingPerson && (
+                  <button
+                    onClick={() => {
+                      props.editingHouseholdState.set(true);
+                      props.editingPersonState.set(person.id);
+                    }}
+                  >
+                    <span className="visually-hidden">Edit Person</span>
+                    <span aria-hidden="true" className="f5 fas fa-pen"></span>
+                  </button>
+                )}
+              </span>
+            </h4>
+            {!editingHousehold && isValid(props.guidance.endDate) && (
+              <p className="lead text-muted">
+                {guidanceMessage(props.guidance)}
+              </p>
+            )}
           </div>
+          <div className={"my-3"} />
+          {editingHousehold && renderFeedback()}
         </div>
       </div>
     );
   }
 
-  return props.editingState.get() === person.id
-    ? renderEditing()
-    : renderNonEditing();
+  return editingPerson === person.id ? renderEditing() : renderNonEditing();
 }
