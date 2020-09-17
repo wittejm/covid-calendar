@@ -59,7 +59,7 @@ export default function App() {
   }
 
   return (
-    <Router>
+    <Router basename={`/${process.env.PUBLIC_URL}`}>
       <Switch>
         <Route path="/household">
           <Household
