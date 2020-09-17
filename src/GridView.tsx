@@ -23,11 +23,11 @@ export default function GridView(props: Props) {
       (result: CalculationResult) => {
         return {
           classNames: ["TODO"],
-          title: result.person.name,
-          start: parseISO("1970-01-01"),
-          end: result.endDate,
+          title: `${result.person.name}'s last day\n of ${result.infected? "isolation" : "quarantine"}` ,
+          start: result.endDate,
           color: colors[result.person.id - (1 % colors.length)],
-          textColor: "#000000"
+          textColor: "#000000",
+          display: 'block',
         };
       }
     );
