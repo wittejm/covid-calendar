@@ -20,7 +20,6 @@ interface Props {
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
   editingHouseholdState: State<boolean>;
   editingPersonState: State<number | undefined>;
-  eventSetterState: State<((date: string) => void) | undefined>;
   guidance: CalculationResult;
 }
 
@@ -116,13 +115,6 @@ export default function Person(props: Props) {
             id={person.id}
             questionFieldTextState={covidEventsState[fieldName]}
             questionFieldName={fieldName}
-            onChange={handleChange}
-            onFocus={() =>
-              props.eventSetterState.set(() => (date: string) =>
-                covidEventsState[fieldName].set(date)
-              )
-            }
-            onUnfocus={() => props.eventSetterState.set(undefined)}
             missing={datesMissing[fieldName].get()}
             invalid={datesInvalid[fieldName].get()}
           />
@@ -158,13 +150,6 @@ export default function Person(props: Props) {
               covidEventsState[CovidEventName.SymptomsStart]
             }
             questionFieldName={CovidEventName.SymptomsStart}
-            onChange={handleChange}
-            onFocus={() =>
-              props.eventSetterState.set(() => (date: string) =>
-                covidEventsState[CovidEventName.SymptomsStart].set(date)
-              )
-            }
-            onUnfocus={() => props.eventSetterState.set(undefined)}
             missing={datesMissing[CovidEventName.SymptomsStart].get()}
             invalid={datesInvalid[CovidEventName.SymptomsStart].get()}
           />
@@ -192,11 +177,6 @@ export default function Person(props: Props) {
     );
   }
 
-  const handleChange = (e: React.BaseSyntheticEvent) => {
-    const name: CovidEventName = e.target.name;
-    const value: string = e.target.value;
-    covidEventsState[name].set(value);
-  };
   const handleSubmit = () => {
     Object.values(CovidEventName).map((key: CovidEventName) => {
       datesMissing[key].set(
@@ -395,7 +375,6 @@ export default function Person(props: Props) {
             relevantInHouseExposureEventsState={
               relevantInHouseExposureEventsState
             }
-            eventSetterState={props.eventSetterState}
           />
           <div className={"d-flex justify-content-between align-items-center"}>
             <button

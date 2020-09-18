@@ -7,7 +7,6 @@ import { State } from "@hookstate/core/dist";
 interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
-  eventSetterState: State<((date: string) => void) | undefined>;
 }
 
 export default function Home(props: Props) {
@@ -72,7 +71,6 @@ export default function Home(props: Props) {
       {members.length ? (
         <GridView
           membersState={props.membersState}
-          eventSetterState={props.eventSetterState}
           inHouseExposureEvents={props.inHouseExposureEventsState.get()}
         />
       ) : null}
