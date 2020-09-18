@@ -23,8 +23,6 @@ export interface InHouseExposureEvent {
   exposed: boolean;
   ongoing: boolean;
   date: string;
-  dateMissing: boolean;
-  dateInvalid: boolean;
 }
 
 export interface CalculationResult {

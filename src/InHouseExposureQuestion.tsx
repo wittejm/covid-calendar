@@ -1,8 +1,9 @@
 import React from "react";
 import { InHouseExposureEvent, PersonData } from "./types";
-import { State } from "@hookstate/core/dist";
+import { State } from "@hookstate/core";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import DateQuestion from "./DateQuestion";
+import { format } from "date-fns";
 
 interface Props {
   id: number;
@@ -29,7 +30,19 @@ export default function InHouseExposureQuestion(props: Props) {
           id={props.id}
           questionText={`${props.person.name}'s close contact with ${props.otherPerson.name} is ongoing`}
           checked={isOngoing}
-          onChange={() => props.inHouseExposureEventState.ongoing.set(v => !v)}
+          onChange={() => {
+            const ongoingState = props.inHouseExposureEventState.ongoing;
+            const ongoing = ongoingState.get();
+            const newOngoing = !ongoing;
+            ongoingState.set(newOngoing);
+            if (newOngoing) {
+              props.inHouseExposureEventState.date.set("");
+            } else {
+              props.inHouseExposureEventState.date.set(
+                format(new Date(), "MM/dd/yyyy")
+              );
+            }
+          }}
         />
       )}
       {isExposed && !isOngoing && (
@@ -37,8 +50,6 @@ export default function InHouseExposureQuestion(props: Props) {
           id={props.id}
           questionFieldTextState={props.inHouseExposureEventState.date}
           questionFieldName={`crossExposure-${props.index}`}
-          missing={inHouseExposureEvent.dateMissing}
-          invalid={inHouseExposureEvent.dateInvalid}
         />
       )}
     </div>

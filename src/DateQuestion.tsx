@@ -7,8 +7,6 @@ interface Props {
   id: number;
   questionFieldTextState: State<string>;
   questionFieldName: string;
-  missing: boolean;
-  invalid: boolean;
 }
 
 export default function DateQuestion(props: Props) {
@@ -20,13 +18,6 @@ export default function DateQuestion(props: Props) {
     <div className="">
       <label htmlFor={`${props.id}-${props.questionFieldName}`}>
         Date <span className="f6 fw3">mm/dd/yyyy</span>
-        <div role="alert">
-          {props.missing ? (
-            <span className="f5 fw5 red">required</span>
-          ) : props.invalid ? (
-            <span className="f5 fw5 red">mm/dd/yyyy format required</span>
-          ) : null}
-        </div>
       </label>
       <DatePicker
         className="form-control"
