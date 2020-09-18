@@ -1,51 +1,23 @@
 import React from "react";
-import { State } from "@hookstate/core/dist";
 import DatePicker from "react-datepicker";
-import { useState } from "@hookstate/core";
+import { State } from "@hookstate/core";
 import "react-datepicker/dist/react-datepicker.css";
+import { parse, format, isValid } from "date-fns";
 interface Props {
   id: number;
   questionFieldTextState: State<string>;
   questionFieldName: string;
-  onChange: (e: React.BaseSyntheticEvent) => void;
-  onFocus: () => void;
-  onUnfocus: () => void;
   missing: boolean;
   invalid: boolean;
 }
 
 export default function DateQuestion(props: Props) {
-  const twoDigitYearPattern = new RegExp(
-    "^([0-9][0-9]?/[0-9][0-9]?/)([0-9][0-9])$"
-  );
-  const dayMonthPattern = new RegExp("^[0-9][0-9]?/[0-9][0-9]?$");
+  const questionFieldText = props.questionFieldTextState.get();
+  const parsedDate = parse(questionFieldText, "M/dd/yyyy", new Date());
+  const questionFieldDate = isValid(parsedDate) ? parsedDate : new Date();
 
-  const pickedDate = useState(new Date());
-  const handleTextChange = (e: React.BaseSyntheticEvent) => {
-    props.onChange(e);
-  };
-
-  const handleUnfocus = () => {
-    let fixedDate = props.questionFieldTextState.get();
-    const twoDigitYearMatch = twoDigitYearPattern.exec(fixedDate);
-    if (twoDigitYearMatch) {
-      fixedDate = fixedDate.slice(0, -2) + "20" + fixedDate.slice(-2);
-    }
-    const dayMonthMatch = dayMonthPattern.exec(fixedDate);
-    if (dayMonthMatch) {
-      fixedDate = fixedDate + "/2020";
-    }
-    props.questionFieldTextState.set(fixedDate);
-    props.onUnfocus();
-  };
-  console.log("pickedDate.get()", pickedDate.get());
   return (
     <div className="">
-      <DatePicker
-        selected={pickedDate.get()}
-        onChange={(date: Date) => {pickedDate.set(date)}}
-      />
-
       <label htmlFor={`${props.id}-${props.questionFieldName}`}>
         Date <span className="f6 fw3">mm/dd/yyyy</span>
         <div role="alert">
@@ -56,15 +28,15 @@ export default function DateQuestion(props: Props) {
           ) : null}
         </div>
       </label>
-      <input
+      <DatePicker
         className="form-control"
-        value={props.questionFieldTextState.get()}
+        selected={questionFieldDate}
+        onChange={(date: Date) => {
+          const validDate = isValid(date) ? date : new Date(); // Default to today
+          props.questionFieldTextState.set(format(validDate, "MM/dd/yyyy"));
+        }}
         name={props.questionFieldName}
         id={`${props.id}-${props.questionFieldName}`}
-        type="text"
-        onChange={handleTextChange}
-        onFocus={props.onFocus}
-        onBlur={handleUnfocus}
       />
     </div>
   );

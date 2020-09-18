@@ -11,12 +11,10 @@ import { State } from "@hookstate/core/dist";
 interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEvents: InHouseExposureEvent[];
-  eventSetterState: State<((date: string) => void) | undefined>;
 }
 
 export default function GridView(props: Props) {
   const members = props.membersState.get();
-  const eventSetter = props.eventSetterState.get();
   function computeEvents(
     members: PersonData[],
     inHouseExposureEvents: InHouseExposureEvent[]
@@ -37,20 +35,14 @@ export default function GridView(props: Props) {
 
   return (
     <div className={"p-3"}>
-      {
-        <div className={eventSetter ? "ba bw2 b--light-yellow" : ""}>
-          <FullCalendar
-            plugins={[dayGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
-            events={computeEvents(members, props.inHouseExposureEvents)}
-            dateClick={(info: DateClickArg) => {
-              if (eventSetter) {
-                eventSetter(format(info.date, "MM/dd/yyyy"));
-              }
-            }}
-          />
-        </div>
-      }
+      <div>
+        <FullCalendar
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          events={computeEvents(members, props.inHouseExposureEvents)}
+          dateClick={(info: DateClickArg) => {}}
+        />
+      </div>
     </div>
   );
 }

@@ -11,7 +11,6 @@ interface Props {
   inHouseExposureEventsState: State<InHouseExposureEvent[]>;
   editingHouseholdState: State<boolean>;
   editingPersonState: State<number | undefined>;
-  eventSetterState: State<((date: string) => void) | undefined>;
   height: State<number>;
 }
 
@@ -111,7 +110,6 @@ export default function Household(props: Props) {
                       }
                       editingHouseholdState={props.editingHouseholdState}
                       editingPersonState={props.editingPersonState}
-                      eventSetterState={props.eventSetterState}
                       guidance={personGuidance}
                     />
                   );

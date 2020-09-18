@@ -7,7 +7,6 @@ interface Props {
   person: PersonData;
   meaningfulInHouseExposures: PersonData[];
   relevantInHouseExposureEventsState: State<InHouseExposureEvent>[];
-  eventSetterState: State<((date: string) => void) | undefined>;
 }
 
 export default function InHouseExposureQuestions(props: Props) {
@@ -33,7 +32,6 @@ export default function InHouseExposureQuestions(props: Props) {
                 person={props.person}
                 otherPerson={otherPerson}
                 inHouseExposureEventState={inHouseExposureEventState}
-                eventSetterState={props.eventSetterState}
               />
               <hr />
             </>

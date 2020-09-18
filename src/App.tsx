@@ -21,9 +21,6 @@ export default function App() {
   const id = useState(members.length + 1);
   const editingHouseholdState = useState(true);
   const editingPersonState = useState<number | undefined>(undefined);
-  const eventSetterState = useState<((date: string) => void) | undefined>(
-    undefined
-  );
 
   function addNewPerson() {
     const currentId = id.get();
@@ -66,7 +63,6 @@ export default function App() {
             addNewPerson={addNewPerson}
             editingHouseholdState={editingHouseholdState}
             editingPersonState={editingPersonState}
-            eventSetterState={eventSetterState}
             height={height}
             inHouseExposureEventsState={inHouseExposureEvents}
             membersState={members}
@@ -76,7 +72,6 @@ export default function App() {
           <Home
             membersState={members}
             inHouseExposureEventsState={inHouseExposureEvents}
-            eventSetterState={eventSetterState}
           />
         </Route>
       </Switch>
