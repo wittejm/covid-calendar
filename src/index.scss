@@ -35,3 +35,7 @@
 div.react-datepicker-wrapper {
   display: block;
 }
+
+div.react-datepicker-popper {
+    z-index: 100;
+}
