@@ -201,18 +201,48 @@ export default function Person(props: Props) {
       const date = format(guidance.endDate, "PPPP");
       if (guidance.infected) {
         if (guidance.person.noSymptomsFor24Hours) {
-          return `Until ${date}`;
+          return (
+            <>
+              <p>Until {date}</p>
+              <p>
+                This is 10 days after the earliest known date of illness onset.
+              </p>
+            </>
+          );
         } else {
-          return `Until at least ${date} and 24 hours after symptoms improve`;
+          return (
+            <>
+              <p>Until at least {date} and 24 hours after symptoms improve</p>
+              <p>
+                This is 10 days after the earliest known date of illness onset.
+              </p>
+            </>
+          );
         }
       } else {
         if (guidance.peopleWithOngoingExposureWithSymptoms?.length) {
           const names = guidance.peopleWithOngoingExposureWithSymptoms?.join(
             ", "
           );
-          return `Until 14 days after isolation period ends for ${names} (at least ${date})`;
+          return (
+            <>
+              <p>
+                Until 14 days after isolation period ends for {names} (at least{" "}
+                {date})
+              </p>
+              <p>
+                Please come back when symptoms for {names} have improved for an
+                exact date.
+              </p>
+            </>
+          );
         } else {
-          return `Until ${date}`;
+          return (
+            <>
+              <p>Until {date}</p>
+              <p>This is 14 days after the last known exposure date.</p>
+            </>
+          );
         }
       }
     }
@@ -397,11 +427,7 @@ export default function Person(props: Props) {
                 )}
               </span>
             </h4>
-            {!editingHousehold && (
-              <p className="lead text-muted">
-                {guidanceMessage(props.guidance)}
-              </p>
-            )}
+            {!editingHousehold && guidanceMessage(props.guidance)}
           </div>
           <div className={"my-3"} />
           {editingHousehold && renderFeedback()}
