@@ -218,6 +218,23 @@ export default function Person(props: Props) {
     }
   }
 
+  function renderFeedbackLine(name: string, date: string, noSymptoms: boolean) {
+    switch (name) {
+      case CovidEventName.LastCloseContact:
+        return `Most recent close contact was on ${date}.`;
+      case CovidEventName.PositiveTest:
+        return `Earliest positive test was on ${date}.`;
+      case CovidEventName.SymptomsStart:
+        if (noSymptoms) {
+          return `Symptoms started showing on ${date}.`;
+        } else {
+          return `Symptoms started showing on ${date} and have not improved.`;
+        }
+      default:
+        return null;
+    }
+  }
+
   function renderFeedback() {
     return (
       <div className="">
@@ -226,8 +243,7 @@ export default function Person(props: Props) {
             if (date !== "") {
               return (
                 <div className="f5">
-                  {name}
-                  {": "} {date}
+                  {renderFeedbackLine(name, date, person.noSymptomsFor24Hours)}
                 </div>
               );
             }
@@ -246,14 +262,14 @@ export default function Person(props: Props) {
                 return (
                   <div className="f5">
                     {quarantinedPersonName} has an ongoing exposure to{" "}
-                    {contagiousPersonName}{" "}
+                    {contagiousPersonName}.
                   </div>
                 );
               } else {
                 return (
                   <div className="f5">
                     {quarantinedPersonName} exposed to {contagiousPersonName} at{" "}
-                    {event.date}
+                    {event.date}.
                   </div>
                 );
               }
