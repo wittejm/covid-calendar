@@ -156,7 +156,7 @@ export default function Person(props: Props) {
   }
 
   function setContagiousState(contagious: boolean) {
-    relevantInHouseExposureEventsState.map(e => e.set(none)); // Remove all current exposures
+    relevantInHouseExposureEventsState.reverse().map(e => e.set(none)); // Remove all current exposures
     const newExposureEvents = members.map((otherPerson: PersonData) => {
       const otherContagious = isContagious(otherPerson);
       if (person !== otherPerson && contagious !== otherContagious) {
@@ -180,7 +180,7 @@ export default function Person(props: Props) {
   );
 
   function removeFromMembers() {
-    relevantInHouseExposureEventsState.map(e => e.set(none)); // Remove all current exposures
+    relevantInHouseExposureEventsState.reverse().map(e => e.set(none)); // Remove all current exposures
     props.personState.set(none);
   }
 
