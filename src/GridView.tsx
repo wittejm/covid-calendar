@@ -29,7 +29,7 @@ export default function GridView(props: Props) {
             title: guidance.person.name,
             start: guidance.startDate, // startDate is guaranteed if endDate exists
             end: guidance.endDate,
-            color: colors[guidance.person.id - (1 % colors.length)],
+            color: colors[(guidance.person.id - 1) % colors.length],
             textColor: "#000000"
           };
         }
