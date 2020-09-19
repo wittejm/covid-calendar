@@ -25,6 +25,7 @@ export default function InHouseExposureQuestions(props: Props) {
         if (inHouseExposureEventState) {
           return (
             <>
+              <hr />
               <InHouseExposureQuestion
                 key={props.person.id + "-" + index}
                 id={props.person.id}
@@ -33,7 +34,6 @@ export default function InHouseExposureQuestions(props: Props) {
                 otherPerson={otherPerson}
                 inHouseExposureEventState={inHouseExposureEventState}
               />
-              <hr />
             </>
           );
         } else {

@@ -1,13 +1,12 @@
-import React from "react";
+import React, { Ref } from "react";
 import { useState, none, State } from "@hookstate/core";
-
 import { CovidEventName, InHouseExposure, PersonData, Guidance } from "./types";
 import DateQuestion from "./DateQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
-import { format, isValid } from "date-fns";
+import { format } from "date-fns";
 
 interface Props {
   personState: State<PersonData>;
@@ -16,6 +15,7 @@ interface Props {
   editingHouseholdState: State<boolean>;
   editingPersonState: State<number | undefined>;
   guidance: Guidance;
+  editingPersonRef: Ref<HTMLDivElement>;
 }
 
 export default function Person(props: Props) {
@@ -312,8 +312,8 @@ export default function Person(props: Props) {
 
   function renderEditing() {
     return (
-      <div className={"card shadow-sm mb-2"}>
-        <div className="p-2">
+      <div className={"card shadow-sm mb-2"} ref={props.editingPersonRef}>
+        <div className="card-body">
           <div className="mb-3">
             <label htmlFor={`${person.id}-name`}>Name</label>
             <input
@@ -354,18 +354,17 @@ export default function Person(props: Props) {
                 </a>
               </div>
             )}
-            <hr />
           </div>
           <div className="mb-3">
+            <hr />
             {buildCovidEventQuestion(
               CovidEventName.PositiveTest,
               `${person.name} has received a positive test result`
             )}
-            <hr />
           </div>
           <div className="mb-3">
-            {buildSymptomsQuestion()}
             <hr />
+            {buildSymptomsQuestion()}
           </div>
           <InHouseExposureQuestions
             person={person}
@@ -374,30 +373,6 @@ export default function Person(props: Props) {
               relevantInHouseExposureEventsState
             }
           />
-          <div className={"d-flex justify-content-between align-items-center"}>
-            <button
-              className="btn btn-secondary"
-              onClick={() => {
-                removeFromMembers();
-                props.editingPersonState.set(undefined);
-              }}
-            >
-              <span className="visually-hidden">Remove</span>
-              Remove
-              <i
-                aria-hidden="true"
-                className="pl2 fas fa-times-circle white"
-              ></i>
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                props.editingPersonState.set(undefined);
-              }}
-            >
-              {person.isNewPerson ? "Submit" : "Update"}
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -415,15 +390,30 @@ export default function Person(props: Props) {
               </span>
               <span>
                 {!editingPerson && (
-                  <button
-                    onClick={() => {
-                      props.editingHouseholdState.set(true);
-                      props.editingPersonState.set(person.id);
-                    }}
-                  >
-                    <span className="visually-hidden">Edit Person</span>
-                    <span aria-hidden="true" className="f5 fas fa-pen"></span>
-                  </button>
+                  <>
+                    <button
+                      onClick={() => {
+                        props.editingHouseholdState.set(true);
+                        props.editingPersonState.set(person.id);
+                      }}
+                    >
+                      <span className="visually-hidden">Edit Person</span>
+                      <span aria-hidden="true" className="f5 fas fa-pen"></span>
+                    </button>
+                    <span className={"mx-2"} />
+                    <button
+                      onClick={() => {
+                        removeFromMembers();
+                        props.editingPersonState.set(undefined);
+                      }}
+                    >
+                      <span className="visually-hidden">Remove</span>
+                      <span
+                        className="f5 fa fa-trash"
+                        aria-hidden="true"
+                      ></span>
+                    </button>
+                  </>
                 )}
               </span>
             </h4>

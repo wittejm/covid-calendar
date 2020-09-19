@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { InHouseExposure, PersonData } from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core";
@@ -23,6 +23,31 @@ export default function Household(props: Props) {
     members,
     inHouseExposureEvents
   );
+
+  const editingPersonRef = useRef<HTMLDivElement>(null);
+  const addPersonRef = useRef<HTMLDivElement>(null);
+
+  function collapseEditingPerson(e: any) {
+    if (editingPersonRef.current?.contains(e.target)) {
+      // Within bounds of currently editing person
+    } else if (addPersonRef.current?.contains(e.target)) {
+      addPerson();
+    } else {
+      props.editingPersonState.set(undefined);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", collapseEditingPerson);
+    return () => {
+      document.removeEventListener("mousedown", collapseEditingPerson);
+    };
+  }, []);
+
+  function addPerson() {
+    props.editingHouseholdState.set(true);
+    props.addNewPerson();
+  }
 
   function renderTitle() {
     if (editingHousehold) {
@@ -111,27 +136,24 @@ export default function Household(props: Props) {
                       editingHouseholdState={props.editingHouseholdState}
                       editingPersonState={props.editingPersonState}
                       guidance={personGuidance}
+                      editingPersonRef={editingPersonRef}
                     />
                   );
                 }
               })}
             </div>
-            {!editingPerson && (
-              <div
-                className={"card shadow-sm mb-2"}
-                onClick={() => {
-                  props.editingHouseholdState.set(true);
-                  props.addNewPerson();
-                }}
-              >
-                <button className={"card-body"}>
-                  <h4 className={""}>
-                    Add Person &nbsp;
-                    <i className="fa fa-user-plus" aria-hidden="true"></i>
-                  </h4>
-                </button>
-              </div>
-            )}
+            <div
+              className={"card shadow-sm mb-2"}
+              onClick={addPerson}
+              ref={addPersonRef}
+            >
+              <button className={"card-body"}>
+                <h4 className={""}>
+                  Add Person &nbsp;
+                  <i className="fa fa-user-plus" aria-hidden="true"></i>
+                </h4>
+              </button>
+            </div>
             {renderAction()}
           </div>
         </div>
