@@ -27,7 +27,7 @@ export default function GridView(props: Props) {
           return {
             classNames: ["TODO"],
             title: guidance.person.name,
-            start: parseISO("1970-01-01"),
+            start: guidance.startDate, // startDate is guaranteed if endDate exists
             end: guidance.endDate,
             color: colors[guidance.person.id - (1 % colors.length)],
             textColor: "#000000"
