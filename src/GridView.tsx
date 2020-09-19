@@ -5,32 +5,37 @@ import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
 import { colors } from "./types";
 
-import { PersonData, CalculationResult, InHouseExposureEvent } from "./types";
-import { format, parseISO } from "date-fns";
-import { State } from "@hookstate/core/dist";
+import { PersonData, Guidance, InHouseExposure } from "./types";
+import { parseISO } from "date-fns";
+import { State } from "@hookstate/core";
+import { compact, map, flow } from "lodash/fp";
+
 interface Props {
   membersState: State<PersonData[]>;
-  inHouseExposureEvents: InHouseExposureEvent[];
+  inHouseExposureEvents: InHouseExposure[];
 }
 
 export default function GridView(props: Props) {
   const members = props.membersState.get();
   function computeEvents(
     members: PersonData[],
-    inHouseExposureEvents: InHouseExposureEvent[]
+    inHouseExposureEvents: InHouseExposure[]
   ) {
-    return computeHouseHoldQuarantinePeriod(members, inHouseExposureEvents).map(
-      (result: CalculationResult) => {
-        return {
-          classNames: ["TODO"],
-          title: result.person.name,
-          start: parseISO("1970-01-01"),
-          end: result.endDate,
-          color: colors[result.person.id - (1 % colors.length)],
-          textColor: "#000000"
-        };
-      }
-    );
+    return flow(
+      map((guidance: Guidance) => {
+        if (guidance.endDate) {
+          return {
+            classNames: ["TODO"],
+            title: guidance.person.name,
+            start: parseISO("1970-01-01"),
+            end: guidance.endDate,
+            color: colors[guidance.person.id - (1 % colors.length)],
+            textColor: "#000000"
+          };
+        }
+      }),
+      compact
+    )(computeHouseHoldQuarantinePeriod(members, inHouseExposureEvents));
   }
 
   return (

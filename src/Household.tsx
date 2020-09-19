@@ -1,5 +1,5 @@
 import React from "react";
-import { InHouseExposureEvent, PersonData } from "./types";
+import { InHouseExposure, PersonData } from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 interface Props {
   addNewPerson: () => void;
   membersState: State<PersonData[]>;
-  inHouseExposureEventsState: State<InHouseExposureEvent[]>;
+  inHouseExposureEventsState: State<InHouseExposure[]>;
   editingHouseholdState: State<boolean>;
   editingPersonState: State<number | undefined>;
   height: State<number>;

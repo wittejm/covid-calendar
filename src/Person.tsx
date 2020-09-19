@@ -1,12 +1,7 @@
 import React from "react";
 import { useState, none, State } from "@hookstate/core";
 
-import {
-  CovidEventName,
-  InHouseExposureEvent,
-  PersonData,
-  CalculationResult
-} from "./types";
+import { CovidEventName, InHouseExposure, PersonData, Guidance } from "./types";
 import DateQuestion from "./DateQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
@@ -17,10 +12,10 @@ import { format, isValid } from "date-fns";
 interface Props {
   personState: State<PersonData>;
   membersState: State<PersonData[]>;
-  inHouseExposureEventsState: State<InHouseExposureEvent[]>;
+  inHouseExposureEventsState: State<InHouseExposure[]>;
   editingHouseholdState: State<boolean>;
   editingPersonState: State<number | undefined>;
-  guidance: CalculationResult;
+  guidance: Guidance;
 }
 
 export default function Person(props: Props) {
@@ -30,10 +25,10 @@ export default function Person(props: Props) {
   const editingPerson = props.editingPersonState.get();
   const editingHousehold = props.editingHouseholdState.get();
   const relevantInHouseExposureEventsState: State<
-    InHouseExposureEvent
+    InHouseExposure
   >[] = props.inHouseExposureEventsState.filter(
-    (eventState: State<InHouseExposureEvent>) => {
-      const event: InHouseExposureEvent = eventState.get();
+    (eventState: State<InHouseExposure>) => {
+      const event: InHouseExposure = eventState.get();
       return (
         event.contagiousPerson === person.id ||
         event.quarantinedPerson === person.id
@@ -193,26 +188,32 @@ export default function Person(props: Props) {
     if (editingHousehold) {
       return null;
     } else {
-      return isValid(props.guidance.endDate) && props.guidance.infected
-        ? " - Isolate"
-        : " - Quarantine";
+      if (props.guidance.endDate) {
+        return props.guidance.infected ? " - Isolate" : " - Quarantine";
+      } else {
+        return null;
+      }
     }
   }
 
-  function guidanceMessage(result: CalculationResult) {
-    const date = format(result.endDate, "MM/dd/yyyy");
-    if (result.infected) {
-      if (result.person.noSymptomsFor24Hours) {
-        return `Until ${date}`;
+  function guidanceMessage(guidance: Guidance) {
+    if (guidance.endDate) {
+      const date = format(guidance.endDate, "MM/dd/yyyy");
+      if (guidance.infected) {
+        if (guidance.person.noSymptomsFor24Hours) {
+          return `Until ${date}`;
+        } else {
+          return `Until at least ${date} and 24 hours after symptoms improve`;
+        }
       } else {
-        return `Until at least ${date} and 24 hours after symptoms improve`;
-      }
-    } else {
-      if (result.peopleWithOngoingExposureWithSymptoms?.length) {
-        const names = result.peopleWithOngoingExposureWithSymptoms?.join(", ");
-        return `Until at least ${date} and 14 days after isolation period ends for ${names}`;
-      } else {
-        return `Until ${date}`;
+        if (guidance.peopleWithOngoingExposureWithSymptoms?.length) {
+          const names = guidance.peopleWithOngoingExposureWithSymptoms?.join(
+            ", "
+          );
+          return `Until at least ${date} and 14 days after isolation period ends for ${names}`;
+        } else {
+          return `Until ${date}`;
+        }
       }
     }
   }
@@ -233,7 +234,7 @@ export default function Person(props: Props) {
           }
         )}
         {Object.values(relevantInHouseExposureEvents).map(
-          (event: InHouseExposureEvent) => {
+          (event: InHouseExposure) => {
             if (event.exposed) {
               const quarantinedPersonName = members.find(
                 member => member.id === event.quarantinedPerson
@@ -380,7 +381,7 @@ export default function Person(props: Props) {
                 )}
               </span>
             </h4>
-            {!editingHousehold && isValid(props.guidance.endDate) && (
+            {!editingHousehold && (
               <p className="lead text-muted">
                 {guidanceMessage(props.guidance)}
               </p>

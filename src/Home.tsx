@@ -1,12 +1,12 @@
 import React from "react";
 import GridView from "./GridView";
 import { Link } from "react-router-dom";
-import { InHouseExposureEvent, PersonData } from "./types";
+import { InHouseExposure, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
 
 interface Props {
   membersState: State<PersonData[]>;
-  inHouseExposureEventsState: State<InHouseExposureEvent[]>;
+  inHouseExposureEventsState: State<InHouseExposure[]>;
 }
 
 export default function Home(props: Props) {

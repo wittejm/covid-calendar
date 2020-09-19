@@ -1,5 +1,5 @@
 import React from "react";
-import { InHouseExposureEvent, PersonData } from "./types";
+import { InHouseExposure, PersonData } from "./types";
 import { State } from "@hookstate/core";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import DateQuestion from "./DateQuestion";
@@ -10,7 +10,7 @@ interface Props {
   index: number;
   person: PersonData;
   otherPerson: PersonData;
-  inHouseExposureEventState: State<InHouseExposureEvent>;
+  inHouseExposureEventState: State<InHouseExposure>;
 }
 
 export default function InHouseExposureQuestion(props: Props) {
