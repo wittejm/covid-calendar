@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "@hookstate/core";
 import Household from "./Household";
 import Home from "./Home";
-import { CovidEventName, InHouseExposureEvent, PersonData } from "./types";
+import { CovidEventName, InHouseExposure, PersonData } from "./types";
 import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -17,7 +17,7 @@ export default function App() {
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
   const members = useState([] as PersonData[]);
-  const inHouseExposureEvents = useState<InHouseExposureEvent[]>([]);
+  const inHouseExposureEvents = useState<InHouseExposure[]>([]);
   const id = useState(members.length + 1);
   const editingHouseholdState = useState(true);
   const editingPersonState = useState<number | undefined>(undefined);

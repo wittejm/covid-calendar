@@ -1,4 +1,4 @@
-import { InHouseExposureEvent, PersonData } from "./types";
+import { InHouseExposure, PersonData } from "./types";
 import InHouseExposureQuestion from "./InHouseExposureQuestion";
 import React from "react";
 import { State } from "@hookstate/core/dist";
@@ -6,7 +6,7 @@ import { State } from "@hookstate/core/dist";
 interface Props {
   person: PersonData;
   meaningfulInHouseExposures: PersonData[];
-  relevantInHouseExposureEventsState: State<InHouseExposureEvent>[];
+  relevantInHouseExposureEventsState: State<InHouseExposure>[];
 }
 
 export default function InHouseExposureQuestions(props: Props) {
@@ -14,7 +14,7 @@ export default function InHouseExposureQuestions(props: Props) {
     <>
       {props.meaningfulInHouseExposures.map((otherPerson, index) => {
         const inHouseExposureEventState = props.relevantInHouseExposureEventsState.find(
-          (eventState: State<InHouseExposureEvent>) => {
+          (eventState: State<InHouseExposure>) => {
             const event = eventState.get();
             return (
               event.quarantinedPerson === otherPerson.id ||

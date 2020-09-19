@@ -1,88 +1,53 @@
 import {
-  CalculationResult,
+  Guidance,
   CovidEventName,
-  InHouseExposureEvent,
-  PersonData
+  InHouseExposure,
+  PersonData,
+  Exposure
 } from "./types";
-import { addDays, max, min, isValid, parse } from "date-fns";
-import { flow, compact, map, thru, partition, filter } from "lodash/fp";
+import { addDays, parse } from "date-fns";
+import {
+  flow,
+  compact,
+  map,
+  thru,
+  partition,
+  filter,
+  max,
+  maxBy,
+  min
+} from "lodash/fp";
 
 export function computeHouseHoldQuarantinePeriod(
   household: PersonData[],
-  inHouseExposureEvents: InHouseExposureEvent[]
-): CalculationResult[] {
-  const [infected, quarantined] = flow(
+  inHouseExposures: InHouseExposure[]
+): Guidance[] {
+  const [infectedGuidance, quarantinedGuidance] = flow(
     map((person: PersonData) => {
       const isolationEndDate = computeIsolationPeriod(person);
-      if (isValid(isolationEndDate)) {
+      if (isolationEndDate) {
         return {
           person: person,
-          endDate: isolationEndDate,
-          infected: true
+          infected: true,
+          endDate: isolationEndDate
         };
       } else {
         return {
           person: person,
-          endDate: new Date(),
           infected: false
         };
       }
     }),
     partition(c => c.infected)
   )(household);
-  const quarantinedCalculations: CalculationResult[] = quarantined.map(
-    calculation => {
-      const person = calculation.person;
-      const relevantInHouseExposureEvents = filter(
-        (event: InHouseExposureEvent) =>
-          event.quarantinedPerson === person.id && event.exposed
-      )(inHouseExposureEvents);
-      const lastExposureDate = map((event: InHouseExposureEvent) => {
-        if (event.ongoing) {
-          return infected.find(
-            calculation => calculation.person.id === event.contagiousPerson
-          )?.endDate;
-        } else {
-          return parse(event.date, "M/dd/yyyy", new Date());
-        }
-      });
-      const outHouseExposureDateString =
-        person.covidEvents[CovidEventName.LastCloseContact];
-      const outHouseExposureDate = outHouseExposureDateString
-        ? parse(outHouseExposureDateString, "M/dd/yyyy", new Date())
-        : undefined;
-      const latestExposureDate = max(
-        compact([
-          ...lastExposureDate(relevantInHouseExposureEvents),
-          outHouseExposureDate
-        ])
-      );
-      const peopleWithOngoingExposureWithSymptoms = flow(
-        map((event: InHouseExposureEvent) => {
-          if (event.ongoing) {
-            const personWithOngoingExposure = infected.find(
-              calculation => calculation.person.id === event.contagiousPerson
-            )?.person;
-            if (!personWithOngoingExposure?.noSymptomsFor24Hours) {
-              return personWithOngoingExposure?.name;
-            }
-          }
-        }),
-        compact
-      )(relevantInHouseExposureEvents);
-      const fourteenDaysFromLastExposure = addDays(latestExposureDate, 14);
-      return {
-        person: person,
-        endDate: fourteenDaysFromLastExposure,
-        peopleWithOngoingExposureWithSymptoms: peopleWithOngoingExposureWithSymptoms,
-        infected: false
-      };
-    }
+  const updatedQuarantinedGuidance: Guidance[] = quarantinedGuidance.map(
+    guidance =>
+      computeQuarantineGuidance(guidance, inHouseExposures, infectedGuidance)
   );
-  return [...infected, ...quarantinedCalculations];
+  return [...infectedGuidance, ...updatedQuarantinedGuidance];
 }
 
-export function computeIsolationPeriod(person: PersonData): Date {
+export function computeIsolationPeriod(person: PersonData): Date | undefined {
   const covidPositiveEvents = [
     person.covidEvents[CovidEventName.SymptomsStart],
     person.covidEvents[CovidEventName.PositiveTest]
@@ -92,11 +57,88 @@ export function computeIsolationPeriod(person: PersonData): Date {
     map((date: string) => parse(date, "M/dd/yyyy", new Date())),
     thru((dates: Date[]) => min(dates))
   )(covidPositiveEvents);
-  const tenDaysAfterOnset = illnessOnset && addDays(illnessOnset, 10);
-  const symptomsEnd = person.noSymptomsFor24Hours ? undefined : new Date(); // TODO: Rethink
-  const isolationEndDate = flow(
-    compact,
-    thru((dates: Date[]) => max(dates))
-  )([tenDaysAfterOnset, symptomsEnd]);
-  return isolationEndDate;
+  if (illnessOnset) {
+    const tenDaysAfterOnset = addDays(illnessOnset, 10);
+    const symptomsEnd = person.noSymptomsFor24Hours ? undefined : new Date(); // TODO: Rethink
+    const isolationEndDate = flow(
+      compact,
+      thru((dates: Date[]) => max(dates))
+    )([tenDaysAfterOnset, symptomsEnd]);
+    return isolationEndDate;
+  }
+}
+
+function computeQuarantineGuidance(
+  guidance: Guidance,
+  inHouseExposures: InHouseExposure[],
+  infectedGuidance: Guidance[]
+) {
+  const person = guidance.person;
+  const relevantInHouseExposures = filter(
+    (event: InHouseExposure) =>
+      event.quarantinedPerson === person.id && event.exposed
+  )(inHouseExposures);
+  const normalize = map((event: InHouseExposure) => {
+    const infected = infectedGuidance.find(
+      calculation => calculation.person.id === event.contagiousPerson
+    ) as Guidance;
+    if (event.ongoing) {
+      return {
+        date: infected.endDate as Date,
+        infectionSource: infected.person
+      };
+    } else {
+      return {
+        date: parse(event.date, "M/dd/yyyy", new Date()),
+        infectionSource: infected.person
+      };
+    }
+  });
+  const normalizedInHouseExposures = compact(
+    normalize(relevantInHouseExposures)
+  );
+  const exposures = addOutsideExposures(person, normalizedInHouseExposures);
+  const latestExposure = maxBy(exposure => exposure.date, exposures);
+  let endDate = undefined;
+  if (latestExposure) {
+    endDate = addDays(latestExposure.date, 14);
+  }
+  const peopleWithOngoingExposureWithSymptoms = flow(
+    map((event: InHouseExposure) => {
+      if (event.ongoing) {
+        const personWithOngoingExposure = infectedGuidance.find(
+          calculation => calculation.person.id === event.contagiousPerson
+        )?.person;
+        if (!personWithOngoingExposure?.noSymptomsFor24Hours) {
+          return personWithOngoingExposure?.name;
+        }
+      }
+    }),
+    compact
+  )(relevantInHouseExposures);
+  return {
+    person: person,
+    infected: false,
+    endDate: endDate,
+    infectionSource: latestExposure && latestExposure.infectionSource,
+    peopleWithOngoingExposureWithSymptoms: peopleWithOngoingExposureWithSymptoms
+  };
+}
+
+function addOutsideExposures(person: PersonData, exposures: Exposure[]) {
+  const outHouseExposureDateString =
+    person.covidEvents[CovidEventName.LastCloseContact];
+  if (outHouseExposureDateString) {
+    const outHouseExposureDate = parse(
+      outHouseExposureDateString,
+      "M/dd/yyyy",
+      new Date()
+    );
+    const outHouseExposure = {
+      date: outHouseExposureDate,
+      infectionSource: undefined
+    };
+    exposures = [...exposures, outHouseExposure];
+  }
+  return exposures;
 }

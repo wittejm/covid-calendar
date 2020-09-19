@@ -17,7 +17,7 @@ export type CovidEvents = {
   [key in CovidEventName]: string;
 };
 
-export interface InHouseExposureEvent {
+export interface InHouseExposure {
   contagiousPerson: number;
   quarantinedPerson: number;
   exposed: boolean;
@@ -25,11 +25,17 @@ export interface InHouseExposureEvent {
   date: string;
 }
 
-export interface CalculationResult {
+export interface Exposure {
+  date: Date;
+  infectionSource?: PersonData;
+}
+
+export interface Guidance {
   person: PersonData;
-  endDate: Date;
+  infected: boolean;
+  endDate?: Date;
+  infectionSource?: PersonData;
   peopleWithOngoingExposureWithSymptoms?: string[];
-  infected?: boolean;
 }
 
 export const colors = [

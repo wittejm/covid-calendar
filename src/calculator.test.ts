@@ -85,7 +85,7 @@ const personWithOutsideExposure: PersonData = {
 
 test("Empty", () => {
   const endDate = computeIsolationPeriod(empty);
-  expect(isValid(endDate)).toBe(false);
+  expect(endDate).toBe(undefined);
 });
 
 test("Person with positive symptoms isolates for 10 days", () => {
