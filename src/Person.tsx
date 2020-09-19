@@ -198,7 +198,7 @@ export default function Person(props: Props) {
 
   function guidanceMessage(guidance: Guidance) {
     if (guidance.endDate) {
-      const date = format(guidance.endDate, "MM/dd/yyyy");
+      const date = format(guidance.endDate, "PPPP");
       if (guidance.infected) {
         if (guidance.person.noSymptomsFor24Hours) {
           return `Until ${date}`;
@@ -210,7 +210,7 @@ export default function Person(props: Props) {
           const names = guidance.peopleWithOngoingExposureWithSymptoms?.join(
             ", "
           );
-          return `Until at least ${date} and 14 days after isolation period ends for ${names}`;
+          return `Until 14 days after isolation period ends for ${names} (at least ${date})`;
         } else {
           return `Until ${date}`;
         }
