@@ -3,7 +3,7 @@ import {
   computeIsolationPeriod
 } from "./calculator";
 import { CovidEventName, PersonData } from "./types";
-import { isValid, parseISO } from "date-fns";
+import { parseISO } from "date-fns";
 
 const empty: PersonData = {
   id: 0,
@@ -89,25 +89,40 @@ test("Empty", () => {
 });
 
 test("Person with positive symptoms isolates for 10 days", () => {
-  const endDate = computeIsolationPeriod(personWithPositiveSymptoms);
+  const [startDate, endDate] = computeIsolationPeriod(
+    personWithPositiveSymptoms
+  ) as Date[];
+  expect(startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(endDate).toStrictEqual(parseISO("2020-01-11"));
 });
 
 test("Person with positive test isolates for 10 days", () => {
-  const endDate = computeIsolationPeriod(personWithPositiveTest);
+  const [startDate, endDate] = computeIsolationPeriod(
+    personWithPositiveTest
+  ) as Date[];
+  expect(startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(endDate).toStrictEqual(parseISO("2020-01-11"));
 });
 
 test("Person starts isolating on earlier of positive symptoms and positive test date", () => {
-  const endDate = computeIsolationPeriod(personWithPositiveSymptomsAndTest);
+  const [startDate, endDate] = computeIsolationPeriod(
+    personWithPositiveSymptomsAndTest
+  ) as Date[];
+  expect(startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(endDate).toStrictEqual(parseISO("2020-01-11"));
 });
 
 test("Person continues to isolate if symptoms have not improved in 24 hours", () => {
-  const endDate = computeIsolationPeriod(personWithOngoingSymptoms);
+  const [startDate, endDate] = computeIsolationPeriod(
+    personWithOngoingSymptoms
+  ) as Date[];
+  expect(startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(endDate).not.toStrictEqual(parseISO("2020-01-11"));
 
-  const endDate2 = computeIsolationPeriod(personWithPositiveSymptomsAndTest);
+  const [startDate2, endDate2] = computeIsolationPeriod(
+    personWithPositiveSymptomsAndTest
+  ) as Date[];
+  expect(startDate2).toStrictEqual(parseISO("2020-01-01"));
   expect(endDate2).toStrictEqual(parseISO("2020-01-11"));
 });
 
@@ -116,6 +131,7 @@ test("Person exposed outside the household quarantines for 14 days", () => {
     [personWithOutsideExposure],
     []
   );
+  expect(calcluations[0].startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-15"));
 });
 
@@ -131,6 +147,8 @@ test("Given a household with a person with a positive test and a caretaker, the 
     [personWithPositiveTest, empty],
     [inHouseExposureEvent]
   );
+  expect(calcluations[0].startDate).toStrictEqual(parseISO("2020-01-01"));
+  expect(calcluations[1].startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-11"));
   expect(calcluations[1].endDate).toStrictEqual(parseISO("2020-01-25"));
 });
@@ -147,8 +165,11 @@ test("Given a household with a person with a positive test and an isolated famil
     [personWithPositiveTest, empty],
     [inHouseExposureEvent]
   );
+  expect(calcluations[0].startDate).toStrictEqual(parseISO("2020-01-01"));
+  expect(calcluations[1].startDate).toStrictEqual(parseISO("2020-01-01"));
   expect(calcluations[0].endDate).toStrictEqual(parseISO("2020-01-11"));
   expect(calcluations[1].endDate).toStrictEqual(parseISO("2020-01-19"));
 });
 
 // TODO: Given a household with person A who has received a positive test and an person B who was exposed to person A and also another covid-positive person outside the household, person B quarantines for 14 days after latter exposure
+// TODO: Example using 3 people

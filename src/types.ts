@@ -26,13 +26,15 @@ export interface InHouseExposure {
 }
 
 export interface Exposure {
-  date: Date;
+  startDate: Date;
+  endDate: Date;
   infectionSource?: PersonData;
 }
 
 export interface Guidance {
   person: PersonData;
   infected: boolean;
+  startDate?: Date;
   endDate?: Date;
   infectionSource?: PersonData;
   peopleWithOngoingExposureWithSymptoms?: string[];
