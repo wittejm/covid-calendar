@@ -77,26 +77,28 @@ export default function Household(props: Props) {
   }
 
   function renderAction() {
-    if (editingHousehold) {
-      return (
-        <button
-          className="btn btn-primary my-3"
-          onClick={() => props.editingHouseholdState.set(false)}
-        >
-          Get recommendation
-        </button>
-      );
-    } else {
-      return (
-        <button
-          className="btn btn-primary my-3"
-          onClick={() => {
-            props.showModalState.set(false);
-          }}
-        >
-          See on calendar
-        </button>
-      );
+    if (members.length) {
+      if (editingHousehold) {
+        return (
+          <button
+            className="btn btn-primary my-3"
+            onClick={() => props.editingHouseholdState.set(false)}
+          >
+            Get recommendation{" "}
+          </button>
+        );
+      } else {
+        return (
+          <button
+            className="btn btn-primary my-3"
+            onClick={() => {
+              props.showModalState.set(false);
+            }}
+          >
+            See on calendar{" "}
+          </button>
+        );
+      }
     }
   }
 
