@@ -26,16 +26,14 @@ export default function Home(props: Props) {
             </a>
             .
           </p>
-          <p>
-            <div
-              className="btn btn-primary my-2"
-              onClick={() => {
-                props.showModalState.set(true);
-              }}
-            >
-              Edit Answers
-            </div>
-          </p>
+          <div
+            className="btn btn-primary my-2"
+            onClick={() => {
+              props.showModalState.set(true);
+            }}
+          >
+            Edit Answers
+          </div>
         </>
       );
     } else {
@@ -46,16 +44,14 @@ export default function Home(props: Props) {
             We'll let you know who should quarantine or isolate, and for how
             long.
           </p>
-          <p>
-            <div
-              className="btn btn-primary my-2"
-              onClick={() => {
-                props.showModalState.set(true);
-              }}
-            >
-              Get Started
-            </div>
-          </p>
+          <div
+            className="btn btn-primary my-2"
+            onClick={() => {
+              props.showModalState.set(true);
+            }}
+          >
+            Get Started
+          </div>
         </>
       );
     }
