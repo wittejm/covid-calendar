@@ -6,7 +6,7 @@ import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 
 interface Props {
   personState: State<PersonData>;
@@ -249,16 +249,17 @@ export default function Person(props: Props) {
   }
 
   function renderFeedbackLine(name: string, date: string, noSymptoms: boolean) {
+    const formatted_date = format(parse(date, "M/dd/yyyy", new Date()), "PPPP");
     switch (name) {
       case CovidEventName.LastCloseContact:
-        return `Most recent close contact was on ${date}.`;
+        return `Most recent close contact was on ${formatted_date}.`;
       case CovidEventName.PositiveTest:
-        return `Earliest positive test was on ${date}.`;
+        return `Earliest positive test was on ${formatted_date}.`;
       case CovidEventName.SymptomsStart:
         if (noSymptoms) {
-          return `Symptoms started showing on ${date}.`;
+          return `Symptoms started showing on ${formatted_date}.`;
         } else {
-          return `Symptoms started showing on ${date} and have not improved.`;
+          return `Symptoms started showing on ${formatted_date} and have not improved.`;
         }
       default:
         return null;
