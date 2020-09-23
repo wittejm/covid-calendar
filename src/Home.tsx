@@ -1,12 +1,12 @@
 import React from "react";
 import GridView from "./GridView";
-import { Link } from "react-router-dom";
 import { InHouseExposure, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
 
 interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposure[]>;
+  showModalState: State<boolean>;
 }
 
 export default function Home(props: Props) {
@@ -27,9 +27,14 @@ export default function Home(props: Props) {
             .
           </p>
           <p>
-            <Link to="/household" className="btn btn-primary my-2">
+            <div
+              className="btn btn-primary my-2"
+              onClick={() => {
+                props.showModalState.set(true);
+              }}
+            >
               Edit Answers
-            </Link>
+            </div>
           </p>
         </>
       );
@@ -42,9 +47,14 @@ export default function Home(props: Props) {
             long.
           </p>
           <p>
-            <Link to="/household" className="btn btn-primary my-2">
+            <div
+              className="btn btn-primary my-2"
+              onClick={() => {
+                props.showModalState.set(true);
+              }}
+            >
               Get Started
-            </Link>
+            </div>
           </p>
         </>
       );

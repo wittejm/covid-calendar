@@ -3,7 +3,6 @@ import { InHouseExposure, PersonData } from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
-import { Link } from "react-router-dom";
 
 interface Props {
   addNewPerson: () => void;
@@ -12,11 +11,11 @@ interface Props {
   editingHouseholdState: State<boolean>;
   editingPersonState: State<number | undefined>;
   height: State<number>;
+  showModalState: State<boolean>;
 }
 
 export default function Household(props: Props) {
   const editingHousehold = props.editingHouseholdState.get();
-  const editingPerson = props.editingPersonState.get();
   const members = props.membersState.get();
   const inHouseExposureEvents = props.inHouseExposureEventsState.get();
   const guidance = computeHouseHoldQuarantinePeriod(
@@ -89,9 +88,14 @@ export default function Household(props: Props) {
       );
     } else {
       return (
-        <Link to="/">
-          <button className="btn btn-primary my-3">See on calendar</button>
-        </Link>
+        <button
+          className="btn btn-primary my-3"
+          onClick={() => {
+            props.showModalState.set(false);
+          }}
+        >
+          See on calendar
+        </button>
       );
     }
   }
@@ -101,18 +105,28 @@ export default function Household(props: Props) {
       <div
         style={{
           display: "flex",
-          flexWrap: "wrap",
-          minHeight: props.height.get() + "px"
+          flexWrap: "wrap"
         }}
       >
-        <div className={"col-md-6"}>
+        <div
+          className={"col-md-6"}
+          style={{
+            backgroundColor: "#fff",
+            minHeight: props.height.get() + "px"
+          }}
+        >
           <header>
             <div className="navbar household">
               <div className="container d-flex justify-content-between">
                 <div />
-                <Link to="/" className={"my-2"}>
+                <div
+                  className={"my-2"}
+                  onClick={() => {
+                    props.showModalState.set(false);
+                  }}
+                >
                   Close
-                </Link>
+                </div>
               </div>
             </div>
           </header>
@@ -157,7 +171,7 @@ export default function Household(props: Props) {
             {renderAction()}
           </div>
         </div>
-        <div className={"col-md-6 empty"} />
+        <div className={"col-md-6"} />
       </div>
     </>
   );
