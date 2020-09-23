@@ -393,7 +393,8 @@ export default function Person(props: Props) {
                 {!editingPerson && (
                   <>
                     <button
-                      onClick={() => {
+                      onClick={(e: React.BaseSyntheticEvent) => {
+                        e.stopPropagation();
                         props.editingHouseholdState.set(true);
                         props.editingPersonState.set(person.id);
                       }}
@@ -403,7 +404,8 @@ export default function Person(props: Props) {
                     </button>
                     <span className={"mx-2"} />
                     <button
-                      onClick={() => {
+                      onClick={(e: React.BaseSyntheticEvent) => {
+                        e.stopPropagation();
                         removeFromMembers();
                         props.editingPersonState.set(undefined);
                       }}
