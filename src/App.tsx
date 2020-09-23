@@ -5,7 +5,7 @@ import Home from "./Home";
 import { CovidEventName, InHouseExposure, PersonData } from "./types";
 import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import ReactModal from "react-modal";
 
 export default function App() {
   const height = useState(window.innerHeight);
@@ -21,6 +21,7 @@ export default function App() {
   const id = useState(members.length + 1);
   const editingHouseholdState = useState(true);
   const editingPersonState = useState<number | undefined>(undefined);
+  const showModalState = useState(false);
 
   function addNewPerson() {
     const currentId = id.get();
@@ -56,25 +57,42 @@ export default function App() {
   }
 
   return (
-    <Router basename={`${process.env.PUBLIC_URL}`}>
-      <Switch>
-        <Route path="/household">
-          <Household
-            addNewPerson={addNewPerson}
-            editingHouseholdState={editingHouseholdState}
-            editingPersonState={editingPersonState}
-            height={height}
-            inHouseExposureEventsState={inHouseExposureEvents}
-            membersState={members}
-          />
-        </Route>
-        <Route path="/">
-          <Home
-            membersState={members}
-            inHouseExposureEventsState={inHouseExposureEvents}
-          />
-        </Route>
-      </Switch>
-    </Router>
+    <>
+      <ReactModal
+        isOpen={showModalState.get()}
+        className={showModalState.get() ? "slide-in" : "slide-out"}
+        style={{
+          overlay: {
+            zIndex: 1
+          },
+          content: {
+            position: "absolute",
+            inset: "0px",
+            padding: "0px",
+            background: "none",
+            border: "none",
+            borderRadius: "none",
+            overflow: "auto",
+            WebkitOverflowScrolling: "touch",
+            outline: "none"
+          }
+        }}
+      >
+        <Household
+          addNewPerson={addNewPerson}
+          editingHouseholdState={editingHouseholdState}
+          editingPersonState={editingPersonState}
+          height={height}
+          inHouseExposureEventsState={inHouseExposureEvents}
+          membersState={members}
+          showModalState={showModalState}
+        />
+      </ReactModal>
+      <Home
+        membersState={members}
+        inHouseExposureEventsState={inHouseExposureEvents}
+        showModalState={showModalState}
+      />
+    </>
   );
 }

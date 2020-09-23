@@ -6,7 +6,6 @@ import { computeHouseHoldQuarantinePeriod } from "./calculator";
 import { colors } from "./types";
 
 import { PersonData, Guidance, InHouseExposure } from "./types";
-import { parseISO } from "date-fns";
 import { State } from "@hookstate/core";
 import { compact, map, flow } from "lodash/fp";
 
