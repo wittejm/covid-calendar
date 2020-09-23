@@ -67,7 +67,7 @@ export default function Home(props: Props) {
         <div className="navbar">
           <div className="container d-flex justify-content-between">
             <div className="navbar-brand d-flex align-items-center">
-              COVID Quarantine Calculator (Work in Progress)
+              COVID Quarantine Calculator (Alpha)
             </div>
             <div>English</div>
           </div>
