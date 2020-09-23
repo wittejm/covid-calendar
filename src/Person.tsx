@@ -273,7 +273,10 @@ export default function Person(props: Props) {
           ([name, date]: [string, string]) => {
             if (date !== "") {
               return (
-                <div className="f5">
+                <div
+                  className="f5"
+                  key={`${person.id}-covidevent-feedback-${name}`}
+                >
                   {renderFeedbackLine(name, date, person.noSymptomsFor24Hours)}
                 </div>
               );
@@ -291,14 +294,20 @@ export default function Person(props: Props) {
               )?.name;
               if (event.ongoing) {
                 return (
-                  <div className="f5">
+                  <div
+                    className="f5"
+                    key={`${person.id}-exposure-feedback-${quarantinedPersonName}-${contagiousPersonName}`}
+                  >
                     {quarantinedPersonName} has an ongoing exposure to{" "}
                     {contagiousPersonName}.
                   </div>
                 );
               } else {
                 return (
-                  <div className="f5">
+                  <div
+                    className="f5"
+                    key={`${person.id}-exposure-feedback-${quarantinedPersonName}-${contagiousPersonName}`}
+                  >
                     {quarantinedPersonName} exposed to {contagiousPersonName} at{" "}
                     {event.date}.
                   </div>
