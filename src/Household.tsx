@@ -24,26 +24,24 @@ export default function Household(props: Props) {
   );
 
   const editingPersonRef = useRef<HTMLDivElement>(null);
-  const addPersonRef = useRef<HTMLDivElement>(null);
 
   function collapseEditingPerson(e: any) {
     if (editingPersonRef.current?.contains(e.target)) {
       // Within bounds of currently editing person
-    } else if (addPersonRef.current?.contains(e.target)) {
-      addPerson();
     } else {
       props.editingPersonState.set(undefined);
     }
   }
 
   useEffect(() => {
-    document.addEventListener("mousedown", collapseEditingPerson);
+    window.addEventListener("click", collapseEditingPerson);
     return () => {
-      document.removeEventListener("mousedown", collapseEditingPerson);
+      window.removeEventListener("click", collapseEditingPerson);
     };
   }, []);
 
-  function addPerson() {
+  function addPerson(e: React.BaseSyntheticEvent) {
+    e.stopPropagation();
     props.editingHouseholdState.set(true);
     props.addNewPerson();
   }
@@ -82,7 +80,9 @@ export default function Household(props: Props) {
         return (
           <button
             className="btn btn-primary my-3"
-            onClick={() => props.editingHouseholdState.set(false)}
+            onClick={(e: React.BaseSyntheticEvent) => {
+              props.editingHouseholdState.set(false);
+            }}
           >
             Get recommendation{" "}
           </button>
@@ -91,7 +91,7 @@ export default function Household(props: Props) {
         return (
           <button
             className="btn btn-primary my-3"
-            onClick={() => {
+            onClick={(e: React.BaseSyntheticEvent) => {
               props.showModalState.set(false);
             }}
           >
@@ -123,7 +123,7 @@ export default function Household(props: Props) {
                 <div />
                 <div
                   className={"my-2"}
-                  onClick={() => {
+                  onClick={(e: React.BaseSyntheticEvent) => {
                     props.showModalState.set(false);
                   }}
                 >
@@ -158,11 +158,7 @@ export default function Household(props: Props) {
                 }
               })}
             </div>
-            <div
-              className={"card shadow-sm mb-2"}
-              onClick={addPerson}
-              ref={addPersonRef}
-            >
+            <div className={"card shadow-sm mb-2"} onClick={addPerson}>
               <button className={"card-body"}>
                 <h4 className={""}>
                   Add Person &nbsp;
