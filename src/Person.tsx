@@ -81,6 +81,7 @@ export default function Person(props: Props) {
   function buildCovidEventQuestion(
     fieldName: CovidEventName,
     questionText: string,
+    datePromptText: string,
     tooltip?: JSX.Element
   ) {
     return (
@@ -95,6 +96,7 @@ export default function Person(props: Props) {
         {selectionsState[fieldName].get() && (
           <DateQuestion
             id={person.id}
+            promptText={datePromptText}
             questionFieldTextState={covidEventsState[fieldName]}
             questionFieldName={fieldName}
           />
@@ -126,6 +128,7 @@ export default function Person(props: Props) {
         {symptomsStart ? (
           <DateQuestion
             id={person.id}
+            promptText="Date of first appearance of symptoms"
             questionFieldTextState={
               covidEventsState[CovidEventName.SymptomsStart]
             }
@@ -351,6 +354,7 @@ export default function Person(props: Props) {
             {buildCovidEventQuestion(
               CovidEventName.LastCloseContact,
               `${person.name} has had close contact to someone presumed covid positive (outside the household)`,
+              "Date of last contact",
               <div>
                 Close contact means any of the following:
                 <ul className="mx-3 mb-1">
@@ -379,7 +383,8 @@ export default function Person(props: Props) {
             <hr />
             {buildCovidEventQuestion(
               CovidEventName.PositiveTest,
-              `${person.name} has received a positive test result`
+              `${person.name} has received a positive test result`,
+              "Date of test"
             )}
           </div>
           <div className="mb-3">
