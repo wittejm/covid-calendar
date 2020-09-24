@@ -48,6 +48,7 @@ export default function InHouseExposureQuestion(props: Props) {
       {isExposed && !isOngoing && (
         <DateQuestion
           id={props.id}
+          promptText="Date of last contact"
           questionFieldTextState={props.inHouseExposureEventState.date}
           questionFieldName={`crossExposure-${props.index}`}
         />

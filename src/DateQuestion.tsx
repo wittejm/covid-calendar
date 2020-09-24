@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { parse, format, isValid } from "date-fns";
 interface Props {
   id: number;
+  promptText: string;
   questionFieldTextState: State<string>;
   questionFieldName: string;
 }
@@ -17,7 +18,7 @@ export default function DateQuestion(props: Props) {
   return (
     <div className="">
       <label htmlFor={`${props.id}-${props.questionFieldName}`}>
-        Date <span className="f6 fw3">mm/dd/yyyy</span>
+        {props.promptText} <span className="f6 fw3">mm/dd/yyyy</span>
       </label>
       <DatePicker
         className="form-control"
