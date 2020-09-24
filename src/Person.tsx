@@ -196,6 +196,17 @@ export default function Person(props: Props) {
     }
   }
 
+  function guidanceDefinition(infected: boolean) {
+    return (
+      <p>
+      {infected ?
+        "Avoid contact with everyone, including your household." :
+        "Avoid contact with everyone outside of your household."
+      }
+      </p>
+    )
+  }
+
   function guidanceMessage(guidance: Guidance) {
     if (guidance.endDate) {
       const date = format(guidance.endDate, "PPPP");
@@ -211,6 +222,7 @@ export default function Person(props: Props) {
           );
         } else {
           return (
+
             <>
               <p>Until at least {date} and 24 hours after symptoms improve</p>
               <p>
@@ -219,6 +231,7 @@ export default function Person(props: Props) {
             </>
           );
         }
+
       } else {
         if (guidance.peopleWithOngoingExposureWithSymptoms?.length) {
           const names = guidance.peopleWithOngoingExposureWithSymptoms?.join(
@@ -429,6 +442,7 @@ export default function Person(props: Props) {
                 )}
               </span>
             </h4>
+            {!editingHousehold && guidanceDefinition(props.guidance.infected)}
             {!editingHousehold && guidanceMessage(props.guidance)}
           </div>
           <div className={"my-3"} />
