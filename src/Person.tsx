@@ -116,13 +116,25 @@ export default function Person(props: Props) {
           checked={symptomsStart}
           onChange={onCheckboxChange(CovidEventName.SymptomsStart)}
           tooltip={
-            <span>
-              Consult the{" "}
+            <div>
+                Common symptoms include:
+                <ul className="mx-3 mb-1">
+                  <li>Fever or chills</li>
+                  <li>Cough</li>
+                  <li>Shortness of breath or difficulty breathing</li>
+                  <li>Fatigue</li>
+                  <li>Muscle or body aches</li>
+                  <li>Headache</li>
+                  <li>New loss of taste or smell</li>
+                  <li>Sore throat</li>
+                  <li>Congestion or runny nose</li>
+                  <li>Nausea or vomiting</li>
+                  <li>Diarrhea</li>
+                </ul>{" "}
               <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
-                CDC website
-              </a>{" "}
-              for a common list of symptoms of Covid.{" "}
-            </span>
+                  Link.
+                </a>
+              </div>
           }
         />
         {symptomsStart ? (
