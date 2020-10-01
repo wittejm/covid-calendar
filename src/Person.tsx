@@ -13,7 +13,6 @@ interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposure[]>;
   editingHouseholdState: State<boolean>;
-  editingPersonState: State<number | undefined>;
   guidance: Guidance;
   editingPersonRef: Ref<HTMLDivElement>;
 }
@@ -22,7 +21,6 @@ export default function Person(props: Props) {
   const person = props.personState.get();
   const members = props.membersState.get();
   const covidEventsState = props.personState.covidEvents;
-  const editingPerson = props.editingPersonState.get();
   const editingHousehold = props.editingHouseholdState.get();
   const relevantInHouseExposureEventsState: State<
     InHouseExposure
@@ -34,9 +32,6 @@ export default function Person(props: Props) {
         event.quarantinedPerson === person.id
       );
     }
-  );
-  const relevantInHouseExposureEvents = relevantInHouseExposureEventsState.map(
-    e => e.get()
   );
   const selectionsState: any = useState(
     Object.values(CovidEventName).reduce(
@@ -273,94 +268,35 @@ export default function Person(props: Props) {
     }
   }
 
-  function renderFeedbackLine(name: string, date: string, noSymptoms: boolean) {
-    const formatted_date = format(parse(date, "M/dd/yyyy", new Date()), "PPPP");
-    switch (name) {
-      case CovidEventName.LastCloseContact:
-        return `Most recent close contact was on ${formatted_date}.`;
-      case CovidEventName.PositiveTest:
-        return `Earliest positive test was on ${formatted_date}.`;
-      case CovidEventName.SymptomsStart:
-        if (noSymptoms) {
-          return `Symptoms started showing on ${formatted_date}.`;
-        } else {
-          return `Symptoms started showing on ${formatted_date} and have not improved.`;
-        }
-      default:
-        return null;
-    }
-  }
-
-  function renderFeedback() {
-    return (
-      <div className="">
-        {Object.entries(person.covidEvents).map(
-          ([name, date]: [string, string]) => {
-            if (date !== "") {
-              return (
-                <div
-                  className="f5"
-                  key={`${person.id}-covidevent-feedback-${name}`}
-                >
-                  {renderFeedbackLine(name, date, person.noSymptomsFor24Hours)}
-                </div>
-              );
-            }
-          }
-        )}
-        {Object.values(relevantInHouseExposureEvents).map(
-          (event: InHouseExposure) => {
-            if (event.exposed) {
-              const quarantinedPersonName = members.find(
-                member => member.id === event.quarantinedPerson
-              )?.name;
-              const contagiousPersonName = members.find(
-                member => member.id === event.contagiousPerson
-              )?.name;
-              if (event.ongoing) {
-                return (
-                  <div
-                    className="f5"
-                    key={`${person.id}-exposure-feedback-${quarantinedPersonName}-${contagiousPersonName}`}
-                  >
-                    {quarantinedPersonName} has an ongoing exposure to{" "}
-                    {contagiousPersonName}.
-                  </div>
-                );
-              } else {
-                return (
-                  <div
-                    className="f5"
-                    key={`${person.id}-exposure-feedback-${quarantinedPersonName}-${contagiousPersonName}`}
-                  >
-                    {quarantinedPersonName} exposed to {contagiousPersonName} at{" "}
-                    {event.date}.
-                  </div>
-                );
-              }
-            }
-          }
-        )}
-      </div>
-    );
-  }
-
   function renderEditing() {
     return (
       <div className={"card shadow-sm mb-2"} ref={props.editingPersonRef}>
         <div className="card-body">
           <div className="mb-3">
             <label htmlFor={`${person.id}-name`}>Name</label>
-            <input
-              className="form-control"
-              value={person.name}
-              name="name"
-              id={`${person.id}-name`}
-              type="text"
-              onChange={(e: React.BaseSyntheticEvent) =>
-                props.personState.name.set(e.target.value)
-              }
-            />
+            <div className="input-group">
+              <input
+                className="form-control"
+                value={person.name}
+                name="name"
+                id={`${person.id}-name`}
+                type="text"
+                onChange={(e: React.BaseSyntheticEvent) =>
+                  props.personState.name.set(e.target.value)
+                }
+              />
+              <div className="input-group-append">
+                <button
+                  className="btn btn-secondary"
+                  onClick={(e: React.BaseSyntheticEvent) => {
+                    e.stopPropagation();
+                    removeFromMembers();
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
           </div>
           <div className="mb-3">
             {buildCovidEventQuestion(
@@ -425,46 +361,14 @@ export default function Person(props: Props) {
                 {person.name + ""}
                 {renderGuidance()}
               </span>
-              <span>
-                {!editingPerson && (
-                  <>
-                    <button
-                      onClick={(e: React.BaseSyntheticEvent) => {
-                        e.stopPropagation();
-                        props.editingHouseholdState.set(true);
-                        props.editingPersonState.set(person.id);
-                      }}
-                    >
-                      <span className="visually-hidden">Edit Person</span>
-                      <span aria-hidden="true" className="f5 fas fa-pen"></span>
-                    </button>
-                    <span className={"mx-2"} />
-                    <button
-                      onClick={(e: React.BaseSyntheticEvent) => {
-                        e.stopPropagation();
-                        removeFromMembers();
-                        props.editingPersonState.set(undefined);
-                      }}
-                    >
-                      <span className="visually-hidden">Remove</span>
-                      <span
-                        className="f5 fa fa-trash"
-                        aria-hidden="true"
-                      ></span>
-                    </button>
-                  </>
-                )}
-              </span>
             </h4>
             {!editingHousehold && guidanceDefinition(props.guidance.infected)}
             {!editingHousehold && guidanceMessage(props.guidance)}
           </div>
-          <div className={"my-3"} />
-          {editingHousehold && renderFeedback()}
         </div>
       </div>
     );
   }
 
-  return editingPerson === person.id ? renderEditing() : renderNonEditing();
+  return editingHousehold ? renderEditing() : renderNonEditing();
 }
