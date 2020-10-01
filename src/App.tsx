@@ -81,7 +81,6 @@ export default function App() {
         <Household
           addNewPerson={addNewPerson}
           editingHouseholdState={editingHouseholdState}
-          editingPersonState={editingPersonState}
           height={height}
           inHouseExposureEventsState={inHouseExposureEvents}
           membersState={members}

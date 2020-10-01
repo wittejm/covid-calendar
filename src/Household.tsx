@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { InHouseExposure, PersonData } from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core";
@@ -9,7 +9,6 @@ interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposure[]>;
   editingHouseholdState: State<boolean>;
-  editingPersonState: State<number | undefined>;
   height: State<number>;
   showModalState: State<boolean>;
 }
@@ -24,21 +23,6 @@ export default function Household(props: Props) {
   );
 
   const editingPersonRef = useRef<HTMLDivElement>(null);
-
-  function collapseEditingPerson(e: any) {
-    if (editingPersonRef.current?.contains(e.target)) {
-      // Within bounds of currently editing person
-    } else {
-      props.editingPersonState.set(undefined);
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener("click", collapseEditingPerson);
-    return () => {
-      window.removeEventListener("click", collapseEditingPerson);
-    };
-  }, []);
 
   function addPerson(e: React.BaseSyntheticEvent) {
     e.stopPropagation();
@@ -89,14 +73,24 @@ export default function Household(props: Props) {
         );
       } else {
         return (
-          <button
-            className="btn btn-primary my-3"
-            onClick={(e: React.BaseSyntheticEvent) => {
-              props.showModalState.set(false);
-            }}
-          >
-            See on calendar{" "}
-          </button>
+          <div className="d-flex justify-content-between">
+            <button
+              className="btn btn-primary my-3"
+              onClick={(e: React.BaseSyntheticEvent) => {
+                props.showModalState.set(false);
+              }}
+            >
+              See on calendar{" "}
+            </button>
+            <button
+              className="btn btn-secondary my-3"
+              onClick={(e: React.BaseSyntheticEvent) => {
+                props.editingHouseholdState.set(true);
+              }}
+            >
+              Edit{" "}
+            </button>
+          </div>
         );
       }
     }
@@ -150,7 +144,6 @@ export default function Household(props: Props) {
                         props.inHouseExposureEventsState
                       }
                       editingHouseholdState={props.editingHouseholdState}
-                      editingPersonState={props.editingPersonState}
                       guidance={personGuidance}
                       editingPersonRef={editingPersonRef}
                     />
@@ -158,14 +151,16 @@ export default function Household(props: Props) {
                 }
               })}
             </div>
-            <div className={"card shadow-sm mb-2"} onClick={addPerson}>
-              <button className={"card-body"}>
-                <h4 className={""}>
-                  Add Person &nbsp;
-                  <i className="fa fa-user-plus" aria-hidden="true"></i>
-                </h4>
-              </button>
-            </div>
+            {editingHousehold && (
+              <div className={"card shadow-sm mb-2"} onClick={addPerson}>
+                <button className={"card-body"}>
+                  <h4 className={""}>
+                    Add Person &nbsp;
+                    <i className="fa fa-user-plus" aria-hidden="true"></i>
+                  </h4>
+                </button>
+              </div>
+            )}
             {renderAction()}
           </div>
         </div>
