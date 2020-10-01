@@ -6,7 +6,7 @@ import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
-import { format, parse } from "date-fns";
+import { format, parse, addDays } from "date-fns";
 
 interface Props {
   personState: State<PersonData>;
@@ -112,24 +112,24 @@ export default function Person(props: Props) {
           onChange={onCheckboxChange(CovidEventName.SymptomsStart)}
           tooltip={
             <div>
-                Common symptoms include:
-                <ul className="mx-3 mb-1">
-                  <li>Fever or chills</li>
-                  <li>Cough</li>
-                  <li>Shortness of breath or difficulty breathing</li>
-                  <li>Fatigue</li>
-                  <li>Muscle or body aches</li>
-                  <li>Headache</li>
-                  <li>New loss of taste or smell</li>
-                  <li>Sore throat</li>
-                  <li>Congestion or runny nose</li>
-                  <li>Nausea or vomiting</li>
-                  <li>Diarrhea</li>
-                </ul>{" "}
+              Common symptoms include:
+              <ul className="mx-3 mb-1">
+                <li>Fever or chills</li>
+                <li>Cough</li>
+                <li>Shortness of breath or difficulty breathing</li>
+                <li>Fatigue</li>
+                <li>Muscle or body aches</li>
+                <li>Headache</li>
+                <li>New loss of taste or smell</li>
+                <li>Sore throat</li>
+                <li>Congestion or runny nose</li>
+                <li>Nausea or vomiting</li>
+                <li>Diarrhea</li>
+              </ul>{" "}
               <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
-                  Link.
-                </a>
-              </div>
+                Link.
+              </a>
+            </div>
           }
         />
         {symptomsStart ? (
@@ -219,11 +219,29 @@ export default function Person(props: Props) {
   function guidanceMessage(guidance: Guidance) {
     if (guidance.endDate) {
       const date = format(guidance.endDate, "PPPP");
+      const calendarLastDay = format(guidance.endDate, "yyyyMMdd");
+      const calendarDayAfter = format(addDays(guidance.endDate, 1), "yyyyMMdd");
+      const addToGoogleCalendarLink = (
+        <a
+          href={`https://www.google.com/calendar/render?action=TEMPLATE&text=${person.name}'s+Last+Day+of+${
+            guidance.infected ? "Isolation" : "Quarantine"
+          }&dates=${calendarLastDay}/${calendarDayAfter}&details=Recommendation+from+<a href="https://codeforpdx.github.io/covid-calendar/">MultCo Covid Calendar</a>+<br>+CDC+Guidelines+on+<a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/${
+            guidance.infected ? "isolation" : "quarantine"
+          }.html">${
+            guidance.infected ? "Isolation" : "Quarantine"
+          }</a>&sf=true&output=xml`}
+          target="_blank"
+        > Add to Google Calendar
+      </a>
+      );
       if (guidance.infected) {
         if (guidance.person.noSymptomsFor24Hours) {
           return (
             <>
-              <p>Until {date}</p>
+              <p>
+                Until {date}
+                  {" "} {addToGoogleCalendarLink}
+              </p>
               <p>
                 This is 10 days after the earliest known date of illness onset.
               </p>
@@ -232,7 +250,10 @@ export default function Person(props: Props) {
         } else {
           return (
             <>
-              <p>Until at least {date} and 24 hours after symptoms improve</p>
+              <p>
+                Until at least {date} and 24 hours after symptoms improve
+                {" "} {addToGoogleCalendarLink}
+              </p>
               <p>
                 This is 10 days after the earliest known date of illness onset.
               </p>
@@ -249,6 +270,7 @@ export default function Person(props: Props) {
               <p>
                 Until 14 days after isolation period ends for {names} (at least{" "}
                 {date})
+                {" "} {addToGoogleCalendarLink}
               </p>
               <p>
                 Please come back when symptoms for {names} have improved for an
@@ -259,7 +281,10 @@ export default function Person(props: Props) {
         } else {
           return (
             <>
-              <p>Until {date}</p>
+              <p>
+                Until {date}
+                {" "} {addToGoogleCalendarLink}
+              </p>
               <p>This is 14 days after the last known exposure date.</p>
             </>
           );
