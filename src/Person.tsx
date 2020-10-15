@@ -6,7 +6,8 @@ import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
-import { format, parse } from "date-fns";
+import { format } from "date-fns";
+import { downloadEvent } from "./calendar";
 
 interface Props {
   personState: State<PersonData>;
@@ -112,24 +113,24 @@ export default function Person(props: Props) {
           onChange={onCheckboxChange(CovidEventName.SymptomsStart)}
           tooltip={
             <div>
-                Common symptoms include:
-                <ul className="mx-3 mb-1">
-                  <li>Fever or chills</li>
-                  <li>Cough</li>
-                  <li>Shortness of breath or difficulty breathing</li>
-                  <li>Fatigue</li>
-                  <li>Muscle or body aches</li>
-                  <li>Headache</li>
-                  <li>New loss of taste or smell</li>
-                  <li>Sore throat</li>
-                  <li>Congestion or runny nose</li>
-                  <li>Nausea or vomiting</li>
-                  <li>Diarrhea</li>
-                </ul>{" "}
+              Common symptoms include:
+              <ul className="mx-3 mb-1">
+                <li>Fever or chills</li>
+                <li>Cough</li>
+                <li>Shortness of breath or difficulty breathing</li>
+                <li>Fatigue</li>
+                <li>Muscle or body aches</li>
+                <li>Headache</li>
+                <li>New loss of taste or smell</li>
+                <li>Sore throat</li>
+                <li>Congestion or runny nose</li>
+                <li>Nausea or vomiting</li>
+                <li>Diarrhea</li>
+              </ul>{" "}
               <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
-                  Link.
-                </a>
-              </div>
+                Link.
+              </a>
+            </div>
           }
         />
         {symptomsStart ? (
@@ -223,7 +224,9 @@ export default function Person(props: Props) {
         if (guidance.person.noSymptomsFor24Hours) {
           return (
             <>
-              <p>Until {date}</p>
+              <p>
+                Until {date} &nbsp;{calendarIcon(guidance)}
+              </p>
               <p>
                 This is 10 days after the earliest known date of illness onset.
               </p>
@@ -259,12 +262,28 @@ export default function Person(props: Props) {
         } else {
           return (
             <>
-              <p>Until {date}</p>
+              <p>
+                Until {date} &nbsp;{calendarIcon(guidance)}
+              </p>
               <p>This is 14 days after the last known exposure date.</p>
             </>
           );
         }
       }
+    }
+  }
+
+  function calendarIcon(guidance: Guidance) {
+    if (guidance.startDate && guidance.endDate) {
+      const title = guidance.infected ? "Isolate" : "Quarantine";
+      const message = `Recommended CDC guidance for ${guidance.person.name}.`;
+      const start = guidance.startDate;
+      const end = guidance.endDate;
+      return (
+        <button onClick={downloadEvent(title, message, start, end)}>
+          <i className="fas fa-calendar" aria-hidden="true"></i>
+        </button>
+      );
     }
   }
 
