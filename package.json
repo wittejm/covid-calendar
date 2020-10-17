@@ -25,6 +25,7 @@
     "bootstrap": "^4.5.2",
     "date-fns": "^2.16.0",
     "husky": "^2.4.1",
+    "ics": "^2.25.0",
     "immutable": "^4.0.0-rc.12",
     "js-file-download": "^0.4.12",
     "lint-staged": "^8.2.1",
