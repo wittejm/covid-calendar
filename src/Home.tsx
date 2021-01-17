@@ -58,7 +58,7 @@ export default function Home(props: Props) {
   }
 
   return (
-    <>
+    <div style={{ minHeight: "100%" }}>
       <header>
         <div className="navbar">
           <div className="container d-flex justify-content-between">
@@ -80,17 +80,78 @@ export default function Home(props: Props) {
           inHouseExposureEvents={props.inHouseExposureEventsState.get()}
         />
       ) : null}
-      <footer className={"mb-3"}>
-        <div className={"container d-flex justify-content-between"}>
-          <a href={"https://www.codeforpdx.org/"}>Code For PDX</a>
-          <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/isolation.html">
-            CDC guidelines on isolation
-          </a>
-          <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
-            CDC guidelines on quarantine
-          </a>
+      {/*
+      <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/isolation.html">
+        CDC guidelines on isolation
+      </a>
+      <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
+        CDC guidelines on quarantine
+      </a>
+      */}
+      <footer
+        className={"py-5"}
+        style={{
+          background: "#1F252F",
+          position: "absolute",
+          bottom: "0%",
+          width: "100%"
+        }}
+      >
+        <div
+          className={"container"}
+          style={{
+            width: "400px"
+          }}
+        >
+          {" "}
+          {/* contains images and below-text*/}
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "50px"
+            }}
+          >
+            <span style={{ display: "inline" }}>
+              <a href={"https://www.clackamas.us/publichealth"}>
+                <img
+                  src={process.env.PUBLIC_URL + "/logo-clackamas.png"}
+                  style={{ height: "100%" }}
+                />
+              </a>
+            </span>
+            <span
+              style={{
+                display: "inline",
+                height: "1px",
+                width: "56.1px",
+                opacity: 0.5,
+                border: "1px solid #FFFFFF",
+                transform: "rotate(120.37deg)",
+                position: "absolute",
+                left: "19.51%",
+                top: "50.6%"
+              }}
+            ></span>
+            <span style={{ display: "inline-block", width: "50px" }}>
+              &nbsp;
+            </span>
+            <span style={{ display: "inline" }}>
+              <a href={"https://www.codeforpdx.org/"}>
+                <img
+                  src={process.env.PUBLIC_URL + "/logo-code-for-pdx.png"}
+                  style={{ height: "100%" }}
+                />
+              </a>
+            </span>
+          </div>
+          <div className="py-3"></div>
+          <div style={{ color: "#FFFFFF" }}>
+            Made in partnership between Clackamas County and Code for PDX.
+            Recommendations use CDC guidelines.
+          </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
