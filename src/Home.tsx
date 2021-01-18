@@ -58,7 +58,7 @@ export default function Home(props: Props) {
   }
 
   return (
-    <div style={{ minHeight: "100%" }}>
+    <div style={{ position: "relative", minHeight: "100%" }}>
       <header>
         <div className="navbar">
           <div className="container d-flex justify-content-between">
@@ -69,17 +69,44 @@ export default function Home(props: Props) {
           </div>
         </div>
       </header>
-      <main className={"main"} role={"main"}>
+      <main className={"main"} role={"main"} style={{ paddingBottom: "250px" }}>
         <section className={"jumbotron"}>
           <div className="container">{renderTitle()}</div>
         </section>
+        <div
+          className="container pb-5"
+          style={{
+            display: "flex",
+            justifyContent: "center"
+          }}
+        >
+          <div
+            style={{
+              width: "70%"
+            }}
+          >
+            <h2 style={{ textAlign: "center" }}>Quarantine vs. Isolation</h2>
+            <div className="py-2"></div>
+            <div className="row">
+              <div className="col-md-6  col-sm-12">
+                People who must <strong>quarantine</strong> are avoiding contact
+                with everyone outside their home.
+              </div>
+              <div className="col-md-6 col-sm-12">
+                People who must <strong>isolate</strong> should keep away from
+                everyone inside and outside the home.
+              </div>
+            </div>
+          </div>
+        </div>
+        {members.length ? (
+          <GridView
+            membersState={props.membersState}
+            inHouseExposureEvents={props.inHouseExposureEventsState.get()}
+          />
+        ) : null}
       </main>
-      {members.length ? (
-        <GridView
-          membersState={props.membersState}
-          inHouseExposureEvents={props.inHouseExposureEventsState.get()}
-        />
-      ) : null}
+
       {/*
       <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/isolation.html">
         CDC guidelines on isolation
@@ -94,7 +121,8 @@ export default function Home(props: Props) {
           background: "#1F252F",
           position: "absolute",
           bottom: "0%",
-          width: "100%"
+          width: "100%",
+          height: "250px"
         }}
       >
         <div
