@@ -104,11 +104,40 @@ export default function Person(props: Props) {
   function buildSymptomsQuestion() {
     const symptomsStartState = selectionsState[CovidEventName.SymptomsStart];
     const symptomsStart = symptomsStartState.get();
+    const atLeastOneState = props.personState.atLeastOne;
     return (
       <>
         <MultipleChoiceQuestion
           id={person.id}
           questionText={`${person.name} has shown positive symptoms`}
+          checked={atLeastOneState.get()}
+          onChange={() => atLeastOneState.set(c => !c)}
+          tooltip={
+            <div>
+              Common symptoms include:
+              <ul className="mx-3 mb-1">
+                <li>Fever or chills</li>
+                <li>Cough</li>
+                <li>Shortness of breath or difficulty breathing</li>
+                <li>Fatigue</li>
+                <li>Muscle or body aches</li>
+                <li>Headache</li>
+                <li>New loss of taste or smell</li>
+                <li>Sore throat</li>
+                <li>Congestion or runny nose</li>
+                <li>Nausea or vomiting</li>
+                <li>Diarrhea</li>
+              </ul>{" "}
+              <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
+                Link.
+              </a>
+            </div>
+          }
+        />
+        {atLeastOneState.get() ? (
+          <MultipleChoiceQuestion
+          id={person.id}
+          questionText={`${person.name} has shown two or more of these symptoms`}
           checked={symptomsStart}
           onChange={onCheckboxChange(CovidEventName.SymptomsStart)}
           tooltip={
@@ -132,7 +161,7 @@ export default function Person(props: Props) {
               </a>
             </div>
           }
-        />
+        />) : null }
         {symptomsStart ? (
           <DateQuestion
             id={person.id}
@@ -257,6 +286,10 @@ export default function Person(props: Props) {
                 Please come back when symptoms for {names} have improved for an
                 exact date.
               </p>
+              {
+                guidance.person.atLeastOne ?
+                <p> We recommend you get a covid test because you have shown a symptom. </p> : null
+              }
             </>
           );
         } else {
@@ -266,6 +299,10 @@ export default function Person(props: Props) {
                 Until {date} &nbsp;{calendarIcon(guidance)}
               </p>
               <p>This is 14 days after the last known exposure date.</p>
+              {
+                guidance.person.atLeastOne ?
+                <p> We recommend you get a covid test because you have shown a symptom. </p> : null
+              }
             </>
           );
         }
