@@ -307,6 +307,10 @@ export default function Person(props: Props) {
           );
         }
       }
+    } else {
+      if (guidance.person.atLeastOne){
+        return <p> We recommend you get a covid test because you have shown a symptom. </p>
+      }
     }
   }
 
