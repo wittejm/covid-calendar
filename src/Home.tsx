@@ -39,18 +39,58 @@ export default function Home(props: Props) {
     } else {
       return (
         <>
-          <h1>Get quarantine and isolation guidance for your household</h1>
-          <p className="lead text-muted">
-            We'll let you know who should quarantine or isolate, and for how
-            long.
-          </p>
-          <div
-            className="btn btn-primary my-2"
-            onClick={() => {
-              props.showModalState.set(true);
+          <h1
+            style={{
+              fontFamily: "Helvetica",
+              fontSize: "60px",
+              fontStyle: "normal",
+              lineHeight: "71px",
+              textAlign: "center",
+              color: "#1F252F"
             }}
           >
-            Get Started
+            {" "}
+            Quarantine and Isolation Calculator
+          </h1>
+          <p className="f3 gray">
+            Did someone in your household test positive? Are they starting to
+            get sick? Answer a few questions to know who should isolate,
+            quarantining, and for how long.
+          </p>
+          <div style={{ position: "relative", paddingBottom: "120px" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "18px 40px",
+                position: "absolute",
+                background: "#1A5BFF",
+                borderRadius: "40px",
+                width: "295px",
+                height: "58px",
+                left: "calc(50% - 295px/2)",
+                top: "50px",
+                fontFamily: "Arial",
+                fontStyle: "normal",
+                fontWeight: "bold",
+                fontSize: "14px",
+                lineHeight: "160%",
+                textAlign: "center",
+                letterSpacing: "0.02em",
+                textTransform: "uppercase",
+                color: "#FFFFFF",
+                flex: "none",
+                order: 0,
+                flexGrow: 0,
+                margin: "0px 0px"
+              }}
+              onClick={() => {
+                props.showModalState.set(true);
+              }}
+            >
+              Get Started
+            </div>
           </div>
         </>
       );
@@ -61,23 +101,36 @@ export default function Home(props: Props) {
     <div style={{ position: "relative", minHeight: "100%" }}>
       <header>
         <div className="navbar">
-          <div className="container d-flex justify-content-between">
-            <div className="navbar-brand d-flex align-items-center">
-              COVID Quarantine Calculator (Alpha)
-            </div>
-            <div>English</div>
+          <div
+            className="container d-flex justify-content-between"
+            style={{
+              fontFamily: "Arial",
+              fontStyle: "normal",
+              fontWeight: "bold",
+              fontSize: "14px",
+              lineHeight: "160%",
+              textAlign: "center",
+              letterSpacing: "0.02em",
+              textTransform: "uppercase",
+              color: "#1F252F"
+            }}
+          >
+            <div className="d-flex align-items-center">COVID CALCULATOR</div>
+            <div>ESPAÑOL</div>
           </div>
         </div>
       </header>
       <main className={"main"} role={"main"} style={{ paddingBottom: "250px" }}>
-        <section className={"jumbotron"}>
+        <section className={"jumbotron"} style={{ background: "#FFFFFF" }}>
           <div className="container">{renderTitle()}</div>
         </section>
         <div
           className="container pb-5"
           style={{
             display: "flex",
-            justifyContent: "center"
+            justifyContent: "center",
+            background: "#F8F8F8",
+            paddingTop: "91px"
           }}
         >
           <div
@@ -88,11 +141,11 @@ export default function Home(props: Props) {
             <h2 style={{ textAlign: "center" }}>Quarantine vs. Isolation</h2>
             <div className="py-2"></div>
             <div className="row">
-              <div className="col-md-6  col-sm-12">
+              <div className="col-md-6  col-sm-12 f3 gray">
                 People who must <strong>quarantine</strong> are avoiding contact
                 with everyone outside their home.
               </div>
-              <div className="col-md-6 col-sm-12">
+              <div className="col-md-6 col-sm-12 f3 gray">
                 People who must <strong>isolate</strong> should keep away from
                 everyone inside and outside the home.
               </div>
