@@ -3,6 +3,7 @@ export interface PersonData {
   name: string;
   covidEvents: CovidEvents;
   noSymptomsFor24Hours: boolean;
+  atLeastOne: boolean;
   isNewPerson: boolean;
   editing: boolean;
 }
