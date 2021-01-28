@@ -34,9 +34,29 @@ export default function Household(props: Props) {
     if (editingHousehold) {
       return (
         <>
-          <h2>Add your household</h2>
-          <p className="lead text-muted">
-            Be sure to add everyone in your household.
+          <h2 style= {{
+            fontFamily: "Helvetica",
+            fontSize: "48px",
+            fontStyle: "normal",
+            fontWeight: 400,
+            lineHeight: "56px",
+            letterSpacing: "-0.01em",
+            textAlign: "left" }}
+            >
+              Tell us about yourself and each person you live with
+          </h2>
+          <p className="lead"
+          style={{
+              fontFamily: "Helvetica",
+              fontSize: "24px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "36px",
+              letterSpacing: "0em",
+              textAlign: "left",
+              color: "#000000"
+            }}>
+            Thank you for doing your part to keep our community safe! For help with a question, tap "?"
           </p>
         </>
       );

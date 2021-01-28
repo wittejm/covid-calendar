@@ -29,15 +29,27 @@ export default function MultipleChoiceQuestion(props: Props) {
           className="custom-control-label"
           htmlFor={`checkbox-${props.id}-${props.questionText}`}
         >
-          {props.questionText}
-          {props.tooltip && (
-            <DisclosureButton>
-              <i
-                aria-hidden="true"
-                className="px-1 fas fa-question-circle link hover-dark-blue gray"
-              ></i>
-            </DisclosureButton>
-          )}
+          <div
+            style={{
+              fontFamily: "Helvetica",
+              fontSize: "24px",
+              fontStyle: "normal",
+              fontWeight: 400,
+              lineHeight: "36px",
+              letterSpacing: "0em",
+              textAlign: "left"
+            }}
+          >
+            {props.questionText}
+            {props.tooltip && (
+              <DisclosureButton>
+                <i
+                  aria-hidden="true"
+                  className="px-1 fas fa-question-circle link hover-dark-blue gray"
+                ></i>
+              </DisclosureButton>
+            )}
+          </div>
         </label>
         {props.tooltip && (
           <DisclosurePanel>

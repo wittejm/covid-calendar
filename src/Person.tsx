@@ -109,7 +109,7 @@ export default function Person(props: Props) {
       <>
         <MultipleChoiceQuestion
           id={person.id}
-          questionText={`${person.name} has shown positive symptoms`}
+          questionText={`${person.name} has been feeling sick`}
           checked={atLeastOneState.get()}
           onChange={() => atLeastOneState.set(c => !c)}
           tooltip={
@@ -371,7 +371,7 @@ export default function Person(props: Props) {
           <div className="mb-3">
             {buildCovidEventQuestion(
               CovidEventName.LastCloseContact,
-              `${person.name} has had close contact to someone presumed covid positive (outside the household)`,
+              `${person.name} had close contact to someone COVID positive that does not live with them`,
               "Date of last contact",
               <div>
                 Close contact means any of the following:
