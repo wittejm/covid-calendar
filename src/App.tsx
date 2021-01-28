@@ -33,6 +33,7 @@ export default function App() {
         [CovidEventName.SymptomsStart]: "",
         [CovidEventName.PositiveTest]: ""
       },
+      symptomsChecked: [false, false, false, false],
       noSymptomsFor24Hours: true,
       atLeastOne: false,
       isNewPerson: true,

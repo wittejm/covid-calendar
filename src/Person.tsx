@@ -74,6 +74,29 @@ export default function Person(props: Props) {
     };
   }
 
+  function onSymptomCheckboxChange(index: number) {
+    return (e: React.BaseSyntheticEvent) => {
+      const symptomsCheckedState = props.personState.symptomsChecked;
+      const numCheckedBefore = symptomsCheckedState
+        .get()
+        .reduce((sum, val) => sum + (val ? 1 : 0), 0);
+      symptomsCheckedState[index].set(c => !c);
+      const numCheckedAfter = symptomsCheckedState
+        .get()
+        .reduce((sum, val) => sum + (val ? 1 : 0), 0);
+      if (
+        (numCheckedBefore == 1 && numCheckedAfter == 2) ||
+        (numCheckedBefore == 2 && numCheckedAfter == 1)
+      ) {
+        const toggleSymptomStart = onCheckboxChange(
+          CovidEventName.SymptomsStart
+        );
+        toggleSymptomStart(e);
+      } else {
+      }
+    };
+  }
+
   function buildCovidEventQuestion(
     fieldName: CovidEventName,
     questionText: string,
@@ -105,13 +128,21 @@ export default function Person(props: Props) {
     const symptomsStartState = selectionsState[CovidEventName.SymptomsStart];
     const symptomsStart = symptomsStartState.get();
     const atLeastOneState = props.personState.atLeastOne;
+    const symptomsChecked = props.personState.symptomsChecked;
+
     return (
       <>
         <MultipleChoiceQuestion
           id={person.id}
           questionText={`${person.name} has been feeling sick`}
           checked={atLeastOneState.get()}
-          onChange={() => atLeastOneState.set(c => !c)}
+          onChange={() => {
+            if (atLeastOneState.get() && symptomsStart) {
+              covidEventsState[CovidEventName.SymptomsStart].set("");
+              symptomsStartState.set(false);
+            }
+            atLeastOneState.set(c => !c);
+          }}
           tooltip={
             <div>
               Common symptoms include:
@@ -135,33 +166,33 @@ export default function Person(props: Props) {
           }
         />
         {atLeastOneState.get() ? (
-          <MultipleChoiceQuestion
-            id={person.id}
-            questionText={`${person.name} has shown two or more of these symptoms`}
-            checked={symptomsStart}
-            onChange={onCheckboxChange(CovidEventName.SymptomsStart)}
-            tooltip={
-              <div>
-                Common symptoms include:
-                <ul className="mx-3 mb-1">
-                  <li>Fever or chills</li>
-                  <li>Cough</li>
-                  <li>Shortness of breath or difficulty breathing</li>
-                  <li>Fatigue</li>
-                  <li>Muscle or body aches</li>
-                  <li>Headache</li>
-                  <li>New loss of taste or smell</li>
-                  <li>Sore throat</li>
-                  <li>Congestion or runny nose</li>
-                  <li>Nausea or vomiting</li>
-                  <li>Diarrhea</li>
-                </ul>{" "}
-                <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
-                  Link.
-                </a>
-              </div>
-            }
-          />
+          <div>
+            Check the boxes if you are experiencing
+            <MultipleChoiceQuestion
+              id={person.id}
+              questionText={`Fever`}
+              checked={symptomsChecked[0].get()}
+              onChange={e => onSymptomCheckboxChange(0)(e)}
+            />
+            <MultipleChoiceQuestion
+              id={person.id}
+              questionText={`Sore Throat`}
+              checked={symptomsChecked[1].get()}
+              onChange={e => onSymptomCheckboxChange(1)(e)}
+            />
+            <MultipleChoiceQuestion
+              id={person.id}
+              questionText={`Loss of smell`}
+              checked={symptomsChecked[2].get()}
+              onChange={e => onSymptomCheckboxChange(2)(e)}
+            />
+            <MultipleChoiceQuestion
+              id={person.id}
+              questionText={`Loss of taste`}
+              checked={symptomsChecked[3].get()}
+              onChange={e => onSymptomCheckboxChange(3)(e)}
+            />
+          </div>
         ) : null}
         {symptomsStart ? (
           <DateQuestion
@@ -200,7 +231,7 @@ export default function Person(props: Props) {
     relevantInHouseExposureEventsState.reverse().map(e => e.set(none)); // Remove all current exposures
     const newExposureEvents = members.map((otherPerson: PersonData) => {
       const otherContagious = isContagious(otherPerson);
-      if (person !== otherPerson && contagious !== otherContagious) {
+      if (person.id !== otherPerson.id && contagious !== otherContagious) {
         return {
           contagiousPerson: contagious ? person.id : otherPerson.id,
           quarantinedPerson: contagious ? otherPerson.id : person.id,
