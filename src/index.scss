@@ -35,3 +35,9 @@ div.react-datepicker-wrapper {
 div.react-datepicker-popper {
   z-index: 100;
 }
+
+.custom-control-label::before, 
+.custom-control-label::after {
+width: 1.5rem !important;
+height: 1.5rem !important;
+}
