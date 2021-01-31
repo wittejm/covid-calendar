@@ -16,7 +16,7 @@ export default function DateQuestion(props: Props) {
   const questionFieldDate = isValid(parsedDate) ? parsedDate : new Date();
 
   return (
-    <div className="">
+    <div className="subquestion questionnaire-text">
       <label htmlFor={`${props.id}-${props.questionFieldName}`}>
         {props.promptText} <span className="f6 fw3">mm/dd/yyyy</span>
       </label>

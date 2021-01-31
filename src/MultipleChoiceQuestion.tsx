@@ -16,7 +16,7 @@ interface Props {
 
 export default function MultipleChoiceQuestion(props: Props) {
   return (
-    <div className="custom-control custom-checkbox mb-3">
+    <div className="custom-control custom-checkbox mb-2">
       <input
         className="custom-control-input"
         checked={props.checked}
@@ -29,17 +29,7 @@ export default function MultipleChoiceQuestion(props: Props) {
           className="custom-control-label"
           htmlFor={`checkbox-${props.id}-${props.questionText}`}
         >
-          <div
-            style={{
-              fontFamily: "Helvetica",
-              fontSize: "24px",
-              fontStyle: "normal",
-              fontWeight: 400,
-              lineHeight: "36px",
-              letterSpacing: "0em",
-              textAlign: "left"
-            }}
-          >
+          <div className="questionnaire-text">
             {props.questionText}
             {props.tooltip && (
               <DisclosureButton>
