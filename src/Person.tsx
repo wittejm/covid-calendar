@@ -140,6 +140,7 @@ export default function Person(props: Props) {
             if (atLeastOneState.get() && symptomsStart) {
               covidEventsState[CovidEventName.SymptomsStart].set("");
               symptomsStartState.set(false);
+              symptomsChecked.set([false, false, false, false]);
             }
             atLeastOneState.set(c => !c);
           }}
@@ -166,8 +167,9 @@ export default function Person(props: Props) {
           }
         />
         {atLeastOneState.get() ? (
-          <div>
-            Check the boxes if you are experiencing
+          <div className="questionnaire-text subquestion">
+            <div className="mb-3">Check the boxes if you are experiencing:</div>
+
             <MultipleChoiceQuestion
               id={person.id}
               questionText={`Fever`}
@@ -371,84 +373,82 @@ export default function Person(props: Props) {
 
   function renderEditing() {
     return (
-      <div className={"card shadow-sm mb-2"} ref={props.editingPersonRef}>
-        <div className="card-body">
-          <div className="mb-3">
-            <label htmlFor={`${person.id}-name`}>Name</label>
-            <div className="input-group">
-              <input
-                className="form-control"
-                value={person.name}
-                name="name"
-                id={`${person.id}-name`}
-                type="text"
-                onChange={(e: React.BaseSyntheticEvent) =>
-                  props.personState.name.set(e.target.value)
-                }
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-secondary"
-                  onClick={(e: React.BaseSyntheticEvent) => {
-                    e.stopPropagation();
-                    removeFromMembers();
-                  }}
-                >
-                  Remove
-                </button>
-              </div>
+      <>
+        <div className="mb-3">
+          <label htmlFor={`${person.id}-name`}>Name</label>
+          <div className="input-group">
+            <input
+              className="form-control"
+              value={person.name}
+              name="name"
+              id={`${person.id}-name`}
+              type="text"
+              onChange={(e: React.BaseSyntheticEvent) =>
+                props.personState.name.set(e.target.value)
+              }
+            />
+            <div className="input-group-append">
+              <button
+                className="btn btn-secondary"
+                onClick={(e: React.BaseSyntheticEvent) => {
+                  e.stopPropagation();
+                  removeFromMembers();
+                }}
+              >
+                Remove
+              </button>
             </div>
           </div>
-          <div className="mb-3">
-            {buildCovidEventQuestion(
-              CovidEventName.LastCloseContact,
-              `${person.name} had close contact to someone COVID positive that does not live with them`,
-              "Date of last contact",
-              <div>
-                Close contact means any of the following:
-                <ul className="mx-3 mb-1">
-                  <li>
-                    You were within 6 feet of them for a total of 15 minutes or
-                    more
-                  </li>
-                  <li>You provided care at home to the person</li>
-                  <li>
-                    You had direct physical contact with the person (hugged or
-                    kissed them)
-                  </li>
-                  <li>You shared eating or drinking utensils</li>
-                  <li>
-                    They sneezed, coughed, or somehow got respiratory droplets
-                    on you
-                  </li>
-                </ul>{" "}
-                <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
-                  Link.
-                </a>
-              </div>
-            )}
-          </div>
-          <div className="mb-3">
-            <hr />
-            {buildCovidEventQuestion(
-              CovidEventName.PositiveTest,
-              `${person.name} has received a positive test result`,
-              "Date of test"
-            )}
-          </div>
-          <div className="mb-3">
-            <hr />
-            {buildSymptomsQuestion()}
-          </div>
-          <InHouseExposureQuestions
-            person={person}
-            meaningfulInHouseExposures={meaningfulInHouseExposures}
-            relevantInHouseExposureEventsState={
-              relevantInHouseExposureEventsState
-            }
-          />
         </div>
-      </div>
+        <div className="mb-3">
+          {buildCovidEventQuestion(
+            CovidEventName.LastCloseContact,
+            `${person.name} had close contact to someone COVID positive that does not live with them`,
+            "Date of last contact",
+            <div>
+              Close contact means any of the following:
+              <ul className="mx-3 mb-1">
+                <li>
+                  You were within 6 feet of them for a total of 15 minutes or
+                  more
+                </li>
+                <li>You provided care at home to the person</li>
+                <li>
+                  You had direct physical contact with the person (hugged or
+                  kissed them)
+                </li>
+                <li>You shared eating or drinking utensils</li>
+                <li>
+                  They sneezed, coughed, or somehow got respiratory droplets on
+                  you
+                </li>
+              </ul>{" "}
+              <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
+                Link.
+              </a>
+            </div>
+          )}
+        </div>
+        <div className="mb-3">
+          <hr />
+          {buildCovidEventQuestion(
+            CovidEventName.PositiveTest,
+            `${person.name} has received a positive test result`,
+            "Date of test"
+          )}
+        </div>
+        <div className="mb-3">
+          <hr />
+          {buildSymptomsQuestion()}
+        </div>
+        <InHouseExposureQuestions
+          person={person}
+          meaningfulInHouseExposures={meaningfulInHouseExposures}
+          relevantInHouseExposureEventsState={
+            relevantInHouseExposureEventsState
+          }
+        />
+      </>
     );
   }
 
