@@ -142,10 +142,28 @@ export default function Home(props: Props) {
             <div className="py-2"></div>
             <div className="row">
               <div className="col-md-6  col-sm-12 f3 gray">
+                <div
+                  style={{
+                    marginLeft: "calc(50% - 90px)",
+                    marginTop: "80px",
+                    marginBottom: "60px"
+                  }}
+                >
+                  <img src={process.env.PUBLIC_URL + "/quarantine.svg"} />
+                </div>
                 People who must <strong>quarantine</strong> are avoiding contact
                 with everyone outside their home.
               </div>
               <div className="col-md-6 col-sm-12 f3 gray">
+                <div
+                  style={{
+                    marginLeft: "calc(50% - 90px)",
+                    marginTop: "80px",
+                    marginBottom: "60px"
+                  }}
+                >
+                  <img src={process.env.PUBLIC_URL + "/isolation.svg"} />
+                </div>
                 People who must <strong>isolate</strong> should keep away from
                 everyone inside and outside the home.
               </div>
