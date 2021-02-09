@@ -87,14 +87,16 @@ export default function Household(props: Props) {
     if (members.length) {
       if (editingHousehold) {
         return (
+          <div className="">
           <button
-            className="btn btn-primary my-3"
+            className="white get-recommendation-button"
             onClick={(e: React.BaseSyntheticEvent) => {
               props.editingHouseholdState.set(false);
             }}
           >
             Get recommendation{" "}
           </button>
+          </div>
         );
       } else {
         return (
@@ -177,14 +179,19 @@ export default function Household(props: Props) {
               })}
             </div>
             {editingHousehold && (
-              <div className={"card shadow-sm mb-2"} onClick={addPerson}>
-                <button className={"card-body"}>
-                  <h4 className={""}>
-                    Add Person &nbsp;
-                    <i className="fa fa-user-plus" aria-hidden="true"></i>
-                  </h4>
-                </button>
-              </div>
+              <button className="mb-2" onClick={addPerson}>
+                <div style={{display: "flex"}}>
+                <div style={{width:"44px"}}> {/*hold the space open for no image load-time jump. There's even a teeny delay for an svg load, and that's dumb, so this stays.  */}
+                <img
+                  src={process.env.PUBLIC_URL + "/circle-plus.svg"}
+                  style={{ marginLeft: "-0.05rem" }}
+                />
+                </div>
+                <span className={"add-another-person"}>
+                  Add another person &nbsp;
+                </span>
+                </div>
+              </button>
             )}
             {renderAction()}
           </div>
