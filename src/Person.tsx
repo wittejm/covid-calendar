@@ -77,16 +77,15 @@ export default function Person(props: Props) {
   function onSymptomCheckboxChange(index: number) {
     return (e: React.BaseSyntheticEvent) => {
       const symptomsCheckedState = props.personState.symptomsChecked;
-      const numCheckedBefore = symptomsCheckedState
+      const anyCheckedBefore = symptomsCheckedState
         .get()
-        .reduce((sum, val) => sum + (val ? 1 : 0), 0);
+        .some(val=>val);
       symptomsCheckedState[index].set(c => !c);
-      const numCheckedAfter = symptomsCheckedState
+      const anyCheckedAfter = symptomsCheckedState
         .get()
-        .reduce((sum, val) => sum + (val ? 1 : 0), 0);
+        .some(val=>val);
       if (
-        (numCheckedBefore == 0 && numCheckedAfter == 1) ||
-        (numCheckedBefore == 1 && numCheckedAfter == 0)
+        !anyCheckedBefore || !anyCheckedAfter
       ) {
         const toggleSymptomStart = onCheckboxChange(
           CovidEventName.SymptomsStart
