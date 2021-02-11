@@ -178,19 +178,19 @@ export default function Person(props: Props) {
             />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`Sore Throat`}
+              questionText={`Cough`}
               checked={symptomsChecked[1].get()}
               onChange={e => onSymptomCheckboxChange(1)(e)}
             />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`Loss of smell`}
+              questionText={`Shortness of breath`}
               checked={symptomsChecked[2].get()}
               onChange={e => onSymptomCheckboxChange(2)(e)}
             />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`Loss of taste`}
+              questionText={`New loss of taste or smell`}
               checked={symptomsChecked[3].get()}
               onChange={e => onSymptomCheckboxChange(3)(e)}
             />
