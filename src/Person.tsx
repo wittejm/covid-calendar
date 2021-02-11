@@ -85,8 +85,8 @@ export default function Person(props: Props) {
         .get()
         .reduce((sum, val) => sum + (val ? 1 : 0), 0);
       if (
-        (numCheckedBefore == 1 && numCheckedAfter == 2) ||
-        (numCheckedBefore == 2 && numCheckedAfter == 1)
+        (numCheckedBefore == 0 && numCheckedAfter == 1) ||
+        (numCheckedBefore == 1 && numCheckedAfter == 0)
       ) {
         const toggleSymptomStart = onCheckboxChange(
           CovidEventName.SymptomsStart
