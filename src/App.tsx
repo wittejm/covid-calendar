@@ -27,7 +27,7 @@ export default function App() {
     const currentId = id.get();
     const newPerson = {
       id: currentId,
-      name: `Person ${getRandomInt(1000)}`,
+      name: `Person ${members.length+1}`,
       covidEvents: {
         [CovidEventName.LastCloseContact]: "",
         [CovidEventName.SymptomsStart]: "",
