@@ -255,6 +255,11 @@ export default function Person(props: Props) {
   function removeFromMembers() {
     relevantInHouseExposureEventsState.reverse().map(e => e.set(none)); // Remove all current exposures
     props.personState.set(none);
+    props.membersState.map((memberState: State<PersonData>, index: number)=>{
+      if (memberState.get().name.match(/Person \d+/)){
+        memberState.name.set(`Person ${index+1}`);
+      }
+    })
   }
 
   function renderGuidance() {
