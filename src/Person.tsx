@@ -77,16 +77,15 @@ export default function Person(props: Props) {
   function onSymptomCheckboxChange(index: number) {
     return (e: React.BaseSyntheticEvent) => {
       const symptomsCheckedState = props.personState.symptomsChecked;
-      const numCheckedBefore = symptomsCheckedState
+      const anyCheckedBefore = symptomsCheckedState
         .get()
-        .reduce((sum, val) => sum + (val ? 1 : 0), 0);
+        .some(val=>val);
       symptomsCheckedState[index].set(c => !c);
-      const numCheckedAfter = symptomsCheckedState
+      const anyCheckedAfter = symptomsCheckedState
         .get()
-        .reduce((sum, val) => sum + (val ? 1 : 0), 0);
+        .some(val=>val);
       if (
-        (numCheckedBefore == 1 && numCheckedAfter == 2) ||
-        (numCheckedBefore == 2 && numCheckedAfter == 1)
+        !anyCheckedBefore || !anyCheckedAfter
       ) {
         const toggleSymptomStart = onCheckboxChange(
           CovidEventName.SymptomsStart
@@ -178,19 +177,19 @@ export default function Person(props: Props) {
             />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`Sore Throat`}
+              questionText={`Cough`}
               checked={symptomsChecked[1].get()}
               onChange={e => onSymptomCheckboxChange(1)(e)}
             />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`Loss of smell`}
+              questionText={`Shortness of breath`}
               checked={symptomsChecked[2].get()}
               onChange={e => onSymptomCheckboxChange(2)(e)}
             />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`Loss of taste`}
+              questionText={`New loss of taste or smell`}
               checked={symptomsChecked[3].get()}
               onChange={e => onSymptomCheckboxChange(3)(e)}
             />
