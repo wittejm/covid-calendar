@@ -274,17 +274,29 @@ export default function Person(props: Props) {
     }
   }
 
-  function guidanceDefinition(infected: boolean) {
+  function guidanceDefinition(infected: boolean, exposed : boolean) {
     return (
       <p>
         {infected
           ? "Avoid contact with everyone, including your household."
-          : "Avoid contact with everyone outside of your household."}
+          : exposed
+            ? "Avoid contact with everyone outside of your household."
+            : "Continue social distancing."
+        }
       </p>
     );
   }
 
   function guidanceMessage(guidance: Guidance) {
+
+    const getTestedNote = guidance.person.atLeastOne && (
+                <p>
+                  {" "}
+                  We recommend you get a covid test because you have shown a
+                  symptom.{" "}
+                </p>
+              );
+
     if (guidance.endDate) {
       const date = format(guidance.endDate, "PPPP");
       if (guidance.infected) {
@@ -324,13 +336,7 @@ export default function Person(props: Props) {
                 Please come back when symptoms for {names} have improved for an
                 exact date.
               </p>
-              {guidance.person.atLeastOne ? (
-                <p>
-                  {" "}
-                  We recommend you get a covid test because you have shown a
-                  symptom.{" "}
-                </p>
-              ) : null}
+              {getTestedNote}
             </>
           );
         } else {
@@ -340,24 +346,13 @@ export default function Person(props: Props) {
                 Until {date} &nbsp;{calendarIcon(guidance)}
               </p>
               <p>This is 14 days after the last known exposure date.</p>
-              {guidance.person.atLeastOne ? (
-                <p>
-                  We recommend you get a covid test because you have shown a
-                  symptom.
-                </p>
-              ) : null}
+              {getTestedNote}
             </>
           );
         }
       }
     } else {
-      if (guidance.person.atLeastOne) {
-        return (
-          <p>
-            We recommend you get a covid test because you have shown a symptom.
-          </p>
-        );
-      }
+      return getTestedNote;
     }
   }
 
@@ -467,7 +462,7 @@ export default function Person(props: Props) {
                 {renderGuidance()}
               </span>
             </h4>
-            {!editingHousehold && guidanceDefinition(props.guidance.infected)}
+            {!editingHousehold && guidanceDefinition(props.guidance.infected, !!props.guidance.endDate)}
             {!editingHousehold && guidanceMessage(props.guidance)}
           </div>
         </div>
