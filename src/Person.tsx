@@ -292,8 +292,7 @@ export default function Person(props: Props) {
     const getTestedNote = guidance.person.atLeastOne && (
                 <p>
                   {" "}
-                  We recommend you get a covid test because you have shown a
-                  symptom.{" "}
+                  Since {guidance.person.name} is feeling sick, we recommend they get a covid test.
                 </p>
               );
 
