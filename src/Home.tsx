@@ -130,7 +130,8 @@ export default function Home(props: Props) {
             display: "flex",
             justifyContent: "center",
             background: "#F8F8F8",
-            paddingTop: "91px"
+            paddingTop: "91px",
+            maxWidth: "100%"
           }}
         >
           <div
