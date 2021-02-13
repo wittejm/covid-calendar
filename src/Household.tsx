@@ -173,6 +173,7 @@ export default function Household(props: Props) {
                       editingHouseholdState={props.editingHouseholdState}
                       guidance={personGuidance}
                       editingPersonRef={editingPersonRef}
+                      addNewPerson={props.addNewPerson}
                     />
                   );
                 }
