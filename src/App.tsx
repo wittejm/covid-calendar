@@ -18,7 +18,7 @@ export default function App() {
   }, []);
   const members = useState([] as PersonData[]);
   const inHouseExposureEvents = useState<InHouseExposure[]>([]);
-  const id = useState(members.length + 1);
+  const id = useState(1);
   const editingHouseholdState = useState(true);
   const editingPersonState = useState<number | undefined>(undefined);
   const showModalState = useState(false);
