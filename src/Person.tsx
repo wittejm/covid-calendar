@@ -16,6 +16,7 @@ interface Props {
   editingHouseholdState: State<boolean>;
   guidance: Guidance;
   editingPersonRef: Ref<HTMLDivElement>;
+  addNewPerson: () => void;
 }
 
 export default function Person(props: Props) {
@@ -260,6 +261,7 @@ export default function Person(props: Props) {
         memberState.name.set(`Person ${index+1}`);
       }
     })
+
   }
 
   function renderGuidance() {
@@ -391,9 +393,12 @@ export default function Person(props: Props) {
                 onClick={(e: React.BaseSyntheticEvent) => {
                   e.stopPropagation();
                   removeFromMembers();
+                  if (members.length === 0) {
+                    props.addNewPerson();
+                  }
                 }}
               >
-                Remove
+                { members.length === 1 ? "Clear" : "Remove" }
               </button>
             </div>
           </div>
