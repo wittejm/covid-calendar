@@ -123,8 +123,15 @@ export default function Person(props: Props) {
           id={person.id}
           questionText={`${person.name} has been feeling sick`}
           checked={feelingSickState.get()}
-          onChange={() => {
+          onChange={(e : React.BaseSyntheticEvent) => {
             if (feelingSickState.get()){
+              if (atLeastOne) {
+                const toggleSymptomStart = onCheckboxChange(
+                  CovidEventName.SymptomsStart
+                );
+                toggleSymptomStart(e);
+              }
+
               feelingSickState.set(false);
               covidEventsState[CovidEventName.SymptomsStart].set("");
               symptomsChecked.set([false, false, false, false]);
