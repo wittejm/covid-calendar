@@ -4,7 +4,7 @@ export interface PersonData {
   covidEvents: CovidEvents;
   noSymptomsFor24Hours: boolean;
   symptomsChecked: boolean[];
-  atLeastOne: boolean;
+  feelingSick: boolean;
   isNewPerson: boolean;
   editing: boolean;
 }

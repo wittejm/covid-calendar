@@ -35,7 +35,7 @@ export default function App() {
       },
       symptomsChecked: [false, false, false, false],
       noSymptomsFor24Hours: true,
-      atLeastOne: false,
+      feelingSick: false,
       isNewPerson: true,
       editing: true
     };

@@ -35,33 +35,23 @@ export default function Person(props: Props) {
       );
     }
   );
-  const selectionsState: any = useState(
-    Object.values(CovidEventName).reduce(
-      (selections: any, key: CovidEventName) => (
-        (selections[key] = covidEventsState[key].get() !== ""), selections
-      ),
-      {}
-    )
-  );
-  const selections = selectionsState.get();
-  const contagious =
-    selections[CovidEventName.PositiveTest] ||
-    selections[CovidEventName.SymptomsStart];
+  const atLeastOne = covidEventsState[CovidEventName.SymptomsStart].get() !== "";
+  const gotPositiveTest = covidEventsState[CovidEventName.PositiveTest].get() !== "";
+  const contagious = atLeastOne || gotPositiveTest;
 
   function onCheckboxChange(fieldName: CovidEventName) {
     return (e: React.BaseSyntheticEvent) => {
       const checked = e.target.checked;
-      selectionsState[fieldName].set(checked);
       if (fieldName === CovidEventName.PositiveTest) {
         const nextContagious = Boolean(
-          checked || selections[CovidEventName.SymptomsStart]
+          checked || atLeastOne
         );
         if (contagious !== nextContagious) {
           setContagiousState(nextContagious);
         }
       } else if (fieldName === CovidEventName.SymptomsStart) {
         const nextContagious = Boolean(
-          checked || selections[CovidEventName.PositiveTest]
+          checked || gotPositiveTest
         );
         if (contagious !== nextContagious) {
           setContagiousState(nextContagious);
@@ -108,11 +98,11 @@ export default function Person(props: Props) {
         <MultipleChoiceQuestion
           id={person.id}
           questionText={questionText}
-          checked={selectionsState[fieldName].get()}
+          checked={covidEventsState[fieldName].get() !== ""}
           onChange={onCheckboxChange(fieldName)}
           tooltip={tooltip}
         />
-        {selectionsState[fieldName].get() && (
+        {(covidEventsState[fieldName].get() !== "") && (
           <DateQuestion
             id={person.id}
             promptText={datePromptText}
@@ -125,24 +115,31 @@ export default function Person(props: Props) {
   }
 
   function buildSymptomsQuestion() {
-    const symptomsStartState = selectionsState[CovidEventName.SymptomsStart];
-    const symptomsStart = symptomsStartState.get();
-    const atLeastOneState = props.personState.atLeastOne;
+    const feelingSickState = props.personState.feelingSick;
     const symptomsChecked = props.personState.symptomsChecked;
-
     return (
       <>
         <MultipleChoiceQuestion
           id={person.id}
           questionText={`${person.name} has been feeling sick`}
-          checked={atLeastOneState.get()}
-          onChange={() => {
-            if (atLeastOneState.get() && symptomsStart) {
+          checked={feelingSickState.get()}
+          onChange={(e : React.BaseSyntheticEvent) => {
+            if (feelingSickState.get()){
+              if (atLeastOne) {
+                const toggleSymptomStart = onCheckboxChange(
+                  CovidEventName.SymptomsStart
+                );
+                toggleSymptomStart(e);
+              }
+
+              feelingSickState.set(false);
               covidEventsState[CovidEventName.SymptomsStart].set("");
-              symptomsStartState.set(false);
+              symptomsChecked.set([false, false, false, false]);
+            } else {
+              feelingSickState.set(true);
+              covidEventsState[CovidEventName.SymptomsStart].set("");
               symptomsChecked.set([false, false, false, false]);
             }
-            atLeastOneState.set(c => !c);
           }}
           tooltip={
             <div>
@@ -166,7 +163,7 @@ export default function Person(props: Props) {
             </div>
           }
         />
-        {atLeastOneState.get() ? (
+        {feelingSickState.get() ? (
           <div className="questionnaire-text subquestion">
             <div className="mb-3">Check the boxes if you are experiencing:</div>
 
@@ -196,7 +193,7 @@ export default function Person(props: Props) {
             />
           </div>
         ) : null}
-        {symptomsStart ? (
+        {atLeastOne ? (
           <DateQuestion
             id={person.id}
             promptText="Date of first appearance of symptoms"
@@ -207,7 +204,7 @@ export default function Person(props: Props) {
           />
         ) : null}
         <div className={"mb-3"} />
-        {symptomsStart ? (
+        {atLeastOne ? (
           <MultipleChoiceQuestion
             id={person.id}
             questionText={`${person.name}'s symptoms have been improved for 24 hours.`}
@@ -291,7 +288,7 @@ export default function Person(props: Props) {
 
   function guidanceMessage(guidance: Guidance) {
 
-    const getTestedNote = guidance.person.atLeastOne && (
+    const getTestedNote = guidance.person.feelingSick && (
                 <p>
                   {" "}
                   Since {guidance.person.name} is feeling sick, we recommend they get a covid test.
