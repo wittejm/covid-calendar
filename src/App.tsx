@@ -16,9 +16,24 @@ export default function App() {
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
-  const members = useState([] as PersonData[]);
+  const firstPerson = {
+    id: 1,
+    name: `Person 1`,
+    covidEvents: {
+      [CovidEventName.LastCloseContact]: "",
+      [CovidEventName.SymptomsStart]: "",
+      [CovidEventName.PositiveTest]: ""
+    },
+    symptomsChecked: [false, false, false, false],
+    noSymptomsFor24Hours: true,
+    feelingSick: false,
+    isNewPerson: true,
+    editing: true
+  };
+
+  const members = useState([firstPerson] as PersonData[]);
   const inHouseExposureEvents = useState<InHouseExposure[]>([]);
-  const id = useState(1);
+  const id = useState(2);
   const editingHouseholdState = useState(true);
   const editingPersonState = useState<number | undefined>(undefined);
   const showModalState = useState(false);
