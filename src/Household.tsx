@@ -68,7 +68,7 @@ export default function Household(props: Props) {
     } else {
       return (
         <>
-          <h2>Our recommendation</h2>
+          <h1>Your recommendation</h1>
           <p className="lead text-muted">
             The guidance given in this app is based on the latest CDC guidelines
             for protecting yourself and others from the spread of COVID-19. The
@@ -101,15 +101,8 @@ export default function Household(props: Props) {
       } else {
         return (
           <div className="d-flex justify-content-between">
-            <Link
-              to="/recommendation"
-              className="btn btn-primary my-3"
-
-            >
-              See on calendar{" "}
-            </Link>
             <button
-              className="btn btn-secondary my-3"
+              className="btn btn-primary my-3"
               onClick={(e: React.BaseSyntheticEvent) => {
                 props.editingHouseholdState.set(true);
               }}
@@ -131,7 +124,7 @@ export default function Household(props: Props) {
         }}
       >
         <div
-          className={"col-md-6"}
+          className={"col-md-12"}
           style={{
             backgroundColor: "#fff",
             minHeight: props.height.get() + "px"
@@ -181,7 +174,6 @@ export default function Household(props: Props) {
             {renderAction()}
           </div>
         </div>
-        <div className={"col-md-6"} />
       </div>
     </>
   );

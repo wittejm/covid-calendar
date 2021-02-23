@@ -57,7 +57,7 @@ export default function Home(props: Props) {
               flexGrow: 0,
               margin: "0px 0px"
             }}
-            to="/household"
+            to="/recommendation"
           >
             Get Started
           </Link>

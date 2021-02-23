@@ -3,37 +3,19 @@ import GridView from "./GridView";
 import { InHouseExposure, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
 import { Link } from "react-router-dom";
+import Household from "./Household";
 
 interface Props {
+  addNewPerson: () => void;
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposure[]>;
+  editingHouseholdState: State<boolean>;
+  height: State<number>;
 }
 
 export default function Recommendation(props: Props) {
   const members = props.membersState.get();
 
-  function renderTitle() {
-    return (
-      <>
-        <h1>Here is our recommendation for your household</h1>
-        <p className="lead text-muted">
-          The guidance given in this app is based on the latest CDC guidelines
-          for protecting yourself and others from the spread of COVID-19. The
-          same information is available on their{" "}
-          <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/index.html">
-            COVID-19 webpage
-          </a>
-          .
-        </p>
-        <Link
-          className="btn btn-primary my-2"
-          to="/household"
-        >
-          Edit Answers
-        </Link>
-      </>
-    );
-  }
 
   return (
     <div style={{ position: "relative", minHeight: "100%" }}>
@@ -60,7 +42,13 @@ export default function Recommendation(props: Props) {
       </header>
       <main className={"main"} role={"main"} style={{ paddingBottom: "250px" }}>
         <section className={"jumbotron"} style={{ background: "#FFFFFF" }}>
-          <div className="container">{renderTitle()}</div>
+          <Household
+            addNewPerson={props.addNewPerson}
+            editingHouseholdState={props.editingHouseholdState}
+            height={props.height}
+            inHouseExposureEventsState={props.inHouseExposureEventsState}
+            membersState={props.membersState}
+          />
         </section>
         <div
           className="container pb-5"
@@ -109,12 +97,6 @@ export default function Recommendation(props: Props) {
             </div>
           </div>
         </div>
-        {members.length ? (
-          <GridView
-            membersState={props.membersState}
-            inHouseExposureEvents={props.inHouseExposureEventsState.get()}
-          />
-        ) : null}
       </main>
 
       {/*

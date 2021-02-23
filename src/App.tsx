@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useState } from "@hookstate/core";
-import Household from "./Household";
 import Home from "./Home";
 import Recommendation from "./Recommendation";
 import { CovidEventName, InHouseExposure, PersonData } from "./types";
@@ -76,19 +75,13 @@ export default function App() {
   return (
     <Router basename={`${process.env.PUBLIC_URL}`}>
       <Switch>
-        <Route path="/household">
-          <Household
+        <Route path="/recommendation">
+          <Recommendation
             addNewPerson={addNewPerson}
             editingHouseholdState={editingHouseholdState}
             height={height}
             inHouseExposureEventsState={inHouseExposureEvents}
             membersState={members}
-          />
-        </Route>
-        <Route path="/recommendation">
-          <Recommendation
-            membersState={members}
-            inHouseExposureEventsState={inHouseExposureEvents}
           />
         </Route>
         <Route path="/">
