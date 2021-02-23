@@ -2,6 +2,7 @@ import React from "react";
 import GridView from "./GridView";
 import { InHouseExposure, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
+import { Link } from "react-router-dom";
 
 interface Props {
   membersState: State<PersonData[]>;
@@ -25,14 +26,12 @@ export default function Recommendation(props: Props) {
           </a>
           .
         </p>
-        <div
+        <Link
           className="btn btn-primary my-2"
-          onClick={() => {
-            props.showModalState.set(true);
-          }}
+          to="/household"
         >
           Edit Answers
-        </div>
+        </Link>
       </>
     );
   }
