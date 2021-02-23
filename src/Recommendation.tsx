@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 interface Props {
   membersState: State<PersonData[]>;
   inHouseExposureEventsState: State<InHouseExposure[]>;
-  showModalState: State<boolean>;
 }
 
 export default function Recommendation(props: Props) {

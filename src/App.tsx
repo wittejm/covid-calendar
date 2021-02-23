@@ -37,7 +37,6 @@ export default function App() {
   const id = useState(2);
   const editingHouseholdState = useState(true);
   const editingPersonState = useState<number | undefined>(undefined);
-  const showModalState = useState(false);
 
   function addNewPerson() {
     const currentId = id.get();
@@ -84,14 +83,12 @@ export default function App() {
             height={height}
             inHouseExposureEventsState={inHouseExposureEvents}
             membersState={members}
-            showModalState={showModalState}
           />
         </Route>
         <Route path="/recommendation">
           <Recommendation
             membersState={members}
             inHouseExposureEventsState={inHouseExposureEvents}
-            showModalState={showModalState}
           />
         </Route>
         <Route path="/">

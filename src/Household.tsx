@@ -11,7 +11,6 @@ interface Props {
   inHouseExposureEventsState: State<InHouseExposure[]>;
   editingHouseholdState: State<boolean>;
   height: State<number>;
-  showModalState: State<boolean>;
 }
 
 export default function Household(props: Props) {
@@ -138,21 +137,6 @@ export default function Household(props: Props) {
             minHeight: props.height.get() + "px"
           }}
         >
-          <header>
-            <div className="navbar household">
-              <div className="container d-flex justify-content-between">
-                <div />
-                <div
-                  className={"my-2"}
-                  onClick={(e: React.BaseSyntheticEvent) => {
-                    props.showModalState.set(false);
-                  }}
-                >
-                  Close
-                </div>
-              </div>
-            </div>
-          </header>
           <div className={"container"}>
             <div className={"my-3"} />
             {renderTitle()}
