@@ -2,7 +2,6 @@ import React from "react";
 import GridView from "./GridView";
 import { InHouseExposure, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
-import { Link } from "react-router-dom";
 
 interface Props {
   membersState: State<PersonData[]>;
@@ -10,62 +9,29 @@ interface Props {
   showModalState: State<boolean>;
 }
 
-export default function Home(props: Props) {
+export default function Recommendation(props: Props) {
   const members = props.membersState.get();
 
   function renderTitle() {
     return (
       <>
-        <h1
-          style={{
-            fontFamily: "Helvetica",
-            fontSize: "60px",
-            fontStyle: "normal",
-            lineHeight: "71px",
-            textAlign: "center",
-            color: "#1F252F"
+        <h1>Here is our recommendation for your household</h1>
+        <p className="lead text-muted">
+          The guidance given in this app is based on the latest CDC guidelines
+          for protecting yourself and others from the spread of COVID-19. The
+          same information is available on their{" "}
+          <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/index.html">
+            COVID-19 webpage
+          </a>
+          .
+        </p>
+        <div
+          className="btn btn-primary my-2"
+          onClick={() => {
+            props.showModalState.set(true);
           }}
         >
-          {" "}
-          Quarantine and Isolation Calculator
-        </h1>
-        <p className="f3 gray">
-          Did someone in your household test positive? Are they starting to
-          get sick? Answer a few questions to know who should isolate,
-          quarantining, and for how long.
-        </p>
-        <div style={{ position: "relative", paddingBottom: "120px" }}>
-          <Link
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "18px 40px",
-              position: "absolute",
-              background: "#1A5BFF",
-              borderRadius: "40px",
-              width: "295px",
-              height: "58px",
-              left: "calc(50% - 295px/2)",
-              top: "50px",
-              fontFamily: "Arial",
-              fontStyle: "normal",
-              fontWeight: "bold",
-              fontSize: "14px",
-              lineHeight: "160%",
-              textAlign: "center",
-              letterSpacing: "0.02em",
-              textTransform: "uppercase",
-              color: "#FFFFFF",
-              flex: "none",
-              order: 0,
-              flexGrow: 0,
-              margin: "0px 0px"
-            }}
-            to="/household"
-          >
-            Get Started
-          </Link>
+          Edit Answers
         </div>
       </>
     );

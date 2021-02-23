@@ -3,6 +3,7 @@ import { InHouseExposure, PersonData } from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
+import { Link } from "react-router-dom";
 
 interface Props {
   addNewPerson: () => void;
@@ -101,14 +102,13 @@ export default function Household(props: Props) {
       } else {
         return (
           <div className="d-flex justify-content-between">
-            <button
+            <Link
+              to="/recommendation"
               className="btn btn-primary my-3"
-              onClick={(e: React.BaseSyntheticEvent) => {
-                props.showModalState.set(false);
-              }}
+
             >
               See on calendar{" "}
-            </button>
+            </Link>
             <button
               className="btn btn-secondary my-3"
               onClick={(e: React.BaseSyntheticEvent) => {
