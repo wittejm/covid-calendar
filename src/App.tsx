@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useState } from "@hookstate/core";
-import Household from "./Household";
 import Home from "./Home";
+import Recommendation from "./Recommendation";
 import { CovidEventName, InHouseExposure, PersonData } from "./types";
 import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
-import ReactModal from "react-modal";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 export default function App() {
   const height = useState(window.innerHeight);
@@ -16,12 +16,26 @@ export default function App() {
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
-  const members = useState([] as PersonData[]);
+  const firstPerson = {
+    id: 1,
+    name: `Person 1`,
+    covidEvents: {
+      [CovidEventName.LastCloseContact]: "",
+      [CovidEventName.SymptomsStart]: "",
+      [CovidEventName.PositiveTest]: ""
+    },
+    symptomsChecked: [false, false, false, false],
+    noSymptomsFor24Hours: true,
+    feelingSick: false,
+    isNewPerson: true,
+    editing: true
+  };
+
+  const members = useState([firstPerson] as PersonData[]);
   const inHouseExposureEvents = useState<InHouseExposure[]>([]);
-  const id = useState(1);
+  const id = useState(2);
   const editingHouseholdState = useState(true);
   const editingPersonState = useState<number | undefined>(undefined);
-  const showModalState = useState(false);
 
   function addNewPerson() {
     const currentId = id.get();
@@ -59,41 +73,21 @@ export default function App() {
   }
 
   return (
-    <>
-      <ReactModal
-        isOpen={showModalState.get()}
-        className={showModalState.get() ? "slide-in" : "slide-out"}
-        style={{
-          overlay: {
-            zIndex: 1
-          },
-          content: {
-            position: "absolute",
-            inset: "0px",
-            padding: "0px",
-            background: "none",
-            border: "none",
-            borderRadius: "none",
-            overflow: "auto",
-            WebkitOverflowScrolling: "touch",
-            outline: "none"
-          }
-        }}
-      >
-        <Household
-          addNewPerson={addNewPerson}
-          editingHouseholdState={editingHouseholdState}
-          height={height}
-          inHouseExposureEventsState={inHouseExposureEvents}
-          membersState={members}
-          showModalState={showModalState}
-        />
-      </ReactModal>
-      <Home
-        membersState={members}
-        inHouseExposureEventsState={inHouseExposureEvents}
-        showModalState={showModalState}
-      />
-    </>
+    <Router basename={`${process.env.PUBLIC_URL}`}>
+      <Switch>
+        <Route path="/recommendation">
+          <Recommendation
+            addNewPerson={addNewPerson}
+            editingHouseholdState={editingHouseholdState}
+            height={height}
+            inHouseExposureEventsState={inHouseExposureEvents}
+            membersState={members}
+          />
+        </Route>
+        <Route path="/">
+          <Home/>
+        </Route>
+      </Switch>
+    </Router>
   );
 }

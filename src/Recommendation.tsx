@@ -3,68 +3,19 @@ import GridView from "./GridView";
 import { InHouseExposure, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
 import { Link } from "react-router-dom";
+import Household from "./Household";
 
 interface Props {
+  addNewPerson: () => void;
+  membersState: State<PersonData[]>;
+  inHouseExposureEventsState: State<InHouseExposure[]>;
+  editingHouseholdState: State<boolean>;
+  height: State<number>;
 }
 
-export default function Home(props: Props) {
-  function renderTitle() {
-    return (
-      <>
-        <h1
-          style={{
-            fontFamily: "Helvetica",
-            fontSize: "60px",
-            fontStyle: "normal",
-            lineHeight: "71px",
-            textAlign: "center",
-            color: "#1F252F"
-          }}
-        >
-          {" "}
-          Quarantine and Isolation Calculator
-        </h1>
-        <p className="f3 gray">
-          Did someone in your household test positive? Are they starting to
-          get sick? Answer a few questions to know who should isolate,
-          quarantining, and for how long.
-        </p>
-        <div style={{ position: "relative", paddingBottom: "120px" }}>
-          <Link
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "18px 40px",
-              position: "absolute",
-              background: "#1A5BFF",
-              borderRadius: "40px",
-              width: "295px",
-              height: "58px",
-              left: "calc(50% - 295px/2)",
-              top: "50px",
-              fontFamily: "Arial",
-              fontStyle: "normal",
-              fontWeight: "bold",
-              fontSize: "14px",
-              lineHeight: "160%",
-              textAlign: "center",
-              letterSpacing: "0.02em",
-              textTransform: "uppercase",
-              color: "#FFFFFF",
-              flex: "none",
-              order: 0,
-              flexGrow: 0,
-              margin: "0px 0px"
-            }}
-            to="/recommendation"
-          >
-            Get Started
-          </Link>
-        </div>
-      </>
-    );
-  }
+export default function Recommendation(props: Props) {
+  const members = props.membersState.get();
+
 
   return (
     <div style={{ position: "relative", minHeight: "100%" }}>
@@ -91,7 +42,13 @@ export default function Home(props: Props) {
       </header>
       <main className={"main"} role={"main"} style={{ paddingBottom: "250px" }}>
         <section className={"jumbotron"} style={{ background: "#FFFFFF" }}>
-          <div className="container">{renderTitle()}</div>
+          <Household
+            addNewPerson={props.addNewPerson}
+            editingHouseholdState={props.editingHouseholdState}
+            height={props.height}
+            inHouseExposureEventsState={props.inHouseExposureEventsState}
+            membersState={props.membersState}
+          />
         </section>
         <div
           className="container pb-5"
@@ -141,6 +98,15 @@ export default function Home(props: Props) {
           </div>
         </div>
       </main>
+
+      {/*
+      <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/isolation.html">
+        CDC guidelines on isolation
+      </a>
+      <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
+        CDC guidelines on quarantine
+      </a>
+      */}
       <footer
         className={"py-5"}
         style={{

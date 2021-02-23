@@ -3,6 +3,7 @@ import { InHouseExposure, PersonData } from "./types";
 import Person from "./Person";
 import { State } from "@hookstate/core";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
+import { Link } from "react-router-dom";
 
 interface Props {
   addNewPerson: () => void;
@@ -10,7 +11,6 @@ interface Props {
   inHouseExposureEventsState: State<InHouseExposure[]>;
   editingHouseholdState: State<boolean>;
   height: State<number>;
-  showModalState: State<boolean>;
 }
 
 export default function Household(props: Props) {
@@ -68,7 +68,7 @@ export default function Household(props: Props) {
     } else {
       return (
         <>
-          <h2>Our recommendation</h2>
+          <h1>Your recommendation</h1>
           <p className="lead text-muted">
             The guidance given in this app is based on the latest CDC guidelines
             for protecting yourself and others from the spread of COVID-19. The
@@ -104,14 +104,6 @@ export default function Household(props: Props) {
             <button
               className="btn btn-primary my-3"
               onClick={(e: React.BaseSyntheticEvent) => {
-                props.showModalState.set(false);
-              }}
-            >
-              See on calendar{" "}
-            </button>
-            <button
-              className="btn btn-secondary my-3"
-              onClick={(e: React.BaseSyntheticEvent) => {
                 props.editingHouseholdState.set(true);
               }}
             >
@@ -132,27 +124,12 @@ export default function Household(props: Props) {
         }}
       >
         <div
-          className={"col-md-6"}
+          className={"col-md-12"}
           style={{
             backgroundColor: "#fff",
             minHeight: props.height.get() + "px"
           }}
         >
-          <header>
-            <div className="navbar household">
-              <div className="container d-flex justify-content-between">
-                <div />
-                <div
-                  className={"my-2"}
-                  onClick={(e: React.BaseSyntheticEvent) => {
-                    props.showModalState.set(false);
-                  }}
-                >
-                  Close
-                </div>
-              </div>
-            </div>
-          </header>
           <div className={"container"}>
             <div className={"my-3"} />
             {renderTitle()}
@@ -197,7 +174,6 @@ export default function Household(props: Props) {
             {renderAction()}
           </div>
         </div>
-        <div className={"col-md-6"} />
       </div>
     </>
   );

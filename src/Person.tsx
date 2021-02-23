@@ -370,7 +370,7 @@ export default function Person(props: Props) {
 
   function renderEditing() {
     return (
-      <div className="ml2 ">
+      <div className="ml2 mb5">
         <div className="mb-3">
           <label htmlFor={`${person.id}-name`}>Name</label>
           <div className="input-group">
