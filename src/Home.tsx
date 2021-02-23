@@ -5,14 +5,9 @@ import { State } from "@hookstate/core/dist";
 import { Link } from "react-router-dom";
 
 interface Props {
-  membersState: State<PersonData[]>;
-  inHouseExposureEventsState: State<InHouseExposure[]>;
-  showModalState: State<boolean>;
 }
 
 export default function Home(props: Props) {
-  const members = props.membersState.get();
-
   function renderTitle() {
     return (
       <>
@@ -145,22 +140,7 @@ export default function Home(props: Props) {
             </div>
           </div>
         </div>
-        {members.length ? (
-          <GridView
-            membersState={props.membersState}
-            inHouseExposureEvents={props.inHouseExposureEventsState.get()}
-          />
-        ) : null}
       </main>
-
-      {/*
-      <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/isolation.html">
-        CDC guidelines on isolation
-      </a>
-      <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
-        CDC guidelines on quarantine
-      </a>
-      */}
       <footer
         className={"py-5"}
         style={{

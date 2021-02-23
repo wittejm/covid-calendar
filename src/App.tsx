@@ -95,11 +95,7 @@ export default function App() {
           />
         </Route>
         <Route path="/">
-          <Home
-            membersState={members}
-            inHouseExposureEventsState={inHouseExposureEvents}
-            showModalState={showModalState}
-          />
+          <Home/>
         </Route>
       </Switch>
     </Router>
