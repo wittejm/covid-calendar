@@ -463,6 +463,7 @@ export default function Person(props: Props) {
         </h4>
         {!editingHousehold && guidanceDefinition(props.guidance.infected, !!props.guidance.endDate)}
         {!editingHousehold && guidanceMessage(props.guidance)}
+      <hr/>
       </div>
     );
   }
