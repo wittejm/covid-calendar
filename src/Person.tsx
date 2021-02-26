@@ -454,19 +454,15 @@ export default function Person(props: Props) {
 
   function renderNonEditing() {
     return (
-      <div className={"card shadow-sm mb-2"}>
-        <div className="card-body">
-          <div className={""}>
-            <h4 className="d-flex justify-content-between align-items-center">
-              <span className="">
-                {person.name + ""}
-                {renderGuidance()}
-              </span>
-            </h4>
-            {!editingHousehold && guidanceDefinition(props.guidance.infected, !!props.guidance.endDate)}
-            {!editingHousehold && guidanceMessage(props.guidance)}
-          </div>
-        </div>
+      <div className={""}>
+        <h4 className="d-flex justify-content-between align-items-center">
+          <span className="">
+            {person.name + ""}
+            {renderGuidance()}
+          </span>
+        </h4>
+        {!editingHousehold && guidanceDefinition(props.guidance.infected, !!props.guidance.endDate)}
+        {!editingHousehold && guidanceMessage(props.guidance)}
       </div>
     );
   }
