@@ -270,7 +270,11 @@ export default function Person(props: Props) {
           return `${person.name} must isolate until at least ${format(props.guidance.endDate, "MMM d")}`;
         }
       } else {
-        return `${person.name} must quarantine until ${format(props.guidance.endDate, "MMM d")}`;
+        if (props.guidance.peopleWithOngoingExposureWithSymptoms?.length) {
+          return `${person.name} must quarantine until at least ${format(props.guidance.endDate, "MMM d")}`;
+        } else {
+          return `${person.name} must quarantine until ${format(props.guidance.endDate, "MMM d")}`;
+        }
       }
     } else {
       return `${person.name} should continue social distancing`;
@@ -284,7 +288,7 @@ export default function Person(props: Props) {
           ? "Avoid contact with everyone, including your household."
           : exposed
             ? "Avoid contact with everyone outside of your household."
-            : "Continue social distancing."
+            : "ya doin' great"
         }
       </p>
     );
@@ -304,22 +308,20 @@ export default function Person(props: Props) {
       if (guidance.infected) {
         if (guidance.person.noSymptomsFor24Hours) {
           return (
-            <>
-              <p>
-                Until {date} &nbsp;{calendarIcon(guidance)}
-              </p>
-              <p>
-                This is 10 days after the earliest known date of illness onset.
-              </p>
-            </>
+            <p>
+              This is 10 days after the earliest known date of illness onset.
+            </p>
           );
         } else {
           return (
             <>
-              <p>Until at least {date} and 24 hours after symptoms improve</p>
               <p>
                 This is 10 days after the earliest known date of illness onset.
               </p>
+              <p>
+                Additionally, continue isolating until 24 hours after symptoms improve
+              </p>
+
             </>
           );
         }
@@ -331,10 +333,6 @@ export default function Person(props: Props) {
           return (
             <>
               <p>
-                Until 14 days after isolation period ends for {names} (at least{" "}
-                {date})
-              </p>
-              <p>
                 Please come back when symptoms for {names} have improved for an
                 exact date.
               </p>
@@ -344,9 +342,6 @@ export default function Person(props: Props) {
         } else {
           return (
             <>
-              <p>
-                Until {date} &nbsp;{calendarIcon(guidance)}
-              </p>
               <p>This is 14 days after the last known exposure date.</p>
               {getTestedNote}
             </>
@@ -462,6 +457,7 @@ export default function Person(props: Props) {
         <h4 className="d-flex justify-content-between align-items-center">
           <span className="">
             {renderGuidance()}
+            &nbsp; {calendarIcon(props.guidance)}
           </span>
         </h4>
         <div className="recommendation-detail">
