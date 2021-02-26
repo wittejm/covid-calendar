@@ -262,14 +262,18 @@ export default function Person(props: Props) {
   }
 
   function renderGuidance() {
-    if (editingHousehold) {
-      return null;
-    } else {
-      if (props.guidance.endDate) {
-        return props.guidance.infected ? " - Isolate" : " - Quarantine";
+    if (props.guidance.endDate) {
+      if (props.guidance.infected) {
+        if (person.noSymptomsFor24Hours) {
+          return `${person.name} must isolate until ${format(props.guidance.endDate, "MMM d")}`;
+        } else {
+          return `${person.name} must isolate until at least ${format(props.guidance.endDate, "MMM d")}`;
+        }
       } else {
-        return null;
+        return `${person.name} must quarantine until ${format(props.guidance.endDate, "MMM d")}`;
       }
+    } else {
+      return `${person.name} should continue social distancing`;
     }
   }
 
@@ -457,7 +461,6 @@ export default function Person(props: Props) {
       <div className="">
         <h4 className="d-flex justify-content-between align-items-center">
           <span className="">
-            {person.name + ""}
             {renderGuidance()}
           </span>
         </h4>
