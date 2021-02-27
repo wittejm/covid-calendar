@@ -281,20 +281,20 @@ export default function Person(props: Props) {
     }
   }
 
-  function guidanceDefinition(infected: boolean, exposed : boolean) {
+  function renderGuidanceDefinition(infected: boolean, exposed : boolean) {
     return (
       <p>
         {infected
           ? "Avoid contact with everyone, including your household."
           : exposed
             ? "Avoid contact with everyone outside of your household."
-            : "ya doin' great"
+            : ""
         }
       </p>
     );
   }
 
-  function guidanceMessage(guidance: Guidance) {
+  function renderGuidanceMessage(guidance: Guidance) {
 
     const getTestedNote = guidance.person.feelingSick && (
                 <p>
@@ -451,6 +451,19 @@ export default function Person(props: Props) {
     );
   }
 
+  function renderRecommendationDetail() {
+    const guidanceDefinition = renderGuidanceDefinition(props.guidance.infected, !!props.guidance.endDate);
+    const guidanceMessage = renderGuidanceMessage(props.guidance);
+    if (guidanceDefinition && guidanceMessage) {
+      return (
+        <div className="recommendation-detail">
+          {guidanceDefinition}
+          {guidanceMessage}
+        </div>
+      );
+    }
+  }
+
   function renderNonEditing() {
     return (
       <div className="">
@@ -460,10 +473,7 @@ export default function Person(props: Props) {
             &nbsp; {calendarIcon(props.guidance)}
           </span>
         </h4>
-        <div className="recommendation-detail">
-          {guidanceDefinition(props.guidance.infected, !!props.guidance.endDate)}
-          {guidanceMessage(props.guidance)}
-        </div>
+        {renderRecommendationDetail()}
       <hr/>
       </div>
     );
