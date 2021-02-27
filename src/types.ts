@@ -12,7 +12,8 @@ export interface PersonData {
 export enum CovidEventName {
   LastCloseContact = "Most Recent Close Contact",
   SymptomsStart = "Illness Onset",
-  PositiveTest = "Most Recent Positive Test"
+  PositiveTest = "Most Recent Positive Test",
+  SecondVaccination = "Second Vaccination"
 }
 
 export type CovidEvents = {
