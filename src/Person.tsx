@@ -42,6 +42,11 @@ export default function Person(props: Props) {
   function onCheckboxChange(fieldName: CovidEventName) {
     return (e: React.BaseSyntheticEvent) => {
       const checked = e.target.checked;
+      if (!checked) {
+        covidEventsState[fieldName].set("");
+      } else {
+        covidEventsState[fieldName].set(format(new Date(), "MM/dd/yyyy"));
+      }
       if (fieldName === CovidEventName.PositiveTest) {
         const nextContagious = Boolean(
           checked || atLeastOne
@@ -56,12 +61,10 @@ export default function Person(props: Props) {
         if (contagious !== nextContagious) {
           setContagiousState(nextContagious);
         }
+      } else if(fieldName === CovidEventName.SecondVaccination) {
+        setContagiousState(contagious);
       }
-      if (!checked) {
-        covidEventsState[fieldName].set("");
-      } else {
-        covidEventsState[fieldName].set(format(new Date(), "MM/dd/yyyy"));
-      }
+
     };
   }
 
@@ -231,15 +234,19 @@ export default function Person(props: Props) {
     const newExposureEvents = members.map((otherPerson: PersonData) => {
       const otherContagious = isContagious(otherPerson);
       if (person.id !== otherPerson.id && contagious !== otherContagious) {
-        return {
-          contagiousPerson: contagious ? person.id : otherPerson.id,
-          quarantinedPerson: contagious ? otherPerson.id : person.id,
-          exposed: true,
-          ongoing: true,
-          date: "",
-          dateMissing: false,
-          dateInvalid: false
-        };
+        const theAtRiskPerson = contagious ? otherPerson : person;
+        const theAtRiskPersonIsFullyVaccinated = theAtRiskPerson.covidEvents[CovidEventName.SecondVaccination] !== "";
+        if (!theAtRiskPersonIsFullyVaccinated) {
+          return {
+            contagiousPerson: contagious ? person.id : otherPerson.id,
+            quarantinedPerson: contagious ? otherPerson.id : person.id,
+            exposed: true,
+            ongoing: true,
+            date: "",
+            dateMissing: false,
+            dateInvalid: false
+          };
+        }
       }
     });
     props.inHouseExposureEventsState.merge(compact(newExposureEvents));
@@ -281,20 +288,20 @@ export default function Person(props: Props) {
     }
   }
 
-  function guidanceDefinition(infected: boolean, exposed : boolean) {
+  function renderGuidanceDefinition(infected: boolean, exposed : boolean) {
     return (
       <p>
         {infected
           ? "Avoid contact with everyone, including your household."
           : exposed
             ? "Avoid contact with everyone outside of your household."
-            : "ya doin' great"
+            : ""
         }
       </p>
     );
   }
 
-  function guidanceMessage(guidance: Guidance) {
+  function renderGuidanceMessage(guidance: Guidance) {
 
     const getTestedNote = guidance.person.feelingSick && (
                 <p>
@@ -401,6 +408,16 @@ export default function Person(props: Props) {
         </div>
         <div className="mb-3">
           {buildCovidEventQuestion(
+            CovidEventName.SecondVaccination,
+            `${person.name} has received two vaccinations`,
+            "Date of second vaccination",
+            <div>
+            placeholder tooltip
+            </div>
+          )}
+        </div>
+        <div className="mb-3">
+          {buildCovidEventQuestion(
             CovidEventName.LastCloseContact,
             `${person.name} had close contact to someone COVID positive that does not live with them`,
             "Date of last contact",
@@ -451,6 +468,19 @@ export default function Person(props: Props) {
     );
   }
 
+  function renderRecommendationDetail() {
+    const guidanceDefinition = renderGuidanceDefinition(props.guidance.infected, !!props.guidance.endDate);
+    const guidanceMessage = renderGuidanceMessage(props.guidance);
+    if (guidanceDefinition && guidanceMessage) {
+      return (
+        <div className="recommendation-detail">
+          {guidanceDefinition}
+          {guidanceMessage}
+        </div>
+      );
+    }
+  }
+
   function renderNonEditing() {
     return (
       <div className="">
@@ -460,10 +490,7 @@ export default function Person(props: Props) {
             &nbsp; {calendarIcon(props.guidance)}
           </span>
         </h4>
-        <div className="recommendation-detail">
-          {guidanceDefinition(props.guidance.infected, !!props.guidance.endDate)}
-          {guidanceMessage(props.guidance)}
-        </div>
+        {renderRecommendationDetail()}
       <hr/>
       </div>
     );

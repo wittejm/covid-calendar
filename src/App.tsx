@@ -22,7 +22,8 @@ export default function App() {
     covidEvents: {
       [CovidEventName.LastCloseContact]: "",
       [CovidEventName.SymptomsStart]: "",
-      [CovidEventName.PositiveTest]: ""
+      [CovidEventName.PositiveTest]: "",
+      [CovidEventName.SecondVaccination]: "",
     },
     symptomsChecked: [false, false, false, false],
     noSymptomsFor24Hours: true,
@@ -45,7 +46,8 @@ export default function App() {
       covidEvents: {
         [CovidEventName.LastCloseContact]: "",
         [CovidEventName.SymptomsStart]: "",
-        [CovidEventName.PositiveTest]: ""
+        [CovidEventName.PositiveTest]: "",
+        [CovidEventName.SecondVaccination]: ""
       },
       symptomsChecked: [false, false, false, false],
       noSymptomsFor24Hours: true,
