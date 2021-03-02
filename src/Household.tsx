@@ -92,6 +92,7 @@ export default function Household(props: Props) {
             className="white get-recommendation-button"
             onClick={(e: React.BaseSyntheticEvent) => {
               props.editingHouseholdState.set(false);
+              window.scrollTo(0,0);
             }}
           >
             Get recommendation{" "}
