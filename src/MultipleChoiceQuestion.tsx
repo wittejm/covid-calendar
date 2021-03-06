@@ -45,7 +45,7 @@ export default function MultipleChoiceQuestion(props: Props) {
         </label>
         {props.tooltip && (
           <DisclosurePanel>
-            <div className="f5 gray">{props.tooltip}</div>
+            <div className="our-tooltip">{props.tooltip}</div>
           </DisclosurePanel>
         )}
       </Disclosure>
