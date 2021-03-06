@@ -324,7 +324,7 @@ export default function Person(props: Props) {
                 This is 10 days after the earliest known date of illness onset.
               </p>
               <p>
-                Additionally, continue isolating until 24 hours after symptoms improve
+                Additionally, continue isolating until 24 hours after fever is gone
               </p>
 
             </>
