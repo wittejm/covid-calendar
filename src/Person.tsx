@@ -61,10 +61,7 @@ export default function Person(props: Props) {
         if (contagious !== nextContagious) {
           setContagiousState(nextContagious);
         }
-      } else if(fieldName === CovidEventName.SecondVaccination) {
-        setContagiousState(contagious);
       }
-
     };
   }
 
@@ -94,6 +91,7 @@ export default function Person(props: Props) {
     fieldName: CovidEventName,
     questionText: string,
     datePromptText: string,
+    disabled: boolean,
     tooltip?: JSX.Element
   ) {
     return (
@@ -104,6 +102,7 @@ export default function Person(props: Props) {
           checked={covidEventsState[fieldName].get() !== ""}
           onChange={onCheckboxChange(fieldName)}
           tooltip={tooltip}
+          disabled={disabled}
         />
         {(covidEventsState[fieldName].get() !== "") && (
           <DateQuestion
@@ -235,8 +234,7 @@ export default function Person(props: Props) {
       const otherContagious = isContagious(otherPerson);
       if (person.id !== otherPerson.id && contagious !== otherContagious) {
         const theAtRiskPerson = contagious ? otherPerson : person;
-        const theAtRiskPersonIsFullyVaccinated = theAtRiskPerson.covidEvents[CovidEventName.SecondVaccination] !== "";
-        if (!theAtRiskPersonIsFullyVaccinated) {
+        if (!theAtRiskPerson.vaccinated) {
           return {
             contagiousPerson: contagious ? person.id : otherPerson.id,
             quarantinedPerson: contagious ? otherPerson.id : person.id,
@@ -303,12 +301,17 @@ export default function Person(props: Props) {
 
   function renderGuidanceMessage(guidance: Guidance) {
 
-    const getTestedNote = guidance.person.feelingSick && (
-                <p>
-                  {" "}
-                  Since {guidance.person.name} is feeling sick, we recommend they get a covid test.
-                </p>
-              );
+    const getTestedNote = guidance.person.feelingSick ? (
+      <p>
+        {" "}
+        Since {guidance.person.name} is feeling sick, we recommend they get a covid test.
+      </p>
+    ) :
+    (
+      <p>
+        If {guidance.person.name} develops symptoms, they should call a doctor and get a covid test.
+      </p>
+    );
 
     if (guidance.endDate) {
       const date = format(guidance.endDate, "PPPP");
@@ -326,7 +329,7 @@ export default function Person(props: Props) {
                 This is 10 days after the earliest known date of illness onset.
               </p>
               <p>
-                Additionally, continue isolating until 24 hours after symptoms improve
+                Additionally, continue isolating until 24 hours after fever is gone.
               </p>
 
             </>
@@ -406,21 +409,23 @@ export default function Person(props: Props) {
             </div>
           </div>
         </div>
-        <div className="mb-3">
-          {buildCovidEventQuestion(
-            CovidEventName.SecondVaccination,
-            `${person.name} has received two vaccinations`,
-            "Date of second vaccination",
-            <div>
-            placeholder tooltip
-            </div>
-          )}
-        </div>
+        <MultipleChoiceQuestion
+          id={person.id}
+          questionText={`${person.name} has been fully vaccinated for at least two weeks`}
+          checked={props.personState.vaccinated.get()}
+          onChange={() => {
+            props.personState.vaccinated.set(v => !v);
+            covidEventsState[CovidEventName.LastCloseContact].set("");
+            setContagiousState(contagious);
+          }}
+        />
+
         <div className="mb-3">
           {buildCovidEventQuestion(
             CovidEventName.LastCloseContact,
             `${person.name} had close contact to someone COVID positive that does not live with them`,
             "Date of last contact",
+            props.personState.vaccinated.get(), // disabled?
             <div>
               Close contact means any of the following:
               <ul className="mx-3 mb-1">
@@ -450,7 +455,8 @@ export default function Person(props: Props) {
           {buildCovidEventQuestion(
             CovidEventName.PositiveTest,
             `${person.name} has received a positive test result`,
-            "Date of test"
+            "Date of test",
+            false // disabled?
           )}
         </div>
         <div className="mb-3">

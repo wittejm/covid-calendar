@@ -5,6 +5,7 @@ export interface PersonData {
   noSymptomsFor24Hours: boolean;
   symptomsChecked: boolean[];
   feelingSick: boolean;
+  vaccinated: boolean;
   isNewPerson: boolean;
   editing: boolean;
 }
@@ -13,7 +14,6 @@ export enum CovidEventName {
   LastCloseContact = "Most Recent Close Contact",
   SymptomsStart = "Illness Onset",
   PositiveTest = "Most Recent Positive Test",
-  SecondVaccination = "Second Vaccination"
 }
 
 export type CovidEvents = {
