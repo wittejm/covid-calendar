@@ -12,6 +12,7 @@ interface Props {
   checked: boolean;
   onChange: (e: React.BaseSyntheticEvent) => void;
   tooltip?: JSX.Element;
+  disabled?: boolean;
 }
 
 export default function MultipleChoiceQuestion(props: Props) {
@@ -23,6 +24,7 @@ export default function MultipleChoiceQuestion(props: Props) {
         id={`checkbox-${props.id}-${props.questionText}`}
         type="checkbox"
         onChange={props.onChange}
+        disabled={props.disabled}
       />
       <Disclosure>
         <label

@@ -23,11 +23,11 @@ export default function App() {
       [CovidEventName.LastCloseContact]: "",
       [CovidEventName.SymptomsStart]: "",
       [CovidEventName.PositiveTest]: "",
-      [CovidEventName.SecondVaccination]: "",
     },
     symptomsChecked: [false, false, false, false],
     noSymptomsFor24Hours: true,
     feelingSick: false,
+    vaccinated: false,
     isNewPerson: true,
     editing: true
   };
@@ -47,11 +47,11 @@ export default function App() {
         [CovidEventName.LastCloseContact]: "",
         [CovidEventName.SymptomsStart]: "",
         [CovidEventName.PositiveTest]: "",
-        [CovidEventName.SecondVaccination]: ""
       },
       symptomsChecked: [false, false, false, false],
       noSymptomsFor24Hours: true,
       feelingSick: false,
+      vaccinated: false,
       isNewPerson: true,
       editing: true
     };

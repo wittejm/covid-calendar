@@ -82,6 +82,9 @@ margin-top: 4px;
 .custom-control-label::before {
     border: #000000 solid 2px;
 }
+.custom-control-input[disabled] ~ .custom-control-label::before, .custom-control-input:disabled ~ .custom-control-label::before {
+    border: #cccccc solid 2px;
+}
 
 .get-recommendation-button {
     display: flex;
