@@ -301,12 +301,17 @@ export default function Person(props: Props) {
 
   function renderGuidanceMessage(guidance: Guidance) {
 
-    const getTestedNote = guidance.person.feelingSick && (
-                <p>
-                  {" "}
-                  Since {guidance.person.name} is feeling sick, we recommend they get a covid test.
-                </p>
-              );
+    const getTestedNote = guidance.person.feelingSick ? (
+      <p>
+        {" "}
+        Since {guidance.person.name} is feeling sick, we recommend they get a covid test.
+      </p>
+    ) :
+    (
+      <p>
+        If {guidance.person.name} develops symptoms, they should call a doctor and get a covid test.
+      </p>
+    );
 
     if (guidance.endDate) {
       const date = format(guidance.endDate, "PPPP");
@@ -324,7 +329,7 @@ export default function Person(props: Props) {
                 This is 10 days after the earliest known date of illness onset.
               </p>
               <p>
-                Additionally, continue isolating until 24 hours after fever is gone
+                Additionally, continue isolating until 24 hours after fever is gone.
               </p>
 
             </>
