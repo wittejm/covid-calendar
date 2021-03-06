@@ -33,10 +33,10 @@ export default function MultipleChoiceQuestion(props: Props) {
             {props.questionText}
             {props.tooltip && (
               <DisclosureButton>
-                <i
-                  aria-hidden="true"
-                  className="px-1 fas fa-question-circle link hover-dark-blue gray"
-                ></i>
+                <img
+                  src={process.env.PUBLIC_URL + "/circle-question.svg"}
+                  style={{ marginLeft: "0.2rem" }}
+                />
               </DisclosureButton>
             )}
           </div>
