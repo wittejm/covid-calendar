@@ -30,6 +30,7 @@ export default function Household(props: Props) {
     props.addNewPerson();
   }
 
+
   function renderTitle() {
     if (editingHousehold) {
       return (
@@ -103,12 +104,12 @@ export default function Household(props: Props) {
         return (
           <div className="d-flex justify-content-between">
             <button
-              className="btn btn-primary my-3"
+              className="my-3 edit-button"
               onClick={(e: React.BaseSyntheticEvent) => {
                 props.editingHouseholdState.set(true);
               }}
             >
-              Edit{" "}
+              UPDATE ANSWERS
             </button>
           </div>
         );

@@ -113,3 +113,26 @@ margin-top: 4px;
     line-height: 36px;
     color: #FFFFFF;
 }
+
+
+.edit-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 40px;
+    position: static;
+    width: 50%;
+    height: 80px;
+    left: 0px;
+    bottom: 0px;
+    background: #1A5BFF;
+    border-radius: 40px;
+    margin: 60px 0px;
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 36px;
+    color: #FFFFFF;
+}
