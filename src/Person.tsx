@@ -482,7 +482,7 @@ export default function Person(props: Props) {
   function renderNonEditing() {
     return (
       <Disclosure open={recommendationDetailIsOpen} onChange={() => setRecommendationDetailIsOpen(!recommendationDetailIsOpen)}>
-        <DisclosureButton style={{width:"100%"}}>
+        <DisclosureButton className="w-100">
         <h4 className="d-flex justify-content-between align-items-center">
           <span className="">
             {renderGuidance()}
