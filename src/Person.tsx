@@ -7,6 +7,12 @@ import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
 import { format } from "date-fns";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@reach/disclosure";
+
 
 interface Props {
   personState: State<PersonData>;
@@ -37,6 +43,7 @@ export default function Person(props: Props) {
   const atLeastOne = covidEventsState[CovidEventName.SymptomsStart].get() !== "";
   const gotPositiveTest = covidEventsState[CovidEventName.PositiveTest].get() !== "";
   const contagious = atLeastOne || gotPositiveTest;
+  const [recommendationDetailIsOpen, setRecommendationDetailIsOpen] = React.useState(false);
 
   function onCheckboxChange(fieldName: CovidEventName) {
     return (e: React.BaseSyntheticEvent) => {
@@ -474,15 +481,21 @@ export default function Person(props: Props) {
 
   function renderNonEditing() {
     return (
-      <div className="">
+      <Disclosure open={recommendationDetailIsOpen} onChange={() => setRecommendationDetailIsOpen(!recommendationDetailIsOpen)}>
+        <DisclosureButton style={{width:"100%"}}>
         <h4 className="d-flex justify-content-between align-items-center">
           <span className="">
             {renderGuidance()}
           </span>
+
+        <span aria-hidden="true" className={"fas " + (recommendationDetailIsOpen ? "fa-angle-up" : "fa-angle-down")}></span>
         </h4>
+        </DisclosureButton>
+        <DisclosurePanel>
         {renderRecommendationDetail()}
+        </DisclosurePanel>
       <hr/>
-      </div>
+      </Disclosure>
     );
   }
 
