@@ -4,6 +4,7 @@ import Person from "./Person";
 import { State } from "@hookstate/core";
 import { computeHouseHoldQuarantinePeriod } from "./calculator";
 import { Link } from "react-router-dom";
+import { downloadEvents } from "./calendar";
 
 interface Props {
   addNewPerson: () => void;
@@ -17,7 +18,7 @@ export default function Household(props: Props) {
   const editingHousehold = props.editingHouseholdState.get();
   const members = props.membersState.get();
   const inHouseExposureEvents = props.inHouseExposureEventsState.get();
-  const guidance = computeHouseHoldQuarantinePeriod(
+  const guidances = computeHouseHoldQuarantinePeriod(
     members,
     inHouseExposureEvents
   );
@@ -29,6 +30,7 @@ export default function Household(props: Props) {
     props.editingHouseholdState.set(true);
     props.addNewPerson();
   }
+
 
   function renderTitle() {
     if (editingHousehold) {
@@ -103,14 +105,23 @@ export default function Household(props: Props) {
         return (
           <div className="d-flex justify-content-between">
             <button
-              className="btn btn-primary my-3"
-              onClick={(e: React.BaseSyntheticEvent) => {
+              className="my-3 edit-button"
+              onClick={() => {
                 props.editingHouseholdState.set(true);
               }}
             >
-              Edit{" "}
+              UPDATE ANSWERS
+            </button>
+            <button
+              className="my-3 edit-button"
+              onClick={() => {
+                downloadEvents(guidances);
+              }}
+            >
+              DOWNLOAD ANSWERS
             </button>
           </div>
+
         );
       }
     }
@@ -138,7 +149,7 @@ export default function Household(props: Props) {
               {props.membersState.map((personState: State<PersonData>) => {
                 const person = personState.get();
                 const id = person.id;
-                const personGuidance = guidance.find(c => c.person.id === id);
+                const personGuidance = guidances.find(c => c.person.id === id);
                 if (personGuidance) {
                   return (
                     <Person

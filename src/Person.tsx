@@ -7,7 +7,12 @@ import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
 import { format } from "date-fns";
-import { downloadEvent } from "./calendar";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@reach/disclosure";
+
 
 interface Props {
   personState: State<PersonData>;
@@ -38,6 +43,7 @@ export default function Person(props: Props) {
   const atLeastOne = covidEventsState[CovidEventName.SymptomsStart].get() !== "";
   const gotPositiveTest = covidEventsState[CovidEventName.PositiveTest].get() !== "";
   const contagious = atLeastOne || gotPositiveTest;
+  const [recommendationDetailIsOpen, setRecommendationDetailIsOpen] = React.useState(false);
 
   function onCheckboxChange(fieldName: CovidEventName) {
     return (e: React.BaseSyntheticEvent) => {
@@ -363,20 +369,6 @@ export default function Person(props: Props) {
     }
   }
 
-  function calendarIcon(guidance: Guidance) {
-    if (guidance.startDate && guidance.endDate) {
-      const title = guidance.infected ? "Isolate" : "Quarantine";
-      const message = `Recommended CDC guidance for ${guidance.person.name}.`;
-      const start = guidance.startDate;
-      const end = guidance.endDate;
-      return (
-        <button onClick={downloadEvent(title, message, start, end)}>
-          <i className="fas fa-calendar" aria-hidden="true"></i>
-        </button>
-      );
-    }
-  }
-
   function renderEditing() {
     return (
       <div className="ml2 mb5">
@@ -489,16 +481,21 @@ export default function Person(props: Props) {
 
   function renderNonEditing() {
     return (
-      <div className="">
+      <Disclosure open={recommendationDetailIsOpen} onChange={() => setRecommendationDetailIsOpen(!recommendationDetailIsOpen)}>
+        <DisclosureButton className="w-100">
         <h4 className="d-flex justify-content-between align-items-center">
           <span className="">
             {renderGuidance()}
-            &nbsp; {calendarIcon(props.guidance)}
           </span>
+
+        <span aria-hidden="true" className={"fas " + (recommendationDetailIsOpen ? "fa-angle-up" : "fa-angle-down")}></span>
         </h4>
+        </DisclosureButton>
+        <DisclosurePanel>
         {renderRecommendationDetail()}
+        </DisclosurePanel>
       <hr/>
-      </div>
+      </Disclosure>
     );
   }
 

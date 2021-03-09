@@ -28,13 +28,14 @@ export default function MultipleChoiceQuestion(props: Props) {
       />
       <Disclosure>
         <label
-          className="custom-control-label"
+          className="custom-control-label w-100"
           htmlFor={`checkbox-${props.id}-${props.questionText}`}
         >
-          <div className="questionnaire-text">
+          <div className="questionnaire-text d-flex justify-content-between align-items-start" >
+
             {props.questionText}
             {props.tooltip && (
-              <DisclosureButton>
+              <DisclosureButton style={{flexShrink: 0}}>
                 <img
                   src={process.env.PUBLIC_URL + "/circle-question.svg"}
                   style={{ marginLeft: "0.2rem" }}

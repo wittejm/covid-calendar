@@ -12,22 +12,21 @@ export default function Home(props: Props) {
     return (
       <>
         <h1
+          className="mb-4"
           style={{
             fontFamily: "Helvetica",
-            fontSize: "60px",
+            fontSize: "3rem",
             fontStyle: "normal",
-            lineHeight: "71px",
             textAlign: "center",
             color: "#1F252F"
+
           }}
         >
           {" "}
           Quarantine and Isolation Calculator
         </h1>
-        <p className="f3 gray">
-          Did someone in your household test positive? Are they starting to
-          get sick? Answer a few questions to know who should isolate,
-          quarantining, and for how long.
+        <p className="f3 gray"> This calculator will help you determine whether to quarantine or isolate, and for how long. Answer a few simple questions and we will match your situation to the best advice according to CDC guidelines.
+
         </p>
         <div style={{ position: "relative", paddingBottom: "120px" }}>
           <Link
