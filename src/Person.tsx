@@ -413,6 +413,7 @@ export default function Person(props: Props) {
         />
 
         <div className="mb-3">
+          <hr />
           {buildCovidEventQuestion(
             CovidEventName.LastCloseContact,
             `${person.name} had close contact to someone COVID positive that does not live with them`,
