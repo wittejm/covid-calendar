@@ -88,7 +88,7 @@ export default function Home(props: Props) {
           </div>
         </div>
       </header>
-      <main className={"main"} role={"main"} style={{ paddingBottom: "250px" }}>
+      <main className={"main  off-black"} role={"main"} style={{ paddingBottom: "250px"}}>
         <section className={"jumbotron"} style={{ background: "#FFFFFF" }}>
           <div className="container">{renderTitle()}</div>
         </section>
@@ -104,36 +104,35 @@ export default function Home(props: Props) {
         >
           <div
             style={{
-              width: "70%"
+              width: "60%",
+              textAlign: "center"
             }}
           >
-            <h2 style={{ textAlign: "center" }}>Quarantine vs. Isolation</h2>
+            <h2>Quarantine vs. Isolation</h2>
             <div className="py-2"></div>
             <div className="row">
-              <div className="col-md-6  col-sm-12 f3 gray">
+              <div className="col-md-6  col-sm-12 f3">
                 <div
                   style={{
-                    marginLeft: "calc(50% - 90px)",
                     marginTop: "80px",
                     marginBottom: "60px"
                   }}
                 >
                   <img src={process.env.PUBLIC_URL + "/quarantine.svg"} />
                 </div>
-                People who must <strong>quarantine</strong> are avoiding contact
+                People who must <strong className="our-blue">quarantine</strong> are avoiding contact
                 with everyone outside their home.
               </div>
-              <div className="col-md-6 col-sm-12 f3 gray">
+              <div className="col-md-6 col-sm-12 f3">
                 <div
                   style={{
-                    marginLeft: "calc(50% - 90px)",
                     marginTop: "80px",
                     marginBottom: "60px"
                   }}
                 >
                   <img src={process.env.PUBLIC_URL + "/isolation.svg"} />
                 </div>
-                People who must <strong>isolate</strong> should keep away from
+                People who must <strong className="our-blue">isolate</strong> should keep away from
                 everyone inside and outside the home.
               </div>
             </div>

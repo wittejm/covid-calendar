@@ -35,7 +35,7 @@ export default function Recommendation(props: Props) {
               color: "#1F252F"
             }}
           >
-            <div className="d-flex align-items-center">COVID CALCULATOR</div>
+            <Link to="/" className="d-flex align-items-center home-link">COVID CALCULATOR</Link>
             <div>ESPAÑOL</div>
           </div>
         </div>
