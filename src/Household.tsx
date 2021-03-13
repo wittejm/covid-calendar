@@ -105,20 +105,21 @@ export default function Household(props: Props) {
         return (
           <div className="d-flex justify-content-between">
             <button
-              className="my-3 edit-button"
+              className="my-3 update-button col-md-5"
               onClick={() => {
                 props.editingHouseholdState.set(true);
               }}
             >
               UPDATE ANSWERS
             </button>
+            <div className="col-md-2"></div>
             <button
-              className="my-3 edit-button"
+              className="my-3 download-button col-md-5"
               onClick={() => {
                 downloadEvents(guidances);
               }}
             >
-              DOWNLOAD ANSWERS
+              DOWNLOAD TO CALENDAR
             </button>
           </div>
 
