@@ -29,14 +29,13 @@ export default function Home(props: Props) {
 
         </p>
         <div style={{ position: "relative", paddingBottom: "120px" }}>
-          <Link
+          <Link className="get-started-link"
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               padding: "18px 40px",
               position: "absolute",
-              background: "#1A5BFF",
               borderRadius: "40px",
               width: "295px",
               height: "58px",

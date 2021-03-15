@@ -75,16 +75,26 @@ margin-top: 4px;
     background-color:#ECF9FF;
 }
 
-.add-another-person {
+.add-another-person-text {
 
     font-family: Helvetica;
     font-style: normal;
     font-weight: normal;
     font-size: 24px;
     line-height: 36px;
-    color: #1A5BFF;
     margin: 0px 20px;
 }
+.add-another-person-button {
+    color: #1A5BFF;
+    fill: #1A5BFF;
+    stroke: #1A5BFF;
+}
+.add-another-person-button:hover {
+    color: #1F252F;
+    fill: #1F252F;
+    stroke: #1F252F;
+}
+
 .custom-control-label::before {
     border: #000000 solid 2px;
 }
@@ -182,4 +192,10 @@ margin-top: 4px;
 
 .our-blue {
     color: #1A5BFF;
+}
+.get-started-link {
+    background: #1A5BFF;
+}
+.get-started-link:hover {
+    background: #1F252F;
 }
