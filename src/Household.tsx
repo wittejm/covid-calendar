@@ -170,15 +170,16 @@ export default function Household(props: Props) {
               })}
             </div>
             {editingHousehold && (
-              <button className="mb-2" onClick={addPerson}>
+              <button className="mb-2 add-another-person-button" onClick={addPerson}>
                 <div style={{display: "flex"}}>
                 <div style={{width:"44px"}}> {/*hold the space open for no image load-time jump. There's even a teeny delay for an svg load, and that's dumb, so this stays.  */}
-                <img
-                  src={process.env.PUBLIC_URL + "/circle-plus.svg"}
-                  style={{ marginLeft: "-0.05rem" }}
-                />
+                <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="22" cy="22" r="21" stroke-width="2"/>
+                  <path d="M22 14V22M22 30V22M22 22H14M22 22H30" stroke-width="2"/>
+                </svg>
+
                 </div>
-                <span className={"add-another-person"}>
+                <span className={"add-another-person-text"}>
                   Add another person &nbsp;
                 </span>
                 </div>
