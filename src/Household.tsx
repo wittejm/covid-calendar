@@ -139,7 +139,7 @@ export default function Household(props: Props) {
             <div className={"my-3"} />
             {renderTitle()}
             <div>
-              {props.membersState.map((personState: State<PersonData>) => {
+              {props.membersState.map((personState: State<PersonData>, index: number) => {
                 const person = personState.get();
                 const id = person.id;
                 const personGuidance = guidances.find(c => c.person.id === id);
@@ -156,6 +156,7 @@ export default function Household(props: Props) {
                       guidance={personGuidance}
                       editingPersonRef={editingPersonRef}
                       addNewPerson={props.addNewPerson}
+                      recommendationDetailOpenByDefault={index===0}
                     />
                   );
                 }
