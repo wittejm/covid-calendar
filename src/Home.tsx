@@ -151,13 +151,20 @@ export default function Home(props: Props) {
         <div
           className={"container"}
           style={{
-            width: "400px"
+            width: "400px",
+            textAlign: "center"
           }}
         >
           {" "}
           {/* contains images and below-text*/}
+          <div style={{ color: "#FFFFFF"}}>
+            Made in partnership between Clackamas County and Code for PDX.
+            Recommendations use CDC guidelines.
+          </div>
+          <div className="py-3"></div>
           <div
             style={{
+
               position: "relative",
               width: "100%",
               height: "50px"
@@ -180,7 +187,7 @@ export default function Home(props: Props) {
                 border: "1px solid #FFFFFF",
                 transform: "rotate(120.37deg)",
                 position: "absolute",
-                left: "19.51%",
+                left: "41.45%",
                 top: "50.6%"
               }}
             ></span>
@@ -195,11 +202,6 @@ export default function Home(props: Props) {
                 />
               </a>
             </span>
-          </div>
-          <div className="py-3"></div>
-          <div style={{ color: "#FFFFFF" }}>
-            Made in partnership between Clackamas County and Code for PDX.
-            Recommendations use CDC guidelines.
           </div>
         </div>
       </footer>
