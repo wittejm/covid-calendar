@@ -22,6 +22,7 @@ interface Props {
   guidance: Guidance;
   editingPersonRef: Ref<HTMLDivElement>;
   addNewPerson: () => void;
+  recommendationDetailOpenByDefault: boolean;
 }
 
 export default function Person(props: Props) {
@@ -43,7 +44,7 @@ export default function Person(props: Props) {
   const atLeastOne = covidEventsState[CovidEventName.SymptomsStart].get() !== "";
   const gotPositiveTest = covidEventsState[CovidEventName.PositiveTest].get() !== "";
   const contagious = atLeastOne || gotPositiveTest;
-  const [recommendationDetailIsOpen, setRecommendationDetailIsOpen] = React.useState(false);
+  const [recommendationDetailIsOpen, setRecommendationDetailIsOpen] = React.useState(props.recommendationDetailOpenByDefault);
 
   function onCheckboxChange(fieldName: CovidEventName) {
     return (e: React.BaseSyntheticEvent) => {

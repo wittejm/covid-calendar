@@ -103,24 +103,16 @@ export default function Household(props: Props) {
         );
       } else {
         return (
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-center">
             <button
-              className="my-3 update-button col-md-5"
+              className="my-3 update-button"
               onClick={() => {
                 props.editingHouseholdState.set(true);
               }}
             >
               UPDATE ANSWERS
             </button>
-            <div className="col-md-2"></div>
-            <button
-              className="my-3 download-button col-md-5"
-              onClick={() => {
-                downloadEvents(guidances);
-              }}
-            >
-              DOWNLOAD TO CALENDAR
-            </button>
+
           </div>
 
         );
@@ -147,7 +139,7 @@ export default function Household(props: Props) {
             <div className={"my-3"} />
             {renderTitle()}
             <div>
-              {props.membersState.map((personState: State<PersonData>) => {
+              {props.membersState.map((personState: State<PersonData>, index: number) => {
                 const person = personState.get();
                 const id = person.id;
                 const personGuidance = guidances.find(c => c.person.id === id);
@@ -164,6 +156,7 @@ export default function Household(props: Props) {
                       guidance={personGuidance}
                       editingPersonRef={editingPersonRef}
                       addNewPerson={props.addNewPerson}
+                      recommendationDetailOpenByDefault={index===0}
                     />
                   );
                 }
