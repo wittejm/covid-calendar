@@ -7,6 +7,7 @@ import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
 import { format } from "date-fns";
+import { t } from 'ttag';
 import {
   Disclosure,
   DisclosureButton,
@@ -130,7 +131,7 @@ export default function Person(props: Props) {
       <>
         <MultipleChoiceQuestion
           id={person.id}
-          questionText={`${person.name} has been feeling sick`}
+          questionText={t`${person.name} has been feeling sick`}
           checked={feelingSickState.get()}
           onChange={(e : React.BaseSyntheticEvent) => {
             if (feelingSickState.get()){
@@ -152,51 +153,51 @@ export default function Person(props: Props) {
           }}
           tooltip={
             <div>
-              Common symptoms include:
+              {t`Common symptoms include:`}
               <ul className="mx-3 mb-1">
-                <li>Fever or chills</li>
-                <li>Cough</li>
-                <li>Shortness of breath or difficulty breathing</li>
-                <li>Fatigue</li>
-                <li>Muscle or body aches</li>
-                <li>Headache</li>
-                <li>New loss of taste or smell</li>
-                <li>Sore throat</li>
-                <li>Congestion or runny nose</li>
-                <li>Nausea or vomiting</li>
-                <li>Diarrhea</li>
+                <li>{t`Fever or chills`}</li>
+                <li>{t`Cough`}</li>
+                <li>{t`Shortness of breath or difficulty breathing`}</li>
+                <li>{t`Fatigue`}</li>
+                <li>{t`Muscle or body aches`}</li>
+                <li>{t`Headache`}</li>
+                <li>{t`New loss of taste or smell`}</li>
+                <li>{t`Sore throat`}</li>
+                <li>{t`Congestion or runny nose`}</li>
+                <li>{t`Nausea or vomiting`}</li>
+                <li>{t`Diarrhea`}</li>
               </ul>{" "}
               <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
-                Link.
+                {t`Link.`}
               </a>
             </div>
           }
         />
         {feelingSickState.get() ? (
           <div className="questionnaire-text subquestion">
-            <div className="mb-3">Check the boxes if you are experiencing:</div>
+            <div className="mb-3">{t`Check the boxes if you are experiencing:`}</div>
 
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`Fever`}
+              questionText={t`Fever`}
               checked={symptomsChecked[0].get()}
               onChange={e => onSymptomCheckboxChange(0)(e)}
             />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`Cough`}
+              questionText={t`Cough`}
               checked={symptomsChecked[1].get()}
               onChange={e => onSymptomCheckboxChange(1)(e)}
             />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`Shortness of breath`}
+              questionText={t`Shortness of breath`}
               checked={symptomsChecked[2].get()}
               onChange={e => onSymptomCheckboxChange(2)(e)}
             />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={`New loss of taste or smell`}
+              questionText={t`New loss of taste or smell`}
               checked={symptomsChecked[3].get()}
               onChange={e => onSymptomCheckboxChange(3)(e)}
             />
@@ -205,7 +206,7 @@ export default function Person(props: Props) {
         {atLeastOne ? (
           <DateQuestion
             id={person.id}
-            promptText="Date of first appearance of symptoms"
+            promptText={t`Date of first appearance of symptoms`}
             questionFieldTextState={
               covidEventsState[CovidEventName.SymptomsStart]
             }
@@ -216,16 +217,16 @@ export default function Person(props: Props) {
         {atLeastOne ? (
           <MultipleChoiceQuestion
             id={person.id}
-            questionText={`${person.name}'s symptoms have been improved for 24 hours.`}
+            questionText={t`${person.name}'s symptoms have been improved for 24 hours.`}
             checked={props.personState.noSymptomsFor24Hours.get()}
             onChange={() => props.personState.noSymptomsFor24Hours.set(c => !c)}
             tooltip={
               <span>
-                Improved symptoms are a requirement for you to end isolation. If
+                {t`Improved symptoms are a requirement for you to end isolation. If
                 your symptoms improve AND you have had no fever for 24 hours
-                without the use of medicine, check this box.{" "}
+                without the use of medicine, check this box.`} {" "}
                 <a href="https://multco.us/novel-coronavirus-covid-19/if-you-test-positive-covid-19">
-                  Link.
+                  {t`Link.`}
                 </a>{" "}
               </span>
             }
@@ -267,29 +268,31 @@ export default function Person(props: Props) {
     props.personState.set(none);
     props.membersState.map((memberState: State<PersonData>, index: number)=>{
       if (memberState.get().name.match(/Person \d+/)){
-        memberState.name.set(`Person ${index+1}`);
+        const personNumber = index+1
+        memberState.name.set(`Person ${personNumber}`);
       }
     })
-
   }
 
   function renderGuidance() {
     if (props.guidance.endDate) {
+      const endDate = format(props.guidance.endDate, "MMM d");
       if (props.guidance.infected) {
         if (person.noSymptomsFor24Hours) {
-          return `${person.name} must isolate until ${format(props.guidance.endDate, "MMM d")}`;
+
+          return t`${person.name} must isolate until ${endDate}`;
         } else {
-          return `${person.name} must isolate until at least ${format(props.guidance.endDate, "MMM d")}`;
+          return t`${person.name} must isolate until at least ${endDate}`;
         }
       } else {
         if (props.guidance.peopleWithOngoingExposureWithSymptoms?.length) {
-          return `${person.name} must quarantine until at least ${format(props.guidance.endDate, "MMM d")}`;
+          return t`${person.name} must quarantine until at least ${endDate}`;
         } else {
-          return `${person.name} must quarantine until ${format(props.guidance.endDate, "MMM d")}`;
+          return t`${person.name} must quarantine until ${endDate}`;
         }
       }
     } else {
-      return `${person.name} should continue social distancing`;
+      return t`${person.name} should continue social distancing`;
     }
   }
 
@@ -297,9 +300,9 @@ export default function Person(props: Props) {
     return (
       <p>
         {infected
-          ? "Avoid contact with everyone, including your household."
+          ? t`Avoid contact with everyone, including your household.`
           : exposed
-            ? "Avoid contact with everyone outside of your household."
+            ? t`Avoid contact with everyone outside of your household.`
             : ""
         }
       </p>
@@ -311,12 +314,12 @@ export default function Person(props: Props) {
     const getTestedNote = guidance.person.feelingSick ? (
       <p>
         {" "}
-        Since {guidance.person.name} is feeling sick, we recommend they get a covid test.
+        {t`Since {guidance.person.name} is feeling sick, we recommend they get a covid test.`}
       </p>
     ) :
     (
       <p>
-        If {guidance.person.name} develops symptoms, they should call a doctor and get a covid test.
+        {t`If {guidance.person.name} develops symptoms, they should call a doctor and get a covid test.`}
       </p>
     );
 
@@ -326,17 +329,17 @@ export default function Person(props: Props) {
         if (guidance.person.noSymptomsFor24Hours) {
           return (
             <p>
-              This is 10 days after the earliest known date of illness onset.
+              {t`This is 10 days after the earliest known date of illness onset.`}
             </p>
           );
         } else {
           return (
             <>
               <p>
-                This is 10 days after the earliest known date of illness onset.
+                {t`This is 10 days after the earliest known date of illness onset.`}
               </p>
               <p>
-                Additionally, continue isolating until 24 hours after fever is gone.
+                {t`Additionally, continue isolating until 24 hours after fever is gone.`}
               </p>
 
             </>
@@ -350,8 +353,8 @@ export default function Person(props: Props) {
           return (
             <>
               <p>
-                Please come back when symptoms for {names} have improved for an
-                exact date.
+                {t`Please come back when symptoms for {names} have improved for an
+                exact date.`}
               </p>
               {getTestedNote}
             </>
@@ -359,7 +362,7 @@ export default function Person(props: Props) {
         } else {
           return (
             <>
-              <p>This is 14 days after the last known exposure date.</p>
+              <p>{t`This is 14 days after the last known exposure date.`}</p>
               {getTestedNote}
             </>
           );
@@ -397,14 +400,14 @@ export default function Person(props: Props) {
                   }
                 }}
               >
-                { members.length === 1 ? "Clear" : "Remove" }
+                { members.length === 1 ? t`Clear` : t`Remove` }
               </button>
             </div>
           </div>
         </div>
         <MultipleChoiceQuestion
           id={person.id}
-          questionText={`${person.name} has been fully vaccinated for at least two weeks`}
+          questionText={t`${person.name} has been fully vaccinated for at least two weeks`}
           checked={props.personState.vaccinated.get()}
           onChange={() => {
             props.personState.vaccinated.set(v => !v);
@@ -417,29 +420,29 @@ export default function Person(props: Props) {
           <hr />
           {buildCovidEventQuestion(
             CovidEventName.LastCloseContact,
-            `${person.name} had close contact to someone COVID positive that does not live with them`,
-            "Date of last contact",
+            t`${person.name} had close contact to someone COVID positive that does not live with them`,
+            t`Date of last contact`,
             props.personState.vaccinated.get(), // disabled?
             <div>
-              Close contact means any of the following:
+              {t`Close contact means any of the following:`}
               <ul className="mx-3 mb-1">
                 <li>
-                  You were within 6 feet of them for a total of 15 minutes or
-                  more
+                  {t`You were within 6 feet of them for a total of 15 minutes or
+                  more`}
                 </li>
-                <li>You provided care at home to the person</li>
+                <li>{t`You provided care at home to the person`}</li>
                 <li>
-                  You had direct physical contact with the person (hugged or
-                  kissed them)
+                  {t`You had direct physical contact with the person (hugged or
+                  kissed them)`}
                 </li>
-                <li>You shared eating or drinking utensils</li>
+                <li>{t`You shared eating or drinking utensils`}</li>
                 <li>
-                  They sneezed, coughed, or somehow got respiratory droplets on
-                  you
+                  {t`They sneezed, coughed, or somehow got respiratory droplets on
+                  you`}
                 </li>
               </ul>{" "}
               <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
-                Link.
+                {t`Link.`}
               </a>
             </div>
           )}
@@ -448,8 +451,8 @@ export default function Person(props: Props) {
           <hr />
           {buildCovidEventQuestion(
             CovidEventName.PositiveTest,
-            `${person.name} has received a positive test result`,
-            "Date of test",
+            t`${person.name} has received a positive test result`,
+            t`Date of test`,
             false // disabled?
           )}
         </div>

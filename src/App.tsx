@@ -6,8 +6,12 @@ import { CovidEventName, InHouseExposure, PersonData } from "./types";
 import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { t, useLocale, addLocale } from 'ttag';
 
 export default function App() {
+  const translationObject = require('./es.po.json');
+  addLocale("es", translationObject);
+  useLocale("es");
   const height = useState(window.innerHeight);
   const updateHeight = () => {
     height.set(window.innerHeight);
@@ -18,7 +22,7 @@ export default function App() {
   }, []);
   const firstPerson = {
     id: 1,
-    name: `Person 1`,
+    name: t`Person 1`,
     covidEvents: {
       [CovidEventName.LastCloseContact]: "",
       [CovidEventName.SymptomsStart]: "",
@@ -40,9 +44,10 @@ export default function App() {
 
   function addNewPerson() {
     const currentId = id.get();
+    const newPersonNumber = members.length+1;
     const newPerson = {
       id: currentId,
-      name: `Person ${members.length+1}`,
+      name: t`Person ${newPersonNumber}`,
       covidEvents: {
         [CovidEventName.LastCloseContact]: "",
         [CovidEventName.SymptomsStart]: "",

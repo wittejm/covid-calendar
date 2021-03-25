@@ -1,0 +1,419 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: src/App.tsx:24
+msgid "Person 1"
+msgstr "example translation"
+
+#: src/App.tsx:49
+#, javascript-format
+msgid "Person ${ newPersonNumber }"
+msgstr ""
+
+#: src/Definitions.tsx:6
+msgid "quarantine"
+msgstr ""
+
+#: src/Definitions.tsx:7
+msgid "isolate"
+msgstr ""
+
+#: src/Definitions.tsx:25
+msgid "Quarantine vs. Isolation"
+msgstr ""
+
+#: src/Definitions.tsx:37
+#, javascript-format
+msgid ""
+"People who must ${ strongQuarantine } should avoid physical contact\n"
+"with everyone outside their home. This includes work, groceries, and "
+"socializing."
+msgstr ""
+"example\n"
+"multi-line translation."
+
+#: src/Definitions.tsx:49
+msgid ""
+"People who must ${ strongIsolate } should keep away from\n"
+"everyone inside and outside the home."
+msgstr ""
+
+#: src/Footer.tsx:66
+msgid ""
+"Made in partnership with Clackamas County and Code for PDX.\n"
+"Recommendations use CDC guidelines."
+msgstr ""
+
+#: src/Home.tsx:29
+msgid ""
+"This calculator determines whether you’ll quarantine or isolate, and for "
+"how long. "
+msgstr ""
+
+#: src/Home.tsx:31
+msgid ""
+"Answer a few simple questions and we will match your situation to the best "
+"advice according to CDC guidelines."
+msgstr ""
+
+#: src/Home.tsx:63
+msgid "Get Started"
+msgstr ""
+
+#: src/Home.tsx:87
+#: src/Recommendation.tsx:41
+msgid "COVID CALCULATOR"
+msgstr ""
+
+#: src/Home.tsx:88
+#: src/Recommendation.tsx:42
+msgid "ESPAÑOL"
+msgstr ""
+
+#: src/Household.tsx:51
+msgid "Tell us about yourself and each person you live with."
+msgstr ""
+
+#: src/Household.tsx:66
+msgid ""
+"Thank you for doing your part to keep our community safe! For help\n"
+"with a question, tap"
+msgstr ""
+
+#: src/Household.tsx:73
+msgid "COVID-19 webpage"
+msgstr ""
+
+#: src/Household.tsx:77
+msgid "Your recommendation"
+msgstr ""
+
+#: src/Household.tsx:79
+msgid ""
+"The guidance given in this app is based on the latest CDC guidelines\n"
+"for protecting yourself and others from the spread of COVID-19. The\n"
+"same information is available on their {$cdcLink}."
+msgstr ""
+
+#: src/Household.tsx:100
+msgid "Get recommendation"
+msgstr ""
+
+#: src/Household.tsx:113
+msgid "UPDATE ANSWERS"
+msgstr ""
+
+#: src/Household.tsx:176
+msgid "Add another person"
+msgstr ""
+
+#: src/InHouseExposureQuestion.tsx:25
+#, javascript-format
+msgid "${ props.person.name } had close contact with ${ props.otherPerson.name }"
+msgstr ""
+
+#: src/InHouseExposureQuestion.tsx:32
+#, javascript-format
+msgid ""
+"${ props.person.name }'s close contact with ${ props.otherPerson.name } is "
+"ongoing"
+msgstr ""
+
+#: src/InHouseExposureQuestion.tsx:52
+#: src/Person.tsx:424
+msgid "Date of last contact"
+msgstr ""
+
+#: src/Instructions.tsx:8
+msgid "How to use this tool"
+msgstr ""
+
+#: src/Instructions.tsx:9
+msgid "STEP 1"
+msgstr ""
+
+#: src/Instructions.tsx:10
+msgid "For each person you live with, answer questions about their symptoms."
+msgstr ""
+
+#: src/Instructions.tsx:11
+msgid "STEP 2"
+msgstr ""
+
+#: src/Instructions.tsx:12
+msgid ""
+"After inputting your answers, you’ll receive recommendations on what each "
+"person should do to stay safe based on official CDC guidelines."
+msgstr ""
+
+#: src/Instructions.tsx:13
+msgid "STEP 3"
+msgstr ""
+
+#: src/Instructions.tsx:14
+msgid "Tap on a recommendation to learn more about the safety behind it."
+msgstr ""
+
+#: src/Person.tsx:134
+#, javascript-format
+msgid "${ person.name } has been feeling sick"
+msgstr ""
+
+#: src/Person.tsx:156
+msgid "Common symptoms include:"
+msgstr ""
+
+#: src/Person.tsx:158
+msgid "Fever or chills"
+msgstr ""
+
+#: src/Person.tsx:159
+#: src/Person.tsx:188
+msgid "Cough"
+msgstr ""
+
+#: src/Person.tsx:160
+msgid "Shortness of breath or difficulty breathing"
+msgstr ""
+
+#: src/Person.tsx:161
+msgid "Fatigue"
+msgstr ""
+
+#: src/Person.tsx:162
+msgid "Muscle or body aches"
+msgstr ""
+
+#: src/Person.tsx:163
+msgid "Headache"
+msgstr ""
+
+#: src/Person.tsx:164
+#: src/Person.tsx:200
+msgid "New loss of taste or smell"
+msgstr ""
+
+#: src/Person.tsx:165
+msgid "Sore throat"
+msgstr ""
+
+#: src/Person.tsx:166
+msgid "Congestion or runny nose"
+msgstr ""
+
+#: src/Person.tsx:167
+msgid "Nausea or vomiting"
+msgstr ""
+
+#: src/Person.tsx:168
+msgid "Diarrhea"
+msgstr ""
+
+#: src/Person.tsx:171
+#: src/Person.tsx:229
+#: src/Person.tsx:445
+msgid "Link."
+msgstr ""
+
+#: src/Person.tsx:178
+msgid "Check the boxes if you are experiencing:"
+msgstr ""
+
+#: src/Person.tsx:182
+msgid "Fever"
+msgstr ""
+
+#: src/Person.tsx:194
+msgid "Shortness of breath"
+msgstr ""
+
+#: src/Person.tsx:209
+msgid "Date of first appearance of symptoms"
+msgstr ""
+
+#: src/Person.tsx:220
+#, javascript-format
+msgid "${ person.name }'s symptoms have been improved for 24 hours."
+msgstr ""
+
+#: src/Person.tsx:225
+msgid ""
+"Improved symptoms are a requirement for you to end isolation. If\n"
+"your symptoms improve AND you have had no fever for 24 hours\n"
+"without the use of medicine, check this box."
+msgstr ""
+
+#: src/Person.tsx:283
+#, javascript-format
+msgid "${ person.name } must isolate until ${ endDate }"
+msgstr ""
+
+#: src/Person.tsx:285
+#, javascript-format
+msgid "${ person.name } must isolate until at least ${ endDate }"
+msgstr ""
+
+#: src/Person.tsx:289
+msgid "${ person.name } must quarantine until at least ${ endDate }"
+msgstr ""
+
+#: src/Person.tsx:291
+#, javascript-format
+msgid "${ person.name } must quarantine until ${ endDate }"
+msgstr ""
+
+#: src/Person.tsx:295
+msgid "${ person.name } should continue social distancing"
+msgstr ""
+
+#: src/Person.tsx:303
+msgid "Avoid contact with everyone, including your household."
+msgstr ""
+
+#: src/Person.tsx:305
+msgid "Avoid contact with everyone outside of your household."
+msgstr ""
+
+#: src/Person.tsx:317
+msgid ""
+"Since {guidance.person.name} is feeling sick, we recommend they get a covid "
+"test."
+msgstr ""
+
+#: src/Person.tsx:322
+msgid ""
+"If {guidance.person.name} develops symptoms, they should call a doctor and "
+"get a covid test."
+msgstr ""
+
+#: src/Person.tsx:332
+#: src/Person.tsx:339
+msgid "This is 10 days after the earliest known date of illness onset."
+msgstr ""
+
+#: src/Person.tsx:342
+msgid "Additionally, continue isolating until 24 hours after fever is gone."
+msgstr ""
+
+#: src/Person.tsx:356
+msgid ""
+"Please come back when symptoms for {names} have improved for an\n"
+"exact date."
+msgstr ""
+
+#: src/Person.tsx:365
+msgid "This is 14 days after the last known exposure date."
+msgstr ""
+
+#: src/Person.tsx:403
+msgid "Clear"
+msgstr ""
+
+#: src/Person.tsx:403
+msgid "Remove"
+msgstr ""
+
+#: src/Person.tsx:410
+#, javascript-format
+msgid "${ person.name } has been fully vaccinated for at least two weeks"
+msgstr ""
+
+#: src/Person.tsx:423
+msgid ""
+"${ person.name } had close contact to someone COVID positive that does not "
+"live with them"
+msgstr ""
+
+#: src/Person.tsx:427
+#. disabled?
+msgid "Close contact means any of the following:"
+msgstr ""
+
+#: src/Person.tsx:430
+#. disabled?
+msgid ""
+"You were within 6 feet of them for a total of 15 minutes or\n"
+"more"
+msgstr ""
+
+#: src/Person.tsx:433
+#. disabled?
+msgid "You provided care at home to the person"
+msgstr ""
+
+#: src/Person.tsx:435
+#. disabled?
+msgid ""
+"You had direct physical contact with the person (hugged or\n"
+"kissed them)"
+msgstr ""
+
+#: src/Person.tsx:438
+#. disabled?
+msgid "You shared eating or drinking utensils"
+msgstr ""
+
+#: src/Person.tsx:440
+#. disabled?
+msgid ""
+"They sneezed, coughed, or somehow got respiratory droplets on\n"
+"you"
+msgstr ""
+
+#: src/Person.tsx:454
+#, javascript-format
+msgid "${ person.name } has received a positive test result"
+msgstr ""
+
+#: src/Person.tsx:455
+msgid "Date of test"
+msgstr ""
+
+#: src/Resources.tsx:5
+msgid "OHA’s test finder map"
+msgstr ""
+
+#: src/Resources.tsx:9
+msgid "I can't affort to quarantine or isolated"
+msgstr ""
+
+#: src/Resources.tsx:10
+msgid ""
+"Help is available! Please call 211 to be connected to COVID-19 specific "
+"resources. Community based organizations can help you with food boxes, "
+"rent, and utilities. They can also help you get connected to other benefits "
+"you are eligible for."
+msgstr ""
+
+#: src/Resources.tsx:11
+msgid "Where do I get a test?"
+msgstr ""
+
+#: src/Resources.tsx:12
+#, javascript-format
+msgid "You can find one using ${ mapLink }."
+msgstr ""
+
+#: src/Resources.tsx:13
+msgid "I have additional questions but no primary care doctor"
+msgstr ""
+
+#: src/Resources.tsx:14
+msgid ""
+"If you are a Clackamas County resident, reach out to a Clackamas County "
+"health center. To set up care or learn more about any of our health clinics "
+"call 503-655-8471.  "
+msgstr ""
+
+#: src/Resources.tsx:17
+msgid "If you are not a resident, we recommend checking your local health centers."
+msgstr ""
+
+#: src/Resources.tsx:18
+msgid ""
+"Clackamas Health Centers offer care on a sliding scale to eligible "
+"uninsured and underinsured people. No one is refused care due to an "
+"inability to pay. "
+msgstr ""
