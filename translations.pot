@@ -32,7 +32,8 @@ msgid ""
 "socializing."
 msgstr ""
 "example\n"
-"multi-line translation."
+"multi-line "
+"translation."
 
 #: src/Definitions.tsx:49
 msgid ""
