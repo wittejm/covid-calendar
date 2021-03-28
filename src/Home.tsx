@@ -1,10 +1,15 @@
 import React from "react";
 import GridView from "./GridView";
+import Definitions from "./Definitions";
+import Footer from "./Footer";
 import { InHouseExposure, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
 import { Link } from "react-router-dom";
+import { t, jt} from "ttag";
 
 interface Props {
+  language: string;
+  setLanguage: Function;
 }
 
 export default function Home(props: Props) {
@@ -15,7 +20,7 @@ export default function Home(props: Props) {
           className="mb-4"
           style={{
             fontFamily: "Helvetica",
-            fontSize: "3rem",
+            fontSize: "2.1rem",
             fontStyle: "normal",
             textAlign: "center",
             color: "#1F252F"
@@ -23,9 +28,9 @@ export default function Home(props: Props) {
           }}
         >
           {" "}
-          Quarantine and Isolation Calculator
+          {t`This calculator determines whether you’ll quarantine or isolate, and for how long. `}
         </h1>
-        <p className="f3 gray"> This calculator will help you determine whether to quarantine or isolate, and for how long. Answer a few simple questions and we will match your situation to the best advice according to CDC guidelines.
+        <p className="f3"> {t`Answer a few simple questions and we will match your situation to the best advice according to CDC guidelines.`}
 
         </p>
         <div style={{ position: "relative", paddingBottom: "120px" }}>
@@ -57,13 +62,12 @@ export default function Home(props: Props) {
             }}
             to="/recommendation"
           >
-            Get Started
+            {t`Get Started`}
           </Link>
         </div>
       </>
     );
   }
-
   return (
     <div style={{ position: "relative", minHeight: "100%" }}>
       <header>
@@ -82,8 +86,12 @@ export default function Home(props: Props) {
               color: "#1F252F"
             }}
           >
-            <div className="d-flex align-items-center">COVID CALCULATOR</div>
-            <div>ESPAÑOL</div>
+            <div className="d-flex align-items-center">{t`COVID CALCULATOR`}</div>
+            <button onClick={()=> props.setLanguage(props.language==="en" ? "es" : "en")}>
+              <div>{(props.language==="en" ? "GARBLE" : "ENGLISH")}</div>
+            </button>
+
+
           </div>
         </div>
       </header>
@@ -91,120 +99,9 @@ export default function Home(props: Props) {
         <section className={"jumbotron"} style={{ background: "#FFFFFF" }}>
           <div className="container">{renderTitle()}</div>
         </section>
-        <div
-          className="container pb-5"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            background: "#F8F8F8",
-            paddingTop: "91px",
-            maxWidth: "100%"
-          }}
-        >
-          <div
-            style={{
-              width: "60%",
-              textAlign: "center"
-            }}
-          >
-            <h2>Quarantine vs. Isolation</h2>
-            <div className="py-2"></div>
-            <div className="row">
-              <div className="col-md-6  col-sm-12 f3">
-                <div
-                  style={{
-                    marginTop: "80px",
-                    marginBottom: "60px"
-                  }}
-                >
-                  <img src={process.env.PUBLIC_URL + "/quarantine.svg"} />
-                </div>
-                People who must <strong className="our-blue">quarantine</strong> are avoiding contact
-                with everyone outside their home.
-              </div>
-              <div className="col-md-6 col-sm-12 f3">
-                <div
-                  style={{
-                    marginTop: "80px",
-                    marginBottom: "60px"
-                  }}
-                >
-                  <img src={process.env.PUBLIC_URL + "/isolation.svg"} />
-                </div>
-                People who must <strong className="our-blue">isolate</strong> should keep away from
-                everyone inside and outside the home.
-              </div>
-            </div>
-          </div>
-        </div>
+        <Definitions/>
       </main>
-      <footer
-        className={"py-5"}
-        style={{
-          background: "#1F252F",
-          position: "absolute",
-          bottom: "0%",
-          width: "100%",
-          height: "250px"
-        }}
-      >
-        <div
-          className={"container"}
-          style={{
-            width: "400px",
-            textAlign: "center"
-          }}
-        >
-          {" "}
-          {/* contains images and below-text*/}
-          <div style={{ color: "#FFFFFF"}}>
-            Made in partnership between Clackamas County and Code for PDX.
-            Recommendations use CDC guidelines.
-          </div>
-          <div className="py-3"></div>
-          <div
-            style={{
-
-              position: "relative",
-              width: "100%",
-              height: "50px"
-            }}
-          >
-            <span style={{ display: "inline" }}>
-              <a href={"https://www.clackamas.us/publichealth"}>
-                <img
-                  src={process.env.PUBLIC_URL + "/logo-clackamas.png"}
-                  style={{ height: "100%" }}
-                />
-              </a>
-            </span>
-            <span
-              style={{
-                display: "inline",
-                height: "1px",
-                width: "56.1px",
-                opacity: 0.5,
-                border: "1px solid #FFFFFF",
-                transform: "rotate(120.37deg)",
-                position: "absolute",
-                left: "41.45%",
-                top: "50.6%"
-              }}
-            ></span>
-            <span style={{ display: "inline-block", width: "50px" }}>
-              &nbsp;
-            </span>
-            <span style={{ display: "inline" }}>
-              <a href={"https://www.codeforpdx.org/"}>
-                <img
-                  src={process.env.PUBLIC_URL + "/logo-code-for-pdx.png"}
-                  style={{ height: "100%" }}
-                />
-              </a>
-            </span>
-          </div>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 }
