@@ -17,10 +17,15 @@ export default function Footer() {
         <div
           className={"container"}
           style={{
-            width: "400px"
+            width: "500px",
+            textAlign: "center"
           }}
         >
-          {" "}
+          <div style={{ color: "#FFFFFF" }}>
+            {t`Made in partnership with Clackamas County and Code for PDX.
+              Recommendations follow guidelines from the CDC.`}
+          </div>
+          <div className="py-3"></div>
           <div
             style={{
               position: "relative",
@@ -36,19 +41,6 @@ export default function Footer() {
                 />
               </a>
             </span>
-            <span
-              style={{
-                display: "inline",
-                height: "1px",
-                width: "56.1px",
-                opacity: 0.5,
-                border: "1px solid #FFFFFF",
-                transform: "rotate(120.37deg)",
-                position: "absolute",
-                left: "19.51%",
-                top: "50.6%"
-              }}
-            ></span>
             <span style={{ display: "inline-block", width: "50px" }}>
               &nbsp;
             </span>
@@ -60,11 +52,6 @@ export default function Footer() {
                 />
               </a>
             </span>
-          </div>
-          <div className="py-3"></div>
-          <div style={{ color: "#FFFFFF" }}>
-            {t`Made in partnership with Clackamas County and Code for PDX.
-              Recommendations use CDC guidelines.`}
           </div>
         </div>
       </footer>
