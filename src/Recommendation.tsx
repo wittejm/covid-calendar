@@ -14,6 +14,8 @@ interface Props {
   inHouseExposureEventsState: State<InHouseExposure[]>;
   editingHouseholdState: State<boolean>;
   height: State<number>;
+  language: string;
+  setLanguage: Function;
 }
 
 export default function Recommendation(props: Props) {
@@ -39,7 +41,9 @@ export default function Recommendation(props: Props) {
             }}
           >
             <Link to="/" className="d-flex align-items-center home-link">{t`COVID CALCULATOR`}</Link>
-            <div>{t`ESPAÑOL`}</div>
+            <button onClick={()=> props.setLanguage(props.language==="en" ? "es" : "en")}>
+              <div>{(props.language==="en" ? "GARBLE" : "ENGLISH")}</div>
+            </button>
           </div>
         </div>
       </header>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState as useReactState } from "react";
 import { useState } from "@hookstate/core";
 import Home from "./Home";
 import Recommendation from "./Recommendation";
@@ -6,12 +6,13 @@ import { CovidEventName, InHouseExposure, PersonData } from "./types";
 import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { t, useLocale, addLocale } from 'ttag';
+import { t, addLocale, useLocale } from 'ttag';
 
 export default function App() {
+  const [language, setLanguage] = useReactState("en");
   const translationObject = require('./es.po.json');
   addLocale("es", translationObject);
-  useLocale("es");
+  useLocale(language);
   const height = useState(window.innerHeight);
   const updateHeight = () => {
     height.set(window.innerHeight);
@@ -89,10 +90,12 @@ export default function App() {
             height={height}
             inHouseExposureEventsState={inHouseExposureEvents}
             membersState={members}
+            language={language}
+            setLanguage={setLanguage}
           />
         </Route>
         <Route path="/">
-          <Home/>
+          <Home language={language} setLanguage={setLanguage} />
         </Route>
       </Switch>
     </Router>
