@@ -3,11 +3,11 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
-#: src/App.tsx:24
+#: src/App.tsx:26
 msgid "Person 1"
 msgstr "example translation"
 
-#: src/App.tsx:49
+#: src/App.tsx:51
 #, javascript-format
 msgid "Person ${ newPersonNumber }"
 msgstr ""
@@ -32,8 +32,7 @@ msgid ""
 "socializing."
 msgstr ""
 "example\n"
-"multi-line "
-"translation."
+"multi-line translation."
 
 #: src/Definitions.tsx:49
 msgid ""
@@ -41,36 +40,25 @@ msgid ""
 "everyone inside and outside the home."
 msgstr ""
 
-#: src/Footer.tsx:66
-msgid ""
-"Made in partnership with Clackamas County and Code for PDX.\n"
-"Recommendations use CDC guidelines."
-msgstr ""
-
-#: src/Home.tsx:29
+#: src/Home.tsx:31
 msgid ""
 "This calculator determines whether you’ll quarantine or isolate, and for "
 "how long. "
 msgstr ""
 
-#: src/Home.tsx:31
+#: src/Home.tsx:33
 msgid ""
 "Answer a few simple questions and we will match your situation to the best "
 "advice according to CDC guidelines."
 msgstr ""
 
-#: src/Home.tsx:63
+#: src/Home.tsx:65
 msgid "Get Started"
 msgstr ""
 
-#: src/Home.tsx:87
-#: src/Recommendation.tsx:41
+#: src/Home.tsx:89
+#: src/Recommendation.tsx:43
 msgid "COVID CALCULATOR"
-msgstr ""
-
-#: src/Home.tsx:88
-#: src/Recommendation.tsx:42
-msgid "ESPAÑOL"
 msgstr ""
 
 #: src/Household.tsx:51
@@ -83,30 +71,7 @@ msgid ""
 "with a question, tap"
 msgstr ""
 
-#: src/Household.tsx:73
-msgid "COVID-19 webpage"
-msgstr ""
-
-#: src/Household.tsx:77
-msgid "Your recommendation"
-msgstr ""
-
-#: src/Household.tsx:79
-msgid ""
-"The guidance given in this app is based on the latest CDC guidelines\n"
-"for protecting yourself and others from the spread of COVID-19. The\n"
-"same information is available on their {$cdcLink}."
-msgstr ""
-
-#: src/Household.tsx:100
-msgid "Get recommendation"
-msgstr ""
-
-#: src/Household.tsx:113
-msgid "UPDATE ANSWERS"
-msgstr ""
-
-#: src/Household.tsx:176
+#: src/Household.tsx:174
 msgid "Add another person"
 msgstr ""
 
@@ -277,18 +242,6 @@ msgstr ""
 msgid "Avoid contact with everyone outside of your household."
 msgstr ""
 
-#: src/Person.tsx:317
-msgid ""
-"Since {guidance.person.name} is feeling sick, we recommend they get a covid "
-"test."
-msgstr ""
-
-#: src/Person.tsx:322
-msgid ""
-"If {guidance.person.name} develops symptoms, they should call a doctor and "
-"get a covid test."
-msgstr ""
-
 #: src/Person.tsx:332
 #: src/Person.tsx:339
 msgid "This is 10 days after the earliest known date of illness onset."
@@ -296,12 +249,6 @@ msgstr ""
 
 #: src/Person.tsx:342
 msgid "Additionally, continue isolating until 24 hours after fever is gone."
-msgstr ""
-
-#: src/Person.tsx:356
-msgid ""
-"Please come back when symptoms for {names} have improved for an\n"
-"exact date."
 msgstr ""
 
 #: src/Person.tsx:365
@@ -319,12 +266,6 @@ msgstr ""
 #: src/Person.tsx:410
 #, javascript-format
 msgid "${ person.name } has been fully vaccinated for at least two weeks"
-msgstr ""
-
-#: src/Person.tsx:423
-msgid ""
-"${ person.name } had close contact to someone COVID positive that does not "
-"live with them"
 msgstr ""
 
 #: src/Person.tsx:427
@@ -417,4 +358,59 @@ msgid ""
 "Clackamas Health Centers offer care on a sliding scale to eligible "
 "uninsured and underinsured people. No one is refused care due to an "
 "inability to pay. "
+msgstr ""
+
+#: src/Footer.tsx:25
+msgid ""
+"Made in partnership with Clackamas County and Code for PDX.\n"
+"Recommendations follow guidelines from the CDC."
+msgstr ""
+
+#: src/Household.tsx:73
+msgid "Clackamas County health center"
+msgstr ""
+
+#: src/Household.tsx:77
+msgid "Here’s what to do based on the latest CDC guidelines."
+msgstr ""
+
+#: src/Household.tsx:98
+msgid "Done"
+msgstr ""
+
+#: src/Household.tsx:111
+msgid "EDIT ANSWERS"
+msgstr ""
+
+#: src/Person.tsx:356
+#, javascript-format
+msgid ""
+"Please come back when symptoms for ${ names } have improved for an\n"
+"exact date."
+msgstr ""
+
+#: src/Household.tsx:79
+#, javascript-format
+msgid ""
+"If you have further questions, please contact your doctor or a ${ "
+"healthCentersLink }."
+msgstr ""
+
+#: src/Person.tsx:317
+#, javascript-format
+msgid ""
+"Since ${ guidance.person.name } is feeling sick, we recommend they get a "
+"COVID-19 test."
+msgstr ""
+
+#: src/Person.tsx:322
+msgid ""
+"If ${ guidance.person.name } develops symptoms, they should call a doctor "
+"and get a COVID-19 test."
+msgstr ""
+
+#: src/Person.tsx:423
+msgid ""
+"${ person.name } had close contact to someone COVID-19 positive that does "
+"not live with them"
 msgstr ""

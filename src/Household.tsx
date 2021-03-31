@@ -69,16 +69,14 @@ export default function Household(props: Props) {
         </>
       );
     } else {
-      const cdcLink = <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/index.html">
-              {t`COVID-19 webpage`}
+      const healthCentersLink = <a href="https://www.clackamas.us/healthcenters">
+              {t`Clackamas County health center`}
             </a>;
       return (
         <>
-          <h1>{t`Your recommendation`}</h1>
+          <h1>{t`Here’s what to do based on the latest CDC guidelines.`}</h1>
           <p className="lead text-muted">
-            {jt`The guidance given in this app is based on the latest CDC guidelines
-            for protecting yourself and others from the spread of COVID-19. The
-            same information is available on their {$cdcLink}.`}
+            {jt`If you have further questions, please contact your doctor or a ${healthCentersLink}.`}
           </p>
         </>
       );
@@ -97,7 +95,7 @@ export default function Household(props: Props) {
               window.scrollTo(0,0);
             }}
           >
-            {t`Get recommendation`}{" "}
+            {t`Done`}{" "}
           </button>
           </div>
         );
@@ -110,7 +108,7 @@ export default function Household(props: Props) {
                 props.editingHouseholdState.set(true);
               }}
             >
-              {t`UPDATE ANSWERS`}
+              {t`EDIT ANSWERS`}
             </button>
 
           </div>
