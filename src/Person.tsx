@@ -314,12 +314,12 @@ export default function Person(props: Props) {
     const getTestedNote = guidance.person.feelingSick ? (
       <p>
         {" "}
-        {t`Since {guidance.person.name} is feeling sick, we recommend they get a covid test.`}
+        {t`Since ${guidance.person.name} is feeling sick, we recommend they get a COVID-19 test.`}
       </p>
     ) :
     (
       <p>
-        {t`If {guidance.person.name} develops symptoms, they should call a doctor and get a covid test.`}
+        {t`If ${guidance.person.name} develops symptoms, they should call a doctor and get a COVID-19 test.`}
       </p>
     );
 
@@ -353,7 +353,7 @@ export default function Person(props: Props) {
           return (
             <>
               <p>
-                {t`Please come back when symptoms for {names} have improved for an
+                {t`Please come back when symptoms for ${names} have improved for an
                 exact date.`}
               </p>
               {getTestedNote}
@@ -420,7 +420,7 @@ export default function Person(props: Props) {
           <hr />
           {buildCovidEventQuestion(
             CovidEventName.LastCloseContact,
-            t`${person.name} had close contact to someone COVID positive that does not live with them`,
+            t`${person.name} had close contact to someone COVID-19 positive that does not live with them`,
             t`Date of last contact`,
             props.personState.vaccinated.get(), // disabled?
             <div>
