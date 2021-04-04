@@ -130,7 +130,7 @@ export default function Household(props: Props) {
           className={"col-md-12"}
           style={{
             backgroundColor: "#fff",
-            minHeight: props.height.get() + "px"
+            //minHeight: props.height.get() + "px"
           }}
         >
           <div className={"container"}>
