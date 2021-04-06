@@ -87,7 +87,7 @@ export default function Home(props: Props) {
             }}
           >
             <div className="d-flex align-items-center">{t`COVID CALCULATOR`}</div>
-            <button onClick={()=> props.setLanguage(props.language==="en" ? "es" : "en")}>
+            <button className="language-button" onClick={()=> props.setLanguage(props.language==="en" ? "es" : "en")}>
               <div>{(props.language==="en" ? "GARBLE" : "ENGLISH")}</div>
             </button>
 
