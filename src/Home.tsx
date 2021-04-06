@@ -31,10 +31,7 @@ export default function Home(props: Props) {
           {" "}
           {t`This calculator determines whether you’ll quarantine or isolate, and for how long. `}
         </h1>
-
-        <p className="f4"> {t`Answer a few simple questions and we will match your situation to the best advice according to CDC guidelines.`}
-
-        </p>
+        <p className="f4"> {t`Answer a few simple questions and we will match your situation to the best advice according to CDC guidelines.`} </p>
         <div style={{ alignItems: "left", position: "relative", paddingBottom: "120px" }}>
           <Link className="get-started-link"
             style={{
@@ -109,7 +106,6 @@ export default function Home(props: Props) {
             maxWidth: "100%"
           }}
         >
-
           <div
             style={{
               width: "70%",
@@ -125,7 +121,6 @@ export default function Home(props: Props) {
             <Instructions/>
           </div>
         </section>
-
       </main>
       <Footer/>
     </div>

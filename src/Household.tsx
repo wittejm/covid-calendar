@@ -134,7 +134,7 @@ export default function Household(props: Props) {
           className={"col-md-12"}
           style={{
             backgroundColor: "#fff",
-            //minHeight: props.height.get() + "px"
+            //minHeight: props.height.get() + "px" TODO:this is to manage the footer placement but has been messed up by other changes and so we're disabling it
           }}
         >
           <div className={"container"}>
