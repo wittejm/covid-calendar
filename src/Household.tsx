@@ -51,7 +51,7 @@ export default function Household(props: Props) {
             {t`Tell us about yourself and each person you live with.`}
           </h2>
           <p
-            className="lead"
+            className="lead pv3"
             style={{
               fontFamily: "Helvetica",
               fontSize: "24px",
