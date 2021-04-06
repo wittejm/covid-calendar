@@ -38,7 +38,7 @@ export default function Home(props: Props) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              padding: "18px 40px",
+              padding: "16px 40px",
               position: "absolute",
               borderRadius: "40px",
               width: "225px",
@@ -47,7 +47,7 @@ export default function Home(props: Props) {
               fontFamily: "Arial",
               fontStyle: "normal",
               fontWeight: "bold",
-              fontSize: "14px",
+              fontSize: "18px",
               lineHeight: "160%",
               textAlign: "left",
               letterSpacing: "0.02em",
@@ -120,7 +120,38 @@ export default function Home(props: Props) {
           <div className="container">
             <Instructions/>
           </div>
+          <div style={{ width: "auto", alignItems:"center", justifyContent: "center", position: "relative", paddingBottom: "120px", paddingLeft:"calc(50% - 350px)"}}>
+          <Link className="get-started-link"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "18px 40px",
+              position: "absolute",
+              borderRadius: "40px",
+              width: "700px",
+              height: "80",
+              top: "20px",
+              fontFamily: "Arial",
+              fontStyle: "normal",
+              fontWeight: "bold",
+              fontSize: "20px",
+              lineHeight: "160%",
+              textAlign: "center",
+              letterSpacing: "0.02em",
+              color: "#FFFFFF",
+              flex: "none",
+              order: 0,
+              flexGrow: 0,
+              margin: "0px 0px"
+            }}
+            to="/recommendation"
+          >
+            {t`Get Started`}
+          </Link>
+        </div>
         </section>
+
       </main>
       <Footer/>
     </div>
