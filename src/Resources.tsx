@@ -9,7 +9,7 @@ import {
 import Definitions from "./Definitions";
 
 export default function Resources() {
-  const mapLink = <div>{t`OHA’s test finder map`}</div>
+  const mapLink = <a href="https://govstatus.egov.com/or-oha-covid-19-testing">{t`OHA’s test finder map`}</a>
   return (
 
 
@@ -17,15 +17,15 @@ export default function Resources() {
       <h2>{t`Resources`}</h2>
       <div className="py-4"/>
       <QuestionBlock question= {t`What is the difference between Quarantine and Isolation?`} answer = {<Definitions/>}/>
-      <QuestionBlock question={t`I can't affort to quarantine or isolated`} answer={<div>{t`Help is available! Please call 211 to be connected to COVID-19 specific resources. Community based organizations can help you with food boxes, rent, and utilities. They can also help you get connected to other benefits you are eligible for.`}</div>}/>
+      <QuestionBlock question={t`I can't afford to quarantine or isolate`} answer={<div>{t`Help is available! Please call 211 to be connected to COVID-19 specific resources. Community based organizations can help you with food boxes, rent, and utilities. They can also help you get connected to other benefits you are eligible for.`}</div>}/>
       <QuestionBlock question={t`Where do I get a test?`} answer={<div>{jt`You can find one using ${mapLink}.`}</div>}/>
 
       <QuestionBlock question={t`I have additional questions but no primary care doctor`}
         answer={
           <>
-            <div>{t`If you are a Clackamas County resident, reach out to a Clackamas County health center. To set up care or learn more about any of our health clinics call 503-655-8471.  `}</div>
-            <div>{t`If you are not a resident, we recommend checking your local health centers.`}</div>
-            <div>{t`Clackamas Health Centers offer care on a sliding scale to eligible uninsured and underinsured people. No one is refused care due to an inability to pay. `}</div>
+            <p className="pv2">{t`If you are a Clackamas County resident, reach out to a Clackamas County health center. To set up care or learn more about any of our health clinics call 503-655-8471.  `}</p>
+            <p className="pv2">{t`If you are not a resident, we recommend checking your local health centers.`}</p>
+            <p className="pv2">{t`Clackamas Health Centers offer care on a sliding scale to eligible uninsured and underinsured people. No one is refused care due to an inability to pay. `}</p>
           </>
         }/>
     </div>
