@@ -2,6 +2,7 @@ import React from "react";
 import GridView from "./GridView";
 import Definitions from "./Definitions";
 import Footer from "./Footer";
+import Instructions from "./Instructions";
 import { InHouseExposure, PersonData } from "./types";
 import { State } from "@hookstate/core/dist";
 import { Link } from "react-router-dom";
@@ -22,7 +23,7 @@ export default function Home(props: Props) {
             fontFamily: "Helvetica",
             fontSize: "2.1rem",
             fontStyle: "normal",
-            textAlign: "center",
+            textAlign: "left",
             color: "#1F252F"
 
           }}
@@ -30,10 +31,11 @@ export default function Home(props: Props) {
           {" "}
           {t`This calculator determines whether you’ll quarantine or isolate, and for how long. `}
         </h1>
-        <p className="f3"> {t`Answer a few simple questions and we will match your situation to the best advice according to CDC guidelines.`}
+
+        <p className="f4"> {t`Answer a few simple questions and we will match your situation to the best advice according to CDC guidelines.`}
 
         </p>
-        <div style={{ position: "relative", paddingBottom: "120px" }}>
+        <div style={{ alignItems: "left", position: "relative", paddingBottom: "120px" }}>
           <Link className="get-started-link"
             style={{
               display: "flex",
@@ -42,18 +44,16 @@ export default function Home(props: Props) {
               padding: "18px 40px",
               position: "absolute",
               borderRadius: "40px",
-              width: "295px",
+              width: "225px",
               height: "58px",
-              left: "calc(50% - 295px/2)",
-              top: "50px",
+              top: "20px",
               fontFamily: "Arial",
               fontStyle: "normal",
               fontWeight: "bold",
               fontSize: "14px",
               lineHeight: "160%",
-              textAlign: "center",
+              textAlign: "left",
               letterSpacing: "0.02em",
-              textTransform: "uppercase",
               color: "#FFFFFF",
               flex: "none",
               order: 0,
@@ -99,7 +99,33 @@ export default function Home(props: Props) {
         <section className={"jumbotron"} style={{ background: "#FFFFFF" }}>
           <div className="container">{renderTitle()}</div>
         </section>
-        <Definitions/>
+        <div
+          className="container pb-5"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            background: "#F8F8F8",
+            paddingTop: "91px",
+            maxWidth: "100%"
+          }}
+        >
+
+          <div
+            style={{
+              width: "70%",
+              textAlign: "center"
+            }}
+          >
+            <hr/>
+            <Definitions/>
+          </div>
+        </div>
+        <section className={"jumbotron"} style={{ background: "#FFFFFF" }}>
+          <div className="container">
+            <Instructions/>
+          </div>
+        </section>
+
       </main>
       <Footer/>
     </div>

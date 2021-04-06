@@ -47,7 +47,7 @@ function QuestionBlock(props: Props) {
           </h4>
           </DisclosureButton>
           <DisclosurePanel>
-          <div className="mv3 resourceAnswer">
+          <div className="mv3 resourceAnswerText">
           {props.answer}
           </div>
           </DisclosurePanel>
