@@ -64,7 +64,11 @@ export default function Household(props: Props) {
             }}
           >
             {t`Thank you for doing your part to keep our community safe! For help
-            with a question, tap`} { "[?]"}
+            with a question, tap`}
+            <img
+              src={process.env.PUBLIC_URL + "/circle-question.svg"}
+              style={{ marginLeft: "0.4rem" }}
+            />
           </p>
         </>
       );
