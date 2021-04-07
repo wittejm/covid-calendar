@@ -29,17 +29,6 @@ export default function Recommendation(props: Props) {
         <div className="navbar">
           <div
             className="container d-flex justify-content-between"
-            style={{
-              fontFamily: "Arial",
-              fontStyle: "normal",
-              fontWeight: "bold",
-              fontSize: "14px",
-              lineHeight: "160%",
-              textAlign: "center",
-              letterSpacing: "0.02em",
-              textTransform: "uppercase",
-              color: "#1F252F"
-            }}
           >
             <Link to="/" className="d-flex align-items-center home-link">{t`COVID CALCULATOR`}</Link>
             <button className="language-button" onClick={()=> props.setLanguage(props.language==="en" ? "es" : "en")}>

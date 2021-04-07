@@ -17,17 +17,7 @@ export default function Home(props: Props) {
   function renderTitle() {
     return (
       <>
-        <h1
-          className="mb-4"
-          style={{
-            fontFamily: "Helvetica",
-            fontSize: "2.1rem",
-            fontStyle: "normal",
-            textAlign: "left",
-            color: "#1F252F"
-
-          }}
-        >
+        <h1 className="page-header mb-4">
           {" "}
           {t`This calculator determines whether you’ll quarantine or isolate, and for how long. `}
         </h1>
@@ -71,24 +61,11 @@ export default function Home(props: Props) {
         <div className="navbar">
           <div
             className="container d-flex justify-content-between"
-            style={{
-              fontFamily: "Arial",
-              fontStyle: "normal",
-              fontWeight: "bold",
-              fontSize: "14px",
-              lineHeight: "160%",
-              textAlign: "center",
-              letterSpacing: "0.02em",
-              textTransform: "uppercase",
-              color: "#1F252F"
-            }}
           >
-            <div className="d-flex align-items-center">{t`COVID CALCULATOR`}</div>
+            <Link to="/" className="d-flex align-items-center home-link">{t`COVID CALCULATOR`}</Link>
             <button className="language-button" onClick={()=> props.setLanguage(props.language==="en" ? "es" : "en")}>
               <div>{(props.language==="en" ? "GARBLE" : "ENGLISH")}</div>
             </button>
-
-
           </div>
         </div>
       </header>
@@ -96,26 +73,12 @@ export default function Home(props: Props) {
         <section className={"jumbotron"} style={{ background: "#FFFFFF" }}>
           <div className="container">{renderTitle()}</div>
         </section>
-        <div
-          className="container pb-5"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            background: "#F8F8F8",
-            paddingTop: "91px",
-            maxWidth: "100%"
-          }}
-        >
-          <div
-            style={{
-              width: "70%",
-              textAlign: "center"
-            }}
-          >
-            <hr/>
-            <Definitions/>
-          </div>
-        </div>
+        <section className={"jumbotron"} >
+            <div className="container">
+              <hr/>
+              <Definitions/>
+            </div>
+        </section>
         <section className={"jumbotron"} style={{ background: "#FFFFFF" }}>
           <div className="container">
             <Instructions/>
@@ -135,7 +98,7 @@ export default function Home(props: Props) {
               fontFamily: "Arial",
               fontStyle: "normal",
               fontWeight: "bold",
-              fontSize: "20px",
+              fontSize: "18px",
               lineHeight: "160%",
               textAlign: "center",
               letterSpacing: "0.02em",
