@@ -4,12 +4,13 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import "~bootstrap";
 
-.card {
-  background-color: transparent !important;
+body {
+  font-size: 20px;
+  color: #1F252F
 }
 
-.fa-xxs {
-  font-size: 0.5em;
+.card {
+  background-color: transparent !important;
 }
 
 .jumbotron .container {
@@ -46,7 +47,6 @@ margin-top: 4px;
 
 .questionnaire-text {
     font-family: Helvetica;
-    font-size: 1.25rem;
     font-style: normal;
     font-weight: 400;
     line-height: 36px;
@@ -76,11 +76,7 @@ margin-top: 4px;
 }
 
 .add-another-person-text {
-
-    font-family: Helvetica;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 36px;
     margin: 0px 20px;
 }
@@ -93,6 +89,7 @@ margin-top: 4px;
     color: #1F252F;
     fill: #1F252F;
     stroke: #1F252F;
+    textDecoration: none;
 }
 
 .custom-control-label::before {
@@ -119,7 +116,7 @@ margin-top: 4px;
     font-family: Helvetica;
     font-style: normal;
     font-weight: 500;
-    font-size: 24px;
+    font-size: 18px;
     line-height: 36px;
     color: #FFFFFF;
 }
@@ -153,6 +150,7 @@ margin-top: 4px;
 .language-button:hover {
   color: #FFFFFF;
   background: #1A5BFF;
+  border-color: #1A5BFF;
 }
 
 .update-button {
@@ -174,7 +172,7 @@ margin-top: 4px;
     font-family: Helvetica;
     font-style: normal;
     font-weight: 500;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 36px;
     color: #1A5BFF;
     width: 60%;
@@ -184,34 +182,20 @@ margin-top: 4px;
   color: #1F252F;
 }
 
-.download-button {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: static;
-    height: 80px;
-    left: 0px;
-    bottom: 0px;
-    background: #1A5BFF;
-    border-radius: 40px;
-    margin: 60px 0px;
-    font-family: Helvetica;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 36px;
-    color: #FFFFFF;
-}
-.download-button:hover {
-  background: #1F252F;
-}
 .home-link {
     color: #1F252F;
+    font-family: Arial;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    letter-spacing: 0.02em;
+    text-align: center;
 }
+
 .home-link:hover {
-    color: #1A5BFF;
+    color: #1F252F;
+    text-decoration: none;
 }
 
 .off-black {
@@ -226,6 +210,7 @@ margin-top: 4px;
 }
 .get-started-link:hover {
     background: #1F252F;
+    text-decoration: none;
 }
 
 .resourceAnswerText {
@@ -235,5 +220,36 @@ margin-top: 4px;
     font-weight: 400;
     line-height: 36px;
     letter-spacing: 0em;
+    text-align: left;
+}
+
+.resourceQuestionText {
+    color: #1F252F;
+    font-family: Helvetica;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 36px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.step-header {
+    font-family: Arial;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 26px;
+    letter-spacing: 0.02em;
+    text-align: left;
+}
+
+.page-header {
+    font-family: Helvetica;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 48px;
+    letter-spacing: -0.01em;
     text-align: left;
 }

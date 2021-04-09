@@ -9,7 +9,7 @@ import {
 import Definitions from "./Definitions";
 
 export default function Resources() {
-  const mapLink = <a href="https://govstatus.egov.com/or-oha-covid-19-testing">{t`OHA’s test finder map`}</a>
+  const mapLink = <a style={{ textDecoration: "underline"}} href="https://govstatus.egov.com/or-oha-covid-19-testing">{t`OHA’s test finder map`}</a>
   return (
 
 
@@ -39,7 +39,7 @@ function QuestionBlock(props: Props) {
       <Disclosure open={isOpen} onChange={() => setIsOpen(!isOpen)}>
           <DisclosureButton className="w-100">
           <h4 className="d-flex justify-content-between align-items-center">
-            <span className="">
+            <span className="resourceQuestionText">
               {props.question}
             </span>
 

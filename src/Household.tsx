@@ -36,25 +36,14 @@ export default function Household(props: Props) {
   function renderTitle() {
     if (editingHousehold) {
       return (
-        <>
-          <h2
-            style={{
-              fontFamily: "Helvetica",
-              fontSize: "48px",
-              fontStyle: "normal",
-              fontWeight: 400,
-              lineHeight: "56px",
-              letterSpacing: "-0.01em",
-              textAlign: "left"
-            }}
-          >
+        <div className="pb4">
+          <h2 className="page-header" >
             {t`Tell us about yourself and each person you live with.`}
           </h2>
           <p
-            className="lead pv3"
+            className="pv3"
             style={{
               fontFamily: "Helvetica",
-              fontSize: "24px",
               fontStyle: "normal",
               fontWeight: 400,
               lineHeight: "36px",
@@ -70,18 +59,21 @@ export default function Household(props: Props) {
               style={{ marginLeft: "0.4rem" }}
             />
           </p>
-        </>
+        </div>
       );
     } else {
-      const healthCentersLink = <a href="https://www.clackamas.us/healthcenters">
+      const healthCentersLink = <a style={{ textDecoration: "underline"}} href="https://www.clackamas.us/healthcenters">
               {t`Clackamas County health center`}
             </a>;
       return (
         <>
-          <h1>{t`Here’s what to do based on the latest CDC guidelines.`}</h1>
-          <p className="lead text-muted">
+        <div className="pb3">
+          <h2 className="page-header">{t`Here’s what to do based on the latest CDC guidelines.`}</h2>
+          <p>
             {jt`If you have further questions, please contact your doctor or a ${healthCentersLink}.`}
           </p>
+        </div>
+        <hr className="pb4"/>
         </>
       );
     }
@@ -158,7 +150,7 @@ export default function Household(props: Props) {
                       guidance={personGuidance}
                       editingPersonRef={editingPersonRef}
                       addNewPerson={props.addNewPerson}
-                      recommendationDetailOpenByDefault={index===0}
+                      recommendationDetailOpenByDefault={false}
                     />
                   );
                 }
