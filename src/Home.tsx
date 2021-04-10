@@ -64,7 +64,7 @@ export default function Home(props: Props) {
           >
             <Link to="/" className="d-flex align-items-center home-link">{t`COVID CALCULATOR`}</Link>
             <button className="language-button" onClick={()=> props.setLanguage(props.language==="en" ? "es" : "en")}>
-              <div>{(props.language==="en" ? "GARBLE" : "ENGLISH")}</div>
+              <div>{(props.language==="en" ? "ESPAÑOL" : "ENGLISH")}</div>
             </button>
           </div>
         </div>
@@ -92,7 +92,8 @@ export default function Home(props: Props) {
               padding: "18px 40px",
               position: "absolute",
               borderRadius: "40px",
-              width: "700px",
+              width: "100%",
+              maxWidth: "700px",
               height: "80",
               top: "20px",
               fontFamily: "Arial",

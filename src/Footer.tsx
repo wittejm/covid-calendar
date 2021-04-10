@@ -17,7 +17,7 @@ export default function Footer() {
         <div
           className={"container"}
           style={{
-            width: "500px",
+            maxWidth: "500px",
             textAlign: "center"
           }}
         >

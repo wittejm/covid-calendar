@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { t, addLocale, useLocale } from 'ttag';
 
 export default function App() {
-  const [language, setLanguage] = useReactState("en");
+  const [language, setLanguageState] = useReactState("en");
   const translationObject = require('./es.po.json');
   addLocale("es", translationObject);
   useLocale(language);
@@ -42,6 +42,17 @@ export default function App() {
   const id = useState(2);
   const editingHouseholdState = useState(true);
   const editingPersonState = useState<number | undefined>(undefined);
+
+  function setLanguage(language: string) {
+  const from = language==="es"? "Person" : "Persona";
+  const to = language==="es"? "Persona" : "Person";
+  members.forEach((person)=> {
+    if (person.name.get().split(" ")[0] === from) {
+      person.name.set(`${to} ${person.name.get().split(" ").slice(1).join(" ")}`);
+  }
+  })
+    setLanguageState(language);
+  }
 
   function addNewPerson() {
     const currentId = id.get();

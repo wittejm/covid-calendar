@@ -32,7 +32,7 @@ export default function Recommendation(props: Props) {
           >
             <Link to="/" className="d-flex align-items-center home-link">{t`COVID CALCULATOR`}</Link>
             <button className="language-button" onClick={()=> props.setLanguage(props.language==="en" ? "es" : "en")}>
-              <div>{(props.language==="en" ? "GARBLE" : "ENGLISH")}</div>
+              <div>{(props.language==="en" ? "ESPAÑOL" : "ENGLISH")}</div>
             </button>
           </div>
         </div>

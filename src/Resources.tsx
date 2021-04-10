@@ -23,9 +23,9 @@ export default function Resources() {
       <QuestionBlock question={t`I have additional questions but no primary care doctor`}
         answer={
           <>
-            <p className="pv2">{t`If you are a Clackamas County resident, reach out to a Clackamas County health center. To set up care or learn more about any of our health clinics call 503-655-8471.  `}</p>
+            <p className="pv2">{t`If you are a Clackamas County resident, reach out to a Clackamas County health center. To set up care or learn more about any of our health clinics call 503-655-8471.`}</p>
             <p className="pv2">{t`If you are not a resident, we recommend checking your local health centers.`}</p>
-            <p className="pv2">{t`Clackamas Health Centers offer care on a sliding scale to eligible uninsured and underinsured people. No one is refused care due to an inability to pay. `}</p>
+            <p className="pv2">{t`Clackamas Health Centers offer care on a sliding scale to eligible uninsured and underinsured people. No one is refused care due to an inability to pay.`}</p>
           </>
         }/>
     </div>
