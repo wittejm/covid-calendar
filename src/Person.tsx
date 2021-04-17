@@ -167,9 +167,6 @@ export default function Person(props: Props) {
                 <li>{t`Nausea or vomiting`}</li>
                 <li>{t`Diarrhea`}</li>
               </ul>{" "}
-              <a href="https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
-                {t`Link.`}
-              </a>
             </div>
           }
         />
@@ -225,9 +222,6 @@ export default function Person(props: Props) {
                 {t`Improved symptoms are a requirement for you to end isolation. If
                 your symptoms improve AND you have had no fever for 24 hours
                 without the use of medicine, check this box.`} {" "}
-                <a href="https://multco.us/novel-coronavirus-covid-19/if-you-test-positive-covid-19">
-                  {t`Link.`}
-                </a>{" "}
               </span>
             }
           />
@@ -441,9 +435,7 @@ export default function Person(props: Props) {
                   you`}
                 </li>
               </ul>{" "}
-              <a href="https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html">
-                {t`Link.`}
-              </a>
+              <div className="pt2" >Note: In a later question, we will ask about close contact with people you do live with.</div>
             </div>
           )}
         </div>
