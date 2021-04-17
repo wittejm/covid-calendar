@@ -5,7 +5,7 @@ import Recommendation from "./Recommendation";
 import { CovidEventName, InHouseExposure, PersonData } from "./types";
 import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { t, addLocale, useLocale } from 'ttag';
 
 export default function App() {

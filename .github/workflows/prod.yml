@@ -36,4 +36,4 @@ jobs:
         run: |
           npm install
           npm run build
-          scp -i ~/.ssh/id_rsa-bastion -r build/* root@covidcalc.org:/var/www/html
+          scp -i ~/.ssh/id_rsa-bastion -o StrictHostKeyChecking=no -r build/* root@covidcalc.org:/var/www/html
