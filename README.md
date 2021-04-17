@@ -1,6 +1,6 @@
 # covid-calendar
 
-This project is a collaboration between [Code for PDX](codeforpdx.org) and the Multnomah County Emergency Operations Center.
+This project is a collaboration between [Code for PDX](codeforpdx.org) and the Clackamas County Public Health Division.
 
 Please read our [code of conduct](http://www.codeforpdx.org/about/conduct).
 
