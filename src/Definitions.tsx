@@ -18,8 +18,8 @@ export default function Definitions() {
                 {jt`People who must ${strongQuarantine} should avoid physical contact
                 with everyone outside their home. This includes work, groceries, and socializing.`}
               </div>
-              <div className="col-md-3">
-                <img  src={process.env.PUBLIC_URL + "/quarantine.svg"} />
+              <div className="col-md-3" style={{ textAlign: "center" }}>
+                <img src={process.env.PUBLIC_URL + "/quarantine.svg"} />
               </div>
             </div>
             <hr/>
@@ -34,7 +34,7 @@ export default function Definitions() {
                 {jt`People who must ${strongIsolate} should keep away from
                 everyone inside and outside the home.`}
               </div>
-              <div className="col-md-3">
+              <div className="col-md-3" style={{ textAlign: "center" }}>
                <img src={process.env.PUBLIC_URL + "/isolation.svg"} />
              </div>
           </div>
