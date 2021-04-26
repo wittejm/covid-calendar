@@ -45,6 +45,7 @@ export default function Recommendation(props: Props) {
             height={props.height}
             inHouseExposureEventsState={props.inHouseExposureEventsState}
             membersState={props.membersState}
+            language={props.language}
           />
         </section>
         <div

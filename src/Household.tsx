@@ -13,6 +13,7 @@ interface Props {
   inHouseExposureEventsState: State<InHouseExposure[]>;
   editingHouseholdState: State<boolean>;
   height: State<number>;
+  language: string;
 }
 
 export default function Household(props: Props) {
@@ -151,6 +152,7 @@ export default function Household(props: Props) {
                       editingPersonRef={editingPersonRef}
                       addNewPerson={props.addNewPerson}
                       recommendationDetailOpenByDefault={false}
+                        language={props.language}
                     />
                   );
                 }

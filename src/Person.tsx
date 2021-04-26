@@ -14,7 +14,6 @@ import {
   DisclosurePanel,
 } from "@reach/disclosure";
 
-
 interface Props {
   personState: State<PersonData>;
   membersState: State<PersonData[]>;
@@ -24,6 +23,7 @@ interface Props {
   editingPersonRef: Ref<HTMLDivElement>;
   addNewPerson: () => void;
   recommendationDetailOpenByDefault: boolean;
+  language: string;
 }
 
 export default function Person(props: Props) {
@@ -371,7 +371,9 @@ export default function Person(props: Props) {
     return (
       <div className="ml2 mb5">
         <div className="mb-3">
-          <label htmlFor={`${person.id}-name`}>Name</label>
+          <label htmlFor={`${person.id}-name`}>
+            {props.language === "en" ? "Name" : "Nombre"}
+          </label>
           <div className="input-group">
             <input
               className="form-control"
