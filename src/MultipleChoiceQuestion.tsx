@@ -12,7 +12,6 @@ interface Props {
   checked: boolean;
   onChange: (e: React.BaseSyntheticEvent) => void;
   tooltip?: JSX.Element;
-  disabled?: boolean;
 }
 
 export default function MultipleChoiceQuestion(props: Props) {
@@ -24,18 +23,16 @@ export default function MultipleChoiceQuestion(props: Props) {
         id={`checkbox-${props.id}-${props.questionText}`}
         type="checkbox"
         onChange={props.onChange}
-        disabled={props.disabled}
       />
       <Disclosure>
         <label
           className="custom-control-label w-100"
           htmlFor={`checkbox-${props.id}-${props.questionText}`}
         >
-          <div className="questionnaire-text d-flex justify-content-between align-items-start" >
-
+          <div className="questionnaire-text d-flex justify-content-between align-items-start">
             {props.questionText}
             {props.tooltip && (
-              <DisclosureButton style={{flexShrink: 0}}>
+              <DisclosureButton style={{ flexShrink: 0 }}>
                 <img
                   src={process.env.PUBLIC_URL + "/circle-question.svg"}
                   style={{ marginLeft: "0.2rem" }}

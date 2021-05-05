@@ -98,7 +98,6 @@ export default function Person(props: Props) {
     fieldName: CovidEventName,
     questionText: string,
     datePromptText: string,
-    disabled: boolean,
     tooltip?: JSX.Element
   ) {
     return (
@@ -109,7 +108,6 @@ export default function Person(props: Props) {
           checked={covidEventsState[fieldName].get() !== ""}
           onChange={onCheckboxChange(fieldName)}
           tooltip={tooltip}
-          disabled={disabled}
         />
         {covidEventsState[fieldName].get() !== "" && (
           <DateQuestion
@@ -363,7 +361,6 @@ export default function Person(props: Props) {
             CovidEventName.LastCloseContact,
             t`${person.name} had close contact to someone COVID-19 positive that does not live with them`,
             t`Date of last contact`,
-            props.personState.vaccinated.get(), // disabled?
             <div>
               {t`Close contact means any of the following:`}
               <ul className="mx-3 mb-1">
@@ -394,8 +391,7 @@ export default function Person(props: Props) {
           {buildCovidEventQuestion(
             CovidEventName.PositiveTest,
             t`${person.name} has received a positive test result`,
-            t`Date of test`,
-            false // disabled?
+            t`Date of test`
           )}
         </div>
         <div className="mb-3">
