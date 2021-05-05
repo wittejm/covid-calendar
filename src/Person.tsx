@@ -222,15 +222,15 @@ export default function Person(props: Props) {
       const endDate = format(props.guidance.endDate, "MMM d");
       if (props.guidance.infected) {
         if (person.noSymptomsFor24Hours) {
-          return t`${person.name} must isolate until ${endDate}`;
+          return t`${person.name} must isolate through ${endDate}`;
         } else {
-          return t`${person.name} must isolate until at least ${endDate}`;
+          return t`${person.name} must isolate through at least ${endDate}`;
         }
       } else {
         if (props.guidance.peopleWithOngoingExposureWithSymptoms?.length) {
-          return t`${person.name} must quarantine until at least ${endDate}`;
+          return t`${person.name} must quarantine through at least ${endDate}`;
         } else {
-          return t`${person.name} must quarantine until ${endDate}`;
+          return t`${person.name} must quarantine through ${endDate}`;
         }
       }
     } else {
