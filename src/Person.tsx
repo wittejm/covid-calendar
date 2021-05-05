@@ -259,6 +259,7 @@ export default function Person(props: Props) {
     ) : (
       <p>
         {t`If ${guidance.person.name} develops symptoms, they should call a doctor and get a COVID-19 test.`}
+        <div className="p-3">{commonSymptomsList()}</div>
       </p>
     );
 
