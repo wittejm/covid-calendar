@@ -7,11 +7,11 @@ import InHouseExposureQuestions from "./InHouseExposureQuestions";
 import { compact } from "lodash/fp";
 import { isContagious } from "./util";
 import { format } from "date-fns";
-import { t } from 'ttag';
+import { t } from "ttag";
 import {
   Disclosure,
   DisclosureButton,
-  DisclosurePanel,
+  DisclosurePanel
 } from "@reach/disclosure";
 
 interface Props {
@@ -42,11 +42,36 @@ export default function Person(props: Props) {
       );
     }
   );
-  const atLeastOne = covidEventsState[CovidEventName.SymptomsStart].get() !== "";
-  const gotPositiveTest = covidEventsState[CovidEventName.PositiveTest].get() !== "";
+  const atLeastOne =
+    covidEventsState[CovidEventName.SymptomsStart].get() !== "";
+  const gotPositiveTest =
+    covidEventsState[CovidEventName.PositiveTest].get() !== "";
   const contagious = atLeastOne || gotPositiveTest;
-  const [recommendationDetailIsOpen, setRecommendationDetailIsOpen] = React.useState(props.recommendationDetailOpenByDefault);
+  const [
+    recommendationDetailIsOpen,
+    setRecommendationDetailIsOpen
+  ] = React.useState(props.recommendationDetailOpenByDefault);
 
+  function commonSymptomsList() {
+    return (
+      <div>
+        {t`Common symptoms include:`}
+        <ul className="mx-3 mb-1">
+          <li>{t`Fever or chills`}</li>
+          <li>{t`Cough`}</li>
+          <li>{t`Shortness of breath or difficulty breathing`}</li>
+          <li>{t`New loss of taste or smell`}</li>
+          <li>{t`Fatigue`}</li>
+          <li>{t`Muscle or body aches`}</li>
+          <li>{t`Headache`}</li>
+          <li>{t`Sore throat`}</li>
+          <li>{t`Congestion or runny nose`}</li>
+          <li>{t`Nausea or vomiting`}</li>
+          <li>{t`Diarrhea`}</li>
+        </ul>{" "}
+      </div>
+    );
+  }
   function onCheckboxChange(fieldName: CovidEventName) {
     return (e: React.BaseSyntheticEvent) => {
       const checked = e.target.checked;
@@ -56,41 +81,15 @@ export default function Person(props: Props) {
         covidEventsState[fieldName].set(format(new Date(), "MM/dd/yyyy"));
       }
       if (fieldName === CovidEventName.PositiveTest) {
-        const nextContagious = Boolean(
-          checked || atLeastOne
-        );
+        const nextContagious = Boolean(checked || atLeastOne);
         if (contagious !== nextContagious) {
           setContagiousState(nextContagious);
         }
       } else if (fieldName === CovidEventName.SymptomsStart) {
-        const nextContagious = Boolean(
-          checked || gotPositiveTest
-        );
+        const nextContagious = Boolean(checked || gotPositiveTest);
         if (contagious !== nextContagious) {
           setContagiousState(nextContagious);
         }
-      }
-    };
-  }
-
-  function onSymptomCheckboxChange(index: number) {
-    return (e: React.BaseSyntheticEvent) => {
-      const symptomsCheckedState = props.personState.symptomsChecked;
-      const anyCheckedBefore = symptomsCheckedState
-        .get()
-        .some(val=>val);
-      symptomsCheckedState[index].set(c => !c);
-      const anyCheckedAfter = symptomsCheckedState
-        .get()
-        .some(val=>val);
-      if (
-        !anyCheckedBefore || !anyCheckedAfter
-      ) {
-        const toggleSymptomStart = onCheckboxChange(
-          CovidEventName.SymptomsStart
-        );
-        toggleSymptomStart(e);
-      } else {
       }
     };
   }
@@ -112,7 +111,7 @@ export default function Person(props: Props) {
           tooltip={tooltip}
           disabled={disabled}
         />
-        {(covidEventsState[fieldName].get() !== "") && (
+        {covidEventsState[fieldName].get() !== "" && (
           <DateQuestion
             id={person.id}
             promptText={datePromptText}
@@ -126,105 +125,55 @@ export default function Person(props: Props) {
 
   function buildSymptomsQuestion() {
     const feelingSickState = props.personState.feelingSick;
-    const symptomsChecked = props.personState.symptomsChecked;
     return (
       <>
         <MultipleChoiceQuestion
           id={person.id}
           questionText={t`${person.name} has been feeling sick`}
           checked={feelingSickState.get()}
-          onChange={(e : React.BaseSyntheticEvent) => {
-            if (feelingSickState.get()){
-              if (atLeastOne) {
-                const toggleSymptomStart = onCheckboxChange(
-                  CovidEventName.SymptomsStart
-                );
-                toggleSymptomStart(e);
-              }
+          onChange={(e: React.BaseSyntheticEvent) => {
+            if (feelingSickState.get()) {
+              const toggleSymptomStart = onCheckboxChange(
+                CovidEventName.SymptomsStart
+              );
+              toggleSymptomStart(e);
 
               feelingSickState.set(false);
               covidEventsState[CovidEventName.SymptomsStart].set("");
-              symptomsChecked.set([false, false, false, false]);
             } else {
               feelingSickState.set(true);
               covidEventsState[CovidEventName.SymptomsStart].set("");
-              symptomsChecked.set([false, false, false, false]);
             }
           }}
-          tooltip={
-            <div>
-              {t`Common symptoms include:`}
-              <ul className="mx-3 mb-1">
-                <li>{t`Fever or chills`}</li>
-                <li>{t`Cough`}</li>
-                <li>{t`Shortness of breath or difficulty breathing`}</li>
-                <li>{t`Fatigue`}</li>
-                <li>{t`Muscle or body aches`}</li>
-                <li>{t`Headache`}</li>
-                <li>{t`New loss of taste or smell`}</li>
-                <li>{t`Sore throat`}</li>
-                <li>{t`Congestion or runny nose`}</li>
-                <li>{t`Nausea or vomiting`}</li>
-                <li>{t`Diarrhea`}</li>
-              </ul>{" "}
-            </div>
-          }
+          tooltip={commonSymptomsList()}
         />
         {feelingSickState.get() ? (
-          <div className="questionnaire-text subquestion">
-            <div className="mb-3">{t`Check the boxes if you are experiencing:`}</div>
-
+          <>
+            <DateQuestion
+              id={person.id}
+              promptText={t`Date of first appearance of symptoms`}
+              questionFieldTextState={
+                covidEventsState[CovidEventName.SymptomsStart]
+              }
+              questionFieldName={CovidEventName.SymptomsStart}
+            />
+            <div className={"mb-3"} />
             <MultipleChoiceQuestion
               id={person.id}
-              questionText={t`Fever`}
-              checked={symptomsChecked[0].get()}
-              onChange={e => onSymptomCheckboxChange(0)(e)}
+              questionText={t`${person.name}'s symptoms have been improved for 24 hours.`}
+              checked={props.personState.noSymptomsFor24Hours.get()}
+              onChange={() =>
+                props.personState.noSymptomsFor24Hours.set(c => !c)
+              }
+              tooltip={
+                <span>
+                  {t`Improved symptoms are a requirement for you to end isolation. If
+                  your symptoms improve AND you have had no fever for 24 hours
+                  without the use of medicine, check this box.`}{" "}
+                </span>
+              }
             />
-            <MultipleChoiceQuestion
-              id={person.id}
-              questionText={t`Cough`}
-              checked={symptomsChecked[1].get()}
-              onChange={e => onSymptomCheckboxChange(1)(e)}
-            />
-            <MultipleChoiceQuestion
-              id={person.id}
-              questionText={t`Shortness of breath`}
-              checked={symptomsChecked[2].get()}
-              onChange={e => onSymptomCheckboxChange(2)(e)}
-            />
-            <MultipleChoiceQuestion
-              id={person.id}
-              questionText={t`New loss of taste or smell`}
-              checked={symptomsChecked[3].get()}
-              onChange={e => onSymptomCheckboxChange(3)(e)}
-            />
-          </div>
-        ) : null}
-        {atLeastOne ? (
-          <DateQuestion
-            id={person.id}
-            promptText={t`Date of first appearance of symptoms`}
-            questionFieldTextState={
-              covidEventsState[CovidEventName.SymptomsStart]
-            }
-            questionFieldName={CovidEventName.SymptomsStart}
-          />
-        ) : null}
-        <div className={"mb-3"} />
-        {atLeastOne ? (
-          <MultipleChoiceQuestion
-            id={person.id}
-            questionText={t`${person.name}'s symptoms have been improved for 24 hours.`}
-            checked={props.personState.noSymptomsFor24Hours.get()}
-            onChange={() => props.personState.noSymptomsFor24Hours.set(c => !c)}
-            tooltip={
-              <span>
-                {t`Improved symptoms are a requirement for you to end isolation. If
-                your symptoms improve AND you have had no fever for 24 hours
-                without the use of medicine, check this box.`} {" "}
-              </span>
-            }
-          />
+          </>
         ) : null}
       </>
     );
@@ -260,12 +209,12 @@ export default function Person(props: Props) {
   function removeFromMembers() {
     relevantInHouseExposureEventsState.reverse().map(e => e.set(none)); // Remove all current exposures
     props.personState.set(none);
-    props.membersState.map((memberState: State<PersonData>, index: number)=>{
-      if (memberState.get().name.match(/Person \d+/)){
-        const personNumber = index+1
+    props.membersState.map((memberState: State<PersonData>, index: number) => {
+      if (memberState.get().name.match(/Person \d+/)) {
+        const personNumber = index + 1;
         memberState.name.set(`Person ${personNumber}`);
       }
-    })
+    });
   }
 
   function renderGuidance() {
@@ -273,7 +222,6 @@ export default function Person(props: Props) {
       const endDate = format(props.guidance.endDate, "MMM d");
       if (props.guidance.infected) {
         if (person.noSymptomsFor24Hours) {
-
           return t`${person.name} must isolate until ${endDate}`;
         } else {
           return t`${person.name} must isolate until at least ${endDate}`;
@@ -290,28 +238,25 @@ export default function Person(props: Props) {
     }
   }
 
-  function renderGuidanceDefinition(infected: boolean, exposed : boolean) {
+  function renderGuidanceDefinition(infected: boolean, exposed: boolean) {
     return (
       <p>
         {infected
           ? t`Avoid contact with everyone, including your household.`
           : exposed
-            ? t`Avoid contact with everyone outside of your household.`
-            : ""
-        }
+          ? t`Avoid contact with everyone outside of your household.`
+          : ""}
       </p>
     );
   }
 
   function renderGuidanceMessage(guidance: Guidance) {
-
     const getTestedNote = guidance.person.feelingSick ? (
       <p>
         {" "}
         {t`Since ${guidance.person.name} is feeling sick, we recommend they get a COVID-19 test.`}
       </p>
-    ) :
-    (
+    ) : (
       <p>
         {t`If ${guidance.person.name} develops symptoms, they should call a doctor and get a COVID-19 test.`}
       </p>
@@ -335,7 +280,6 @@ export default function Person(props: Props) {
               <p>
                 {t`Additionally, continue isolating until 24 hours after fever is gone.`}
               </p>
-
             </>
           );
         }
@@ -396,7 +340,7 @@ export default function Person(props: Props) {
                   }
                 }}
               >
-                { members.length === 1 ? t`Clear` : t`Remove` }
+                {members.length === 1 ? t`Clear` : t`Remove`}
               </button>
             </div>
           </div>
@@ -437,7 +381,10 @@ export default function Person(props: Props) {
                   you`}
                 </li>
               </ul>{" "}
-              <div className="pt2" >Note: In a later question, we will ask about close contact with people you do live with.</div>
+              <div className="pt2">
+                Note: In a later question, we will ask about close contact with
+                people you do live with.
+              </div>
             </div>
           )}
         </div>
@@ -466,7 +413,10 @@ export default function Person(props: Props) {
   }
 
   function renderRecommendationDetail() {
-    const guidanceDefinition = renderGuidanceDefinition(props.guidance.infected, !!props.guidance.endDate);
+    const guidanceDefinition = renderGuidanceDefinition(
+      props.guidance.infected,
+      !!props.guidance.endDate
+    );
     const guidanceMessage = renderGuidanceMessage(props.guidance);
     if (guidanceDefinition && guidanceMessage) {
       return (
@@ -480,20 +430,27 @@ export default function Person(props: Props) {
 
   function renderNonEditing() {
     return (
-      <Disclosure open={recommendationDetailIsOpen} onChange={() => setRecommendationDetailIsOpen(!recommendationDetailIsOpen)}>
+      <Disclosure
+        open={recommendationDetailIsOpen}
+        onChange={() =>
+          setRecommendationDetailIsOpen(!recommendationDetailIsOpen)
+        }
+      >
         <DisclosureButton className="w-100">
-        <h4 className="d-flex justify-content-between align-items-center">
-          <span className="">
-            {renderGuidance()}
-          </span>
+          <h4 className="d-flex justify-content-between align-items-center">
+            <span className="">{renderGuidance()}</span>
 
-        <span aria-hidden="true" className={"fas " + (recommendationDetailIsOpen ? "fa-angle-up" : "fa-angle-down")}></span>
-        </h4>
+            <span
+              aria-hidden="true"
+              className={
+                "fas " +
+                (recommendationDetailIsOpen ? "fa-angle-up" : "fa-angle-down")
+              }
+            ></span>
+          </h4>
         </DisclosureButton>
-        <DisclosurePanel>
-        {renderRecommendationDetail()}
-        </DisclosurePanel>
-      <hr/>
+        <DisclosurePanel>{renderRecommendationDetail()}</DisclosurePanel>
+        <hr />
       </Disclosure>
     );
   }
