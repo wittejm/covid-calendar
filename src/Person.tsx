@@ -42,11 +42,11 @@ export default function Person(props: Props) {
       );
     }
   );
-  const atLeastOne =
+  const feelingSick =
     covidEventsState[CovidEventName.SymptomsStart].get() !== "";
   const gotPositiveTest =
     covidEventsState[CovidEventName.PositiveTest].get() !== "";
-  const contagious = atLeastOne || gotPositiveTest;
+  const contagious = feelingSick || gotPositiveTest;
   const [
     recommendationDetailIsOpen,
     setRecommendationDetailIsOpen
@@ -81,7 +81,7 @@ export default function Person(props: Props) {
         covidEventsState[fieldName].set(format(new Date(), "MM/dd/yyyy"));
       }
       if (fieldName === CovidEventName.PositiveTest) {
-        const nextContagious = Boolean(checked || atLeastOne);
+        const nextContagious = Boolean(checked || feelingSick);
         if (contagious !== nextContagious) {
           setContagiousState(nextContagious);
         }
@@ -117,62 +117,6 @@ export default function Person(props: Props) {
             questionFieldName={fieldName}
           />
         )}
-      </>
-    );
-  }
-
-  function buildSymptomsQuestion() {
-    const feelingSickState = props.personState.feelingSick;
-    return (
-      <>
-        <MultipleChoiceQuestion
-          id={person.id}
-          questionText={t`${person.name} has been feeling sick`}
-          checked={feelingSickState.get()}
-          onChange={(e: React.BaseSyntheticEvent) => {
-            if (feelingSickState.get()) {
-              const toggleSymptomStart = onCheckboxChange(
-                CovidEventName.SymptomsStart
-              );
-              toggleSymptomStart(e);
-
-              feelingSickState.set(false);
-              covidEventsState[CovidEventName.SymptomsStart].set("");
-            } else {
-              feelingSickState.set(true);
-              covidEventsState[CovidEventName.SymptomsStart].set("");
-            }
-          }}
-          tooltip={commonSymptomsList()}
-        />
-        {feelingSickState.get() ? (
-          <>
-            <DateQuestion
-              id={person.id}
-              promptText={t`Date of first appearance of symptoms`}
-              questionFieldTextState={
-                covidEventsState[CovidEventName.SymptomsStart]
-              }
-              questionFieldName={CovidEventName.SymptomsStart}
-            />
-            <div className={"mb-3"} />
-            <MultipleChoiceQuestion
-              id={person.id}
-              questionText={t`${person.name}'s symptoms have been improved for 24 hours.`}
-              checked={props.personState.noSymptomsFor24Hours.get()}
-              onChange={() =>
-                props.personState.noSymptomsFor24Hours.set(c => !c)
-              }
-              tooltip={
-                <span>
-                  {t`Improved symptoms are a requirement for you to end isolation. If
-                  your symptoms improve AND you have had no fever for 24 hours
-                  without the use of medicine, check this box.`}{" "}
-                </span>
-              }
-            />
-          </>
-        ) : null}
       </>
     );
   }
@@ -396,7 +340,32 @@ export default function Person(props: Props) {
         </div>
         <div className="mb-3">
           <hr />
-          {buildSymptomsQuestion()}
+          {buildCovidEventQuestion(
+            CovidEventName.SymptomsStart,
+            t`${person.name} has been feeling sick`,
+            t`Date of first appearance of symptoms`
+          )}
+
+          {feelingSick ? (
+            <>
+              <div className={"mb-3"} />
+              <MultipleChoiceQuestion
+                id={person.id}
+                questionText={t`${person.name}'s symptoms have been improved for 24 hours.`}
+                checked={props.personState.noSymptomsFor24Hours.get()}
+                onChange={() =>
+                  props.personState.noSymptomsFor24Hours.set(c => !c)
+                }
+                tooltip={
+                  <span>
+                    {t`Improved symptoms are a requirement for you to end isolation. If
+                  your symptoms improve AND you have had no fever for 24 hours
+                  without the use of medicine, check this box.`}{" "}
+                  </span>
+                }
+              />
+            </>
+          ) : null}
         </div>
         <InHouseExposureQuestions
           person={person}

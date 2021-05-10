@@ -6,11 +6,11 @@ import { CovidEventName, InHouseExposure, PersonData } from "./types";
 import { compact } from "lodash/fp";
 import { getRandomInt, isContagious } from "./util";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import { t, addLocale, useLocale } from 'ttag';
+import { t, addLocale, useLocale } from "ttag";
 
 export default function App() {
   const [language, setLanguageState] = useReactState("en");
-  const translationObject = require('./es.po.json');
+  const translationObject = require("./es.po.json");
   addLocale("es", translationObject);
   useLocale(language);
   const height = useState(window.innerHeight);
@@ -27,9 +27,8 @@ export default function App() {
     covidEvents: {
       [CovidEventName.LastCloseContact]: "",
       [CovidEventName.SymptomsStart]: "",
-      [CovidEventName.PositiveTest]: "",
+      [CovidEventName.PositiveTest]: ""
     },
-    symptomsChecked: [false, false, false, false],
     noSymptomsFor24Hours: true,
     feelingSick: false,
     vaccinated: false,
@@ -44,28 +43,33 @@ export default function App() {
   const editingPersonState = useState<number | undefined>(undefined);
 
   function setLanguage(language: string) {
-  const from = language==="es"? "Person" : "Persona";
-  const to = language==="es"? "Persona" : "Person";
-  members.forEach((person)=> {
-    if (person.name.get().split(" ")[0] === from) {
-      person.name.set(`${to} ${person.name.get().split(" ").slice(1).join(" ")}`);
-  }
-  })
+    const from = language === "es" ? "Person" : "Persona";
+    const to = language === "es" ? "Persona" : "Person";
+    members.forEach(person => {
+      if (person.name.get().split(" ")[0] === from) {
+        person.name.set(
+          `${to} ${person.name
+            .get()
+            .split(" ")
+            .slice(1)
+            .join(" ")}`
+        );
+      }
+    });
     setLanguageState(language);
   }
 
   function addNewPerson() {
     const currentId = id.get();
-    const newPersonNumber = members.length+1;
+    const newPersonNumber = members.length + 1;
     const newPerson = {
       id: currentId,
       name: t`Person ${newPersonNumber}`,
       covidEvents: {
         [CovidEventName.LastCloseContact]: "",
         [CovidEventName.SymptomsStart]: "",
-        [CovidEventName.PositiveTest]: "",
+        [CovidEventName.PositiveTest]: ""
       },
-      symptomsChecked: [false, false, false, false],
       noSymptomsFor24Hours: true,
       feelingSick: false,
       vaccinated: false,
