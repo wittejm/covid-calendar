@@ -136,7 +136,7 @@ function computeQuarantineGuidance(
 function addOutsideExposures(person: PersonData, exposures: Exposure[]) {
   const outHouseExposureDateString =
     person.covidEvents[CovidEventName.LastCloseContact];
-  if (outHouseExposureDateString) {
+  if (!person.vaccinated && outHouseExposureDateString) {
     const outHouseExposureDate = parse(
       outHouseExposureDateString,
       "M/dd/yyyy",
