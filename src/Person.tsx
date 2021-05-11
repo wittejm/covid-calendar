@@ -56,7 +56,7 @@ export default function Person(props: Props) {
     return (
       <div>
         {t`Common symptoms include:`}
-        <ul className="mx-3 mb-1">
+        <ul className="p-3 mx-3 mb-1">
           <li>{t`Fever or chills`}</li>
           <li>{t`Cough`}</li>
           <li>{t`Shortness of breath or difficulty breathing`}</li>
@@ -199,10 +199,12 @@ export default function Person(props: Props) {
         {t`Since ${guidance.person.name} is feeling sick, we recommend they get a COVID-19 test.`}
       </p>
     ) : (
-      <p>
-        {t`If ${guidance.person.name} develops symptoms, they should call a doctor and get a COVID-19 test.`}
-        <div className="p-3">{commonSymptomsList()}</div>
-      </p>
+      <>
+        <p>
+          {t`If ${guidance.person.name} develops symptoms, they should call a doctor and get a COVID-19 test.`}
+        </p>
+        {commonSymptomsList()}
+      </>
     );
 
     if (guidance.endDate) {
@@ -250,7 +252,26 @@ export default function Person(props: Props) {
         }
       }
     } else {
-      return getTestedNote;
+      return (
+        <>
+          {guidance.person.vaccinated && (
+            <p>
+              {t`${guidance.person.name} is fully vaccinated, but they should continue social distancing and wearing a mask.`}
+            </p>
+          )}
+          {guidance.person.vaccinated &&
+            guidance.person.covidEvents[CovidEventName.LastCloseContact] !==
+              "" && (
+              <p>
+                {t`${guidance.person.name} had close contact with someone who has COVID-19, but they do not need to quarantine because they are fully vaccinated.`}
+              </p>
+            )}
+          <p>
+            {t`If ${guidance.person.name} develops symptoms, they should call a doctor and get a COVID-19 test.`}
+          </p>
+          {commonSymptomsList()}
+        </>
+      );
     }
   }
 
