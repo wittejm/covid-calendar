@@ -315,7 +315,6 @@ export default function Person(props: Props) {
           checked={props.personState.vaccinated.get()}
           onChange={() => {
             props.personState.vaccinated.set(v => !v);
-            covidEventsState[CovidEventName.LastCloseContact].set("");
             setContagiousState(contagious);
           }}
         />
