@@ -363,7 +363,23 @@ export default function Person(props: Props) {
           {buildCovidEventQuestion(
             CovidEventName.SymptomsStart,
             t`${person.name} has been feeling sick`,
-            t`Date of first appearance of symptoms`
+            t`Date of first appearance of symptoms`,
+            <div>
+              {t`Common symptoms include:`}
+              <ul className="mx-3 mb-1 p-3">
+                <li>{t`Fever or chills`}</li>
+                <li>{t`Cough`}</li>
+                <li>{t`Shortness of breath or difficulty breathing`}</li>
+                <li>{t`Fatigue`}</li>
+                <li>{t`Muscle or body aches`}</li>
+                <li>{t`Headache`}</li>
+                <li>{t`New loss of taste or smell`}</li>
+                <li>{t`Sore throat`}</li>
+                <li>{t`Congestion or runny nose`}</li>
+                <li>{t`Nausea or vomiting`}</li>
+                <li>{t`Diarrhea`}</li>
+              </ul>{" "}
+            </div>
           )}
 
           {feelingSick ? (
