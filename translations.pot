@@ -7,7 +7,7 @@ msgstr ""
 msgid "Person 1"
 msgstr "Persona 1"
 
-#: src/App.tsx:62
+#: src/App.tsx:67
 #, javascript-format
 msgid "Person ${ newPersonNumber }"
 msgstr "Persona ${ newPersonNumber }"
@@ -67,7 +67,7 @@ msgstr "Empezar"
 msgid "COVID CALCULATOR"
 msgstr "Calculadora de COVID-19"
 
-#: src/Household.tsx:55
+#: src/Household.tsx:56
 msgid ""
 "Thank you for doing your part to keep our community safe! For help\n"
 "with a question, tap"
@@ -75,7 +75,7 @@ msgstr ""
 "¡Gracias por ayudar a mantener nuestra comunidad sana! \n"
 "Si necesita ayuda para responder una pregunta, presione"
 
-#: src/Household.tsx:191
+#: src/Household.tsx:172
 msgid "Add another person"
 msgstr "Agregar a otra persona"
 
@@ -96,7 +96,7 @@ msgstr ""
 "props.otherPerson.name }"
 
 #: src/InHouseExposureQuestion.tsx:52
-#: src/Person.tsx:419
+#: src/Person.tsx:327
 msgid "Date of last contact"
 msgstr "Fecha del último contacto"
 
@@ -131,89 +131,81 @@ msgstr ""
 msgid "STEP 3"
 msgstr "PASO 3"
 
-#: src/Person.tsx:130
+#: src/Person.tsx:365
 #, javascript-format
 msgid "${ person.name } has been feeling sick"
 msgstr "${ person.name } se ha sentido enferma"
 
-#: src/Person.tsx:152
+#: src/Person.tsx:58
+#: src/Person.tsx:368
 msgid "Common symptoms include:"
 msgstr "Los síntomas más comunes pueden incluir"
 
-#: src/Person.tsx:154
+#: src/Person.tsx:60
+#: src/Person.tsx:370
 msgid "Fever or chills"
 msgstr "Fiebre o escalofríos"
 
-#: src/Person.tsx:155
-#: src/Person.tsx:184
+#: src/Person.tsx:61
+#: src/Person.tsx:371
 msgid "Cough"
 msgstr "Tos"
 
-#: src/Person.tsx:156
+#: src/Person.tsx:62
+#: src/Person.tsx:372
 msgid "Shortness of breath or difficulty breathing"
 msgstr "Dificultad para respirar (sentir que le falta el aire)"
 
-#: src/Person.tsx:157
+#: src/Person.tsx:64
+#: src/Person.tsx:373
 msgid "Fatigue"
 msgstr "Fatiga"
 
-#: src/Person.tsx:158
+#: src/Person.tsx:65
+#: src/Person.tsx:374
 msgid "Muscle or body aches"
 msgstr "Dolores musculares y corporales"
 
-#: src/Person.tsx:159
+#: src/Person.tsx:66
+#: src/Person.tsx:375
 msgid "Headache"
 msgstr "Dolor de cabeza"
 
-#: src/Person.tsx:160
-#: src/Person.tsx:196
+#: src/Person.tsx:63
+#: src/Person.tsx:376
 msgid "New loss of taste or smell"
 msgstr "Pérdida reciente del olfato o el gusto"
 
-#: src/Person.tsx:161
+#: src/Person.tsx:67
+#: src/Person.tsx:377
 msgid "Sore throat"
 msgstr "Dolor de garganta"
 
-#: src/Person.tsx:162
+#: src/Person.tsx:68
+#: src/Person.tsx:378
 msgid "Congestion or runny nose"
 msgstr "Congestión o moqueo"
 
-#: src/Person.tsx:163
+#: src/Person.tsx:69
+#: src/Person.tsx:379
 msgid "Nausea or vomiting"
 msgstr "Náuseas o vómitos"
 
-#: src/Person.tsx:164
+#: src/Person.tsx:70
+#: src/Person.tsx:380
 msgid "Diarrhea"
 msgstr "Diarrea"
 
-#: src/Person.tsx:167
-#: src/Person.tsx:227
-#: src/Person.tsx:440
-msgid "Link."
-msgstr "Enlace."
-
-#: src/Person.tsx:174
-msgid "Check the boxes if you are experiencing:"
-msgstr "Marque en la casilla si ha tenido alguno de los siguientes síntomas:"
-
-#: src/Person.tsx:178
-msgid "Fever"
-msgstr "Fiebre o escalofríos"
-
-#: src/Person.tsx:190
-msgid "Shortness of breath"
-msgstr "Dificultad para respirar (sentir que le falta el aire)"
-
-#: src/Person.tsx:205
+#: src/Person.tsx:366
 msgid "Date of first appearance of symptoms"
 msgstr "Fecha de la primera aparición de los síntomas"
 
-#: src/Person.tsx:216
+#: src/Person.tsx:390
 #, javascript-format
 msgid "${ person.name }'s symptoms have been improved for 24 hours."
 msgstr "Los síntomas de ${person.name} han mejorado durante 24 horas."
 
-#: src/Person.tsx:223
+#: src/Person.tsx:397
 msgid ""
 "Improved symptoms are a requirement for you to end isolation. If\n"
 "your symptoms improve AND you have had no fever for 24 hours\n"
@@ -223,78 +215,57 @@ msgstr ""
 "síntomas han mejorado. Si sus síntomas han mejorado Y usted no \n"
 "ha tenido fiebre durante 24 horas sin tomar medicina, marque esta casilla."
 
-#: src/Person.tsx:280
-#, javascript-format
-msgid "${ person.name } must isolate until ${ endDate }"
-msgstr "${ person.name } debe aislarse hasta el ${ endDate }"
-
-#: src/Person.tsx:282
-#, javascript-format
-msgid "${ person.name } must isolate until at least ${ endDate }"
-msgstr "${ person.name } debe aislarse por lo menos hasta ${ endDate }"
-
-#: src/Person.tsx:286
-msgid "${ person.name } must quarantine until at least ${ endDate }"
-msgstr "${ person.name } debe quedarse en cuarentena hasta el ${ endDate }"
-
-#: src/Person.tsx:288
-#, javascript-format
-msgid "${ person.name } must quarantine until ${ endDate }"
-msgstr "${ person.name } debe quedarse en cuarentena hasta el ${ endDate }"
-
-#: src/Person.tsx:292
+#: src/Person.tsx:179
 msgid "${ person.name } should continue social distancing"
 msgstr "${ person.name } debe seguir con el distanciamiento social"
 
-#: src/Person.tsx:300
+#: src/Person.tsx:187
 msgid "Avoid contact with everyone, including your household."
 msgstr ""
 "Quédese en casa y lejos de otras personas (incluidos los miembros del "
 "hogar)."
 
-#: src/Person.tsx:302
+#: src/Person.tsx:189
 msgid "Avoid contact with everyone outside of your household."
 msgstr ""
 "Quédese en casa y lejos de otras personas (incluidos los miembros del "
 "hogar)."
 
-#: src/Person.tsx:326
-#: src/Person.tsx:333
+#: src/Person.tsx:216
+#: src/Person.tsx:223
 msgid "This is 10 days after the earliest known date of illness onset."
 msgstr ""
 "Esta fecha será 10 días desde que la fecha del comienzo de los primeros "
 "síntomas."
 
-#: src/Person.tsx:336
+#: src/Person.tsx:226
 msgid "Additionally, continue isolating until 24 hours after fever is gone."
 msgstr ""
 "Además, cuándo se le ha pasado la fiebre, debe seguir aislándose hasta que "
 "hayan transcurrido al menos 24 horas."
 
-#: src/Person.tsx:358
+#: src/Person.tsx:248
 msgid "This is 14 days after the last known exposure date."
 msgstr "Esta fecha será 14 días desde que la fecha de su última exposición conocida."
 
-#: src/Person.tsx:398
+#: src/Person.tsx:307
 msgid "Clear"
 msgstr "Borrar"
 
-#: src/Person.tsx:398
+#: src/Person.tsx:307
 msgid "Remove"
 msgstr "Eliminar"
 
-#: src/Person.tsx:405
+#: src/Person.tsx:314
 #, javascript-format
 msgid "${ person.name } has been fully vaccinated for at least two weeks"
 msgstr "${ person.name } ha sido vacunada completamente por al menos 2 semanas"
 
-#: src/Person.tsx:422
-#. disabled?
+#: src/Person.tsx:329
 msgid "Close contact means any of the following:"
 msgstr "El contacto cercano puede incluir:"
 
-#: src/Person.tsx:425
-#. disabled?
+#: src/Person.tsx:332
 msgid ""
 "You were within 6 feet of them for a total of 15 minutes or\n"
 "more"
@@ -302,13 +273,11 @@ msgstr ""
 "Si estuvo a menos de 6 pies de distancia de una persona\n"
 "que tiene COVID-19 por 15 minutos o más"
 
-#: src/Person.tsx:428
-#. disabled?
+#: src/Person.tsx:335
 msgid "You provided care at home to the person"
 msgstr "Si cuidó en casa a una persona enferma con COVID-19"
 
-#: src/Person.tsx:430
-#. disabled?
+#: src/Person.tsx:337
 msgid ""
 "You had direct physical contact with the person (hugged or\n"
 "kissed them)"
@@ -316,13 +285,11 @@ msgstr ""
 "Si tuvo contacto físico con la persona (la abrazó o \n"
 "la besó)"
 
-#: src/Person.tsx:433
-#. disabled?
+#: src/Person.tsx:340
 msgid "You shared eating or drinking utensils"
 msgstr "Si compartió utensilios para comer o beber"
 
-#: src/Person.tsx:435
-#. disabled?
+#: src/Person.tsx:342
 msgid ""
 "They sneezed, coughed, or somehow got respiratory droplets on\n"
 "you"
@@ -330,12 +297,12 @@ msgstr ""
 "Si la persona estornudó o tosió sobre usted, o si le llegaron \n"
 "de alguna otra manera sus gotitas respiratorias"
 
-#: src/Person.tsx:449
+#: src/Person.tsx:357
 #, javascript-format
 msgid "${ person.name } has received a positive test result"
 msgstr "${ person.name } ha recibido un resultado positivo en una prueba de COVID-19"
 
-#: src/Person.tsx:450
+#: src/Person.tsx:358
 msgid "Date of test"
 msgstr "Fecha de la prueba"
 
@@ -384,25 +351,25 @@ msgstr ""
 "Realizada en asociación con el condado de Clackamas y Code for PDX.\n"
 "Las recomendaciones anteriores siguen las pautas de los CDC."
 
-#: src/Household.tsx:70
+#: src/Household.tsx:67
 msgid "Clackamas County health center"
 msgstr "Centro de salud del condado de Clackamas"
 
-#: src/Household.tsx:76
+#: src/Household.tsx:72
 msgid "Here’s what to do based on the latest CDC guidelines."
 msgstr ""
 "Las recomendaciones que debe tomar se basan en las pautas más recientes de "
 "los CDC"
 
-#: src/Household.tsx:99
+#: src/Household.tsx:95
 msgid "Done"
 msgstr "Terminar"
 
-#: src/Household.tsx:112
+#: src/Household.tsx:108
 msgid "EDIT ANSWERS"
 msgstr "CORREGIR RESPUESTAS"
 
-#: src/Person.tsx:349
+#: src/Person.tsx:239
 #, javascript-format
 msgid ""
 "Please come back when symptoms for ${ names } have improved for an\n"
@@ -411,7 +378,7 @@ msgstr ""
 "Cuando ${ names } ya no está(n) enfermo/a(s), vuélvase para recibir \n"
 "una fecha exacta"
 
-#: src/Household.tsx:78
+#: src/Household.tsx:74
 #, javascript-format
 msgid ""
 "If you have further questions, please contact your doctor or a ${ "
@@ -420,7 +387,7 @@ msgstr ""
 "Si tiene alguna otra duda sobre su cuidado, comuníquese con su proveedor de "
 "atención médica o llame a un ${ healthCentersLink }."
 
-#: src/Person.tsx:312
+#: src/Person.tsx:199
 #, javascript-format
 msgid ""
 "Since ${ guidance.person.name } is feeling sick, we recommend they get a "
@@ -429,7 +396,8 @@ msgstr ""
 "Si ${ guidance.person.name } se siente enferma, debe hacerse una prueba de "
 "COVID-19."
 
-#: src/Person.tsx:316
+#: src/Person.tsx:204
+#: src/Person.tsx:270
 msgid ""
 "If ${ guidance.person.name } develops symptoms, they should call a doctor "
 "and get a COVID-19 test."
@@ -437,7 +405,7 @@ msgstr ""
 "Porque ${ guidance.person.name } se siente mal, se recomienda que se haga "
 "la prueba de COVID-19."
 
-#: src/Person.tsx:418
+#: src/Person.tsx:326
 msgid ""
 "${ person.name } had close contact to someone COVID-19 positive that does "
 "not live with them"
@@ -457,7 +425,7 @@ msgstr "¿Cuál es la diferencia entre cuarentena y aislamiento?"
 msgid "I can't afford to quarantine or isolate"
 msgstr "No puedo permitirme el lujo de estar en cuarentena o el aislamiento."
 
-#: src/Household.tsx:41
+#: src/Household.tsx:42
 msgid "Tell us about yourself and each person you live with."
 msgstr "Por favor cuéntenos acerca de usted y de cada persona con quien viva."
 
@@ -486,3 +454,35 @@ msgstr ""
 "Los centros de salud de Clackamas ofrecen atención en una escala móvil de "
 "tarifas a personas elegibles sin seguro o con seguro insuficiente. A nadie "
 "se le niega la atención por no poder pagar."
+
+#: src/Person.tsx:167
+#, javascript-format
+msgid "${ person.name } must isolate through ${ endDate }"
+msgstr ""
+
+#: src/Person.tsx:169
+#, javascript-format
+msgid "${ person.name } must isolate through at least ${ endDate }"
+msgstr ""
+
+#: src/Person.tsx:173
+msgid "${ person.name } must quarantine through at least ${ endDate }"
+msgstr ""
+
+#: src/Person.tsx:175
+#, javascript-format
+msgid "${ person.name } must quarantine through ${ endDate }"
+msgstr ""
+
+#: src/Person.tsx:259
+#, javascript-format
+msgid ""
+"${ guidance.person.name } is fully vaccinated, but they should continue "
+"social distancing and wearing a mask."
+msgstr ""
+
+#: src/Person.tsx:266
+msgid ""
+"${ guidance.person.name } had close contact with someone who has COVID-19, "
+"but they do not need to quarantine because they are fully vaccinated."
+msgstr ""
