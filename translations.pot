@@ -306,11 +306,11 @@ msgstr "${ person.name } ha recibido un resultado positivo en una prueba de COVI
 msgid "Date of test"
 msgstr "Fecha de la prueba"
 
-#: src/Resources.tsx:12
+#: src/Resources.tsx:16
 msgid "OHA’s test finder map"
 msgstr "El mapa de la OHA para encontrar un sitio de prueba"
 
-#: src/Resources.tsx:20
+#: src/Resources.tsx:37
 msgid ""
 "Help is available! Please call 211 to be connected to COVID-19 specific "
 "resources. Community based organizations can help you with food boxes, "
@@ -324,20 +324,20 @@ msgstr ""
 "comida, el alquiler, y los servicios públicos. También le pueden ayudar a "
 "conectar con otros beneficios por cuales se pueda calificar."
 
-#: src/Resources.tsx:21
+#: src/Resources.tsx:43
 msgid "Where do I get a test?"
 msgstr "¿Dónde puedo tomar prueba de COVID-19?"
 
-#: src/Resources.tsx:21
+#: src/Resources.tsx:44
 #, javascript-format
 msgid "You can find one using ${ mapLink }."
 msgstr "Puede buscar un sitio usando ${ mapLink }."
 
-#: src/Resources.tsx:23
+#: src/Resources.tsx:48
 msgid "I have additional questions but no primary care doctor"
 msgstr "Tengo más preguntas pero no tengo médico de atención primaria"
 
-#: src/Resources.tsx:27
+#: src/Resources.tsx:52
 msgid "If you are not a resident, we recommend checking your local health centers."
 msgstr ""
 "Si usted no es residente, se recomienda que consulte con sus centros de "
@@ -413,15 +413,15 @@ msgstr ""
 "${ person.name } ha estado en contacto cercano con alguien que dio positivo "
 "en COVID-19 pero que no vive con ellos"
 
-#: src/Resources.tsx:17
+#: src/Resources.tsx:27
 msgid "Resources"
 msgstr "Recursos"
 
-#: src/Resources.tsx:19
+#: src/Resources.tsx:30
 msgid "What is the difference between Quarantine and Isolation?"
 msgstr "¿Cuál es la diferencia entre cuarentena y aislamiento?"
 
-#: src/Resources.tsx:20
+#: src/Resources.tsx:34
 msgid "I can't afford to quarantine or isolate"
 msgstr "No puedo permitirme el lujo de estar en cuarentena o el aislamiento."
 
@@ -435,7 +435,7 @@ msgstr ""
 "Para aprender más de la seguridad detrás de una recomendación, presione en "
 "ella."
 
-#: src/Resources.tsx:26
+#: src/Resources.tsx:51
 msgid ""
 "If you are a Clackamas County resident, reach out to a Clackamas County "
 "health center. To set up care or learn more about any of our health clinics "
@@ -445,7 +445,7 @@ msgstr ""
 "centro de salud del condado de Clackamas. Para programar una cita o para "
 "obtener más información, llame al 503-655-8471."
 
-#: src/Resources.tsx:28
+#: src/Resources.tsx:53
 msgid ""
 "Clackamas Health Centers offer care on a sliding scale to eligible "
 "uninsured and underinsured people. No one is refused care due to an "
@@ -485,4 +485,15 @@ msgstr ""
 msgid ""
 "${ guidance.person.name } had close contact with someone who has COVID-19, "
 "but they do not need to quarantine because they are fully vaccinated."
+msgstr ""
+
+#: src/Resources.tsx:22
+msgid "Temporary Paid Leave Program"
+msgstr ""
+
+#: src/Resources.tsx:38
+#, javascript-format
+msgid ""
+"If you do not have paid time off, you may qualify for the state of Oregon's "
+"${ paidLeaveProgramLink }."
 msgstr ""
